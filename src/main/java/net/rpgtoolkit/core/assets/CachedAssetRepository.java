@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2015, rpgtoolkit.net & Contributors
+ *
+ * See LICENSE.md in the distribution for the full license text including,
+ * but not limited to, a notice of warranty and distribution rights.
  */
 package net.rpgtoolkit.core.assets;
 
@@ -17,14 +21,13 @@ import net.rpgtoolkit.core.Precondition;
  */
 public class CachedAssetRepository
         implements AssetRepository {
-    
+
     private final Map<AssetDescriptor, AssetHandle> assets;
     private final Set<AssetHandleResolver> resolvers;
     private final Set<AssetSerializer> serializers;
 
     // NOTE: This obviously does not sort by priority. This needs
     // to be implemented in the future.
-    
     public class PriorityComparator<T>
             implements Comparator<T> {
 
@@ -40,7 +43,7 @@ public class CachedAssetRepository
         this.resolvers = new TreeSet<>(new PriorityComparator<>());
         this.serializers = new TreeSet<>(new PriorityComparator<>());
     }
-    
+
     @Override
     public AssetHandle handle(Asset asset) {
         Precondition.notNull(asset);
@@ -49,9 +52,9 @@ public class CachedAssetRepository
                 return handle;
             }
         }
-        return null;    
+        return null;
     }
-    
+
     @Override
     public AssetHandle handle(AssetDescriptor descriptor) {
         Precondition.notNull("descriptor", descriptor);
@@ -80,7 +83,7 @@ public class CachedAssetRepository
             throws AssetException, IOException {
 
         Precondition.notNull("descriptor", descriptor);
-        
+
         if (assets.containsKey(descriptor)) {
             final AssetHandle handle = assets.get(descriptor);
             final Asset asset = handle.getAsset();

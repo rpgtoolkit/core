@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2015, rpgtoolkit.net & Contributors
+ *
+ * See LICENSE.md in the distribution for the full license text including,
+ * but not limited to, a notice of warranty and distribution rights.
+ */
 package net.rpgtoolkit.core.assets.files;
 
 import java.io.File;
@@ -17,12 +23,12 @@ import net.rpgtoolkit.core.assets.AssetHandle;
  * @author Chris Hutchinson <chris@cshutchinson.com>
  */
 public class FileAssetHandle
-    implements AssetHandle {
-    
+        implements AssetHandle {
+
     protected final File file;
     protected final AssetDescriptor descriptor;
     protected Asset asset;
-    
+
     public FileAssetHandle(AssetDescriptor descriptor) {
         Precondition.notNull("descriptor", descriptor);
         this.descriptor = descriptor;
@@ -33,7 +39,7 @@ public class FileAssetHandle
     public File getFile() {
         return this.file;
     }
-    
+
     @Override
     public AssetDescriptor getDescriptor() {
         return this.descriptor;
@@ -43,7 +49,7 @@ public class FileAssetHandle
     public Asset getAsset() {
         return this.asset;
     }
-    
+
     @Override
     public void setAsset(Asset asset) {
         this.asset = asset;
