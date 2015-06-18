@@ -7,9 +7,13 @@
  */
 package net.rpgtoolkit.common.assets.files;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,6 +39,16 @@ public class FileAssetHandle extends AssetHandle {
     @Override
     public OutputStream getOutputStream() throws IOException {
         return new FileOutputStream(getFile());
+    }
+
+    @Override
+    public BufferedReader getReader() throws IOException {
+        return new BufferedReader(new FileReader(getFile()));
+    }
+
+    @Override
+    public BufferedWriter getWriter() throws IOException {
+        return new BufferedWriter(new FileWriter(getFile()));
     }
     
     private File getFile() {

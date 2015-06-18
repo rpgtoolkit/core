@@ -11,8 +11,11 @@ import net.rpgtoolkit.common.CorruptAssetException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import static java.lang.System.out;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class SpecialMove extends BasicType
+public class SpecialMove extends BasicType implements Asset
 {
     // Constants
     private final String FILE_HEADER = "RPGTLKIT SPLMOVE";
@@ -144,7 +147,44 @@ public class SpecialMove extends BasicType
     }
 
     public boolean open()
+    {   
+        try
+        {
+            this.inputStream.close(); //not using binary
+            return true;
+        }
+        catch (IOException e)// | CorruptAssetException e)
+        {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return false;
+        }
+    }
+
+    public boolean save()
     {
+        //convert to new format without overwriting old file
+        if(this.file.getName().endsWith(".spc")) {
+            this.file = new File(this.file.getPath() + ".json");
+        }
+        try {
+            AssetManager.getInstance().serialize(
+                    AssetManager.getInstance().getHandle(this));
+            return true;
+        } catch(IOException | CorruptAssetException ex) {
+            Logger.getLogger(SpecialMove.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    public boolean saveAs(File fileName)
+    {
+        this.file = fileName;
+        return this.save();
+    }
+    
+    public boolean openBinary()
+    {
+        out.println("Attempting to open file as binary.");
         try
         {
             if (binaryIO.readBinaryString().equals(FILE_HEADER)) // Valid Status File
@@ -184,7 +224,7 @@ public class SpecialMove extends BasicType
         }
     }
 
-    public boolean save()
+    public boolean saveBinary()
     {
         try
         {
@@ -215,14 +255,27 @@ public class SpecialMove extends BasicType
         }
     }
 
-    public boolean saveAs(File fileName)
-    {
-        this.file = fileName;
-        return this.save();
-    }
-    
     @Override
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public AssetDescriptor getDescriptor() {
+        return new AssetDescriptor(this.getFile().toURI());
+    }
+
+    @Override
+    public void reset() {
+        this.name = "";
+        this.description = "";
+        this.mpCost = 0;
+        this.fightPower = 0;
+        this.rpgcodeProgram = "";
+        this.mpDrainedFromTarget = 0;
+        this.associatedStatusEffect = "";
+        this.associatedAnimation = "";
+        this.setCanUseInBattle(false);
+        this.setCanUseInMenu(false);
     }
 }
