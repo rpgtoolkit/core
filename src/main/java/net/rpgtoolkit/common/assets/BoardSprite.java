@@ -7,8 +7,6 @@
  */
 package net.rpgtoolkit.common.assets;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import net.rpgtoolkit.common.Selectable;
 
 public class BoardSprite extends BasicType implements Cloneable, Selectable
@@ -23,8 +21,8 @@ public class BoardSprite extends BasicType implements Cloneable, Selectable
     private long activate;
     
     private String initialVariable;
-    private String finalVariable;
     private String initialValue;
+    private String finalVariable;
     private String finalValue;
     private String loadingVariable;
     private String loadingValue;
@@ -47,6 +45,20 @@ public class BoardSprite extends BasicType implements Cloneable, Selectable
     {
         super();
         
+        this.x = 0;
+        this.y = 0;
+        this.layer = 0;
+        this.activate = 0;
+        this.initialVariable = "";
+        this.initialValue = "";
+        this.finalVariable = "";
+        this.finalValue = "";
+        this.loadingVariable = "";
+        this.loadingValue = "";
+        this.activationType = 0;
+        this.activationProgram = "";
+        this.multitaskingProgram = "";
+        this.selected = false;
     }
 
     /*
@@ -63,16 +75,11 @@ public class BoardSprite extends BasicType implements Cloneable, Selectable
     {
         this.fileName = fileName;
 
-        System.out.println("Loading Item: " + fileName);
-//        spriteFile = new Item(new File(System.getProperty("project.path")
-//                + "/Item/" + fileName));
-//        spriteFile.loadAnimations();
-//        spriteFile.setActiveAnimation(0); // SOUTH FACING
-    }
-
-    public BufferedImage getAnimationFrame()
-    {
-        return null; // return spriteFile.getAnimationFrame();
+        //System.out.println("Loading Item: " + fileName);
+        //spriteFile = new Item(new File(System.getProperty("project.path")
+        //        + "/Item/" + fileName));
+        //spriteFile.loadAnimations();
+        //spriteFile.setActiveAnimation(0); // SOUTH FACING
     }
 
     public void setX(long x)
