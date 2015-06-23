@@ -5,9 +5,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+package net.rpgtoolkit.common.assets;
+
 import net.rpgtoolkit.common.Selectable;
-import net.rpgtoolkit.common.assets.BasicType;
-import net.rpgtoolkit.common.assets.BoardVector;
 
 public class BoardProgram extends BasicType implements Cloneable, Selectable
 {

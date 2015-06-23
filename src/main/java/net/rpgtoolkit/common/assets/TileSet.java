@@ -7,7 +7,7 @@
  */
 package net.rpgtoolkit.common.assets;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

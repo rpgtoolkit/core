@@ -10,7 +10,6 @@ package net.rpgtoolkit.common.assets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 
 /**
  *

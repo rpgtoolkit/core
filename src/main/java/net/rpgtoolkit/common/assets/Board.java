@@ -17,17 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import net.rpgtoolkit.common.assets.BoardLayer;
-import net.rpgtoolkit.common.assets.Tile;
 import net.rpgtoolkit.common.utilities.TileSetCache;
-import net.rpgtoolkit.common.assets.BoardChangeListener;
-import net.rpgtoolkit.common.assets.BoardChangedEvent;
-import net.rpgtoolkit.common.assets.BoardImage;
-import net.rpgtoolkit.common.assets.BoardLayerShade;
-import net.rpgtoolkit.common.assets.BoardLight;
-import net.rpgtoolkit.common.assets.BoardProgram;
-import net.rpgtoolkit.common.assets.BoardSprite;
-import net.rpgtoolkit.common.assets.BoardVector;
 import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.utilities.BinaryIO;
 

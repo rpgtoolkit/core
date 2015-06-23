@@ -7,8 +7,11 @@
  */
 package net.rpgtoolkit.common.assets;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import net.rpgtoolkit.common.CorruptAssetException;
-import java.io.*;
 import java.util.ArrayList;
 
 /**

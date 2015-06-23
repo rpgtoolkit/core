@@ -8,8 +8,6 @@
 package net.rpgtoolkit.common.assets;
 
 import java.util.EventObject;
-import net.rpgtoolkit.common.assets.BoardLayer;
-import net.rpgtoolkit.common.assets.Board;
 
 /**
  * 

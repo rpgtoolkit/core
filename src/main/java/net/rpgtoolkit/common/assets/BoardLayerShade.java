@@ -7,7 +7,7 @@
  */
 package net.rpgtoolkit.common.assets;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class BoardLayerShade
 {

@@ -7,9 +7,6 @@
  */
 package net.rpgtoolkit.common.assets;
 
-//import uk.co.tkce.engine.Texture;
-//import uk.co.tkce.engine.TextureLoader;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
