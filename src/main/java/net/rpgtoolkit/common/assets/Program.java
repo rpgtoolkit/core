@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class Program
+public class Program extends BasicType
 {
     private String fileName;
     private StringBuffer programBuffer;
