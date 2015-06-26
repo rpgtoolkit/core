@@ -22,7 +22,14 @@ import net.rpgtoolkit.common.CorruptAssetException;
  */
 public class AssetManager {
     
-    public AssetManager() {
+    // Singleton.
+    private static final AssetManager instance = new AssetManager();
+
+    public static AssetManager getInstance() {
+        return instance;
+    }
+    
+    private AssetManager() {
         this.resolvers = new ArrayList<>();
         this.serializers = new TreeSet<>(
                 new AssetSerializer.PriorityComparator());
@@ -37,6 +44,35 @@ public class AssetManager {
         return this.assets.size();
     }
     
+    /**
+     * Gets the handle for the given asset. If the asset is not already being
+     * managed, a handle for it is created and added. If a handle with the
+     * asset's descriptor is already being managed, the handle's asset is set to
+     * the given asset.
+     *
+     * @param asset
+     * @return a handle for the given asset, or null if the asset is null
+     */
+    public AssetHandle getHandle(Asset asset) {
+        if(asset == null) { return null; }
+        AssetDescriptor d = asset.getDescriptor();
+        AssetHandle h;
+        if(this.assets.containsKey(d)) {
+            h = this.assets.get(d);
+        } else {
+            h = this.resolve(d);
+            this.assets.put(d, h);
+        }
+        h.setAsset(asset);
+        return h;
+    }
+
+    /**
+     * Registers a serializer with the manager. Serializers are sorted in
+     * ascending order of priority, so lower priority numbers are first.
+     *
+     * @param serializer
+     */
     public void registerSerializer(final AssetSerializer serializer) {
         if (serializer == null) {
             throw new NullPointerException();
@@ -49,6 +85,26 @@ public class AssetManager {
             throw new NullPointerException();
         }
         this.resolvers.add(resolver);
+    }
+    
+    public AssetHandle serialize(AssetHandle handle) 
+        throws IOException, CorruptAssetException {
+        
+        final AssetDescriptor descriptor = handle.getDescriptor();
+        
+        if (handle.getAsset() != null) {
+            assets.put(descriptor, handle);
+        }
+        
+        for (AssetSerializer serializer : serializers) {
+            if (serializer.canSerialize(descriptor)) {
+                serializer.serialize(handle);
+            }
+            break;
+        }
+        
+        return handle;
+        
     }
     
     public AssetHandle deserialize(AssetDescriptor descriptor) 
@@ -67,6 +123,7 @@ public class AssetManager {
                     if (handle.getAsset() != null) {
                         assets.put(descriptor, handle);
                     }
+                    break;
                 }
             }
         }
