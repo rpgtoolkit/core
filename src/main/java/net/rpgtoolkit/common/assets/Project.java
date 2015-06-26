@@ -131,8 +131,6 @@ public class Project extends BasicType
                 
                 // appends a leading slash to the games project folder
                 projectPath = "/" + projectPath.toLowerCase().replace("\\", "/");
-                System.setProperty("project.path", 
-                        System.getProperty("user.dir") + projectPath);
 
                 gameTitle = binaryIO.readBinaryString();
                 mainScreenType = binaryIO.readBinaryInteger();
