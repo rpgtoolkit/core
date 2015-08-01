@@ -19,6 +19,7 @@ import net.rpgtoolkit.common.CorruptAssetException;
 /**
  *
  * @author Chris Hutchinson <chris@cshutchinson.com>
+ * @author Joel Moore
  */
 public class AssetManager {
     

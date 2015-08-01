@@ -400,15 +400,16 @@ public class Player extends BasicType
     /**
      * @return the hasSepcialMoves
      */
-    public byte getHasSpecialMoves() {
-        return hasSpecialMoves;
+    public boolean getHasSpecialMoves() {
+        return hasSpecialMoves == 1;
     }
 
     /**
-     * @param hasSepcialMoves the hasSepcialMoves to set
+     * @param hasSpecialMoves the hasSpecialMoves to set
      */
-    public void setHasSpecialMoves(byte hasSepcialMoves) {
-        this.hasSpecialMoves = hasSepcialMoves;
+    public void setHasSpecialMoves(boolean hasSpecialMoves) {
+        if(hasSpecialMoves == true) { this.hasSpecialMoves = 1; }
+        else { this.hasSpecialMoves = 0; }
     }
 
     /**
