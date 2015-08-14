@@ -164,7 +164,7 @@ public class BoardVector implements Cloneable, Selectable
     }
     
     @Override
-    public void setSelected(boolean state)
+    public void setSelectedState(boolean state)
     {
         this.selected = state;
     }

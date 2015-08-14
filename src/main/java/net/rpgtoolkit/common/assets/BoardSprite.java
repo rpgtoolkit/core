@@ -244,7 +244,7 @@ public class BoardSprite extends BasicType implements Cloneable, Selectable
     }
 
     @Override
-    public void setSelected(boolean state)
+    public void setSelectedState(boolean state)
     {
         this.selected = state;
     }

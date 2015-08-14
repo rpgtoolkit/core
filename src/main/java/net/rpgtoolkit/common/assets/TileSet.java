@@ -213,7 +213,7 @@ public class TileSet extends BasicType
     {
         return this.file.getName();
     }
-
+    
     /*
      * *************************************************************************
      * Public Methods

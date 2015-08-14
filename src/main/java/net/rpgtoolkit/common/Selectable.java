@@ -16,5 +16,5 @@ public interface Selectable
 {
     public boolean isSelected();
     
-    public void setSelected(boolean state);
+    public void setSelectedState(boolean state);
 }

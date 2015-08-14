@@ -158,9 +158,9 @@ public class BoardProgram extends BasicType implements Cloneable, Selectable
     }
 
     @Override
-    public void setSelected(boolean state)
+    public void setSelectedState(boolean state)
     {
-        this.vector.setSelected(state);
+        this.vector.setSelectedState(state);
     }
     
     /*
