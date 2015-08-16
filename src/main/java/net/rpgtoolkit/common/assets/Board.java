@@ -26,7 +26,7 @@ import net.rpgtoolkit.common.utilities.BinaryIO;
 /**
  * There is a bug in this file with regard to IO read/writes, saving a board file more than once
  * corrupts the trailing data, see end of open and save methods for more details.
- * 
+ *
  * A model that represents <code>Board</code> files in the RPGToolkit engine and editor.
  *
  * @author Geoff Wilson
@@ -94,9 +94,9 @@ public final class Board extends BasicType implements Selectable {
    * Creates an empty board.
    */
   public Board() {
-    
+
   }
-  
+
   /**
    * Opens the specified board.
    *
@@ -108,7 +108,6 @@ public final class Board extends BasicType implements Selectable {
     init();
 
     System.out.println("Loading Board " + file);
-    binaryIO = new BinaryIO(new FileInputStream(file));
     open();
   }
 
@@ -126,6 +125,7 @@ public final class Board extends BasicType implements Selectable {
     layerCount = 0;
 
     boardDimensions = new int[width][height][layerCount];
+    directionalLinks = new ArrayList<>(Arrays.asList("", "", "", ""));
   }
 
   /**
@@ -819,7 +819,7 @@ public final class Board extends BasicType implements Selectable {
     sprites = new ArrayList<>();
     constants = new ArrayList<>();
     layerTitles = new ArrayList<>();
-    directionalLinks = new ArrayList<>(Arrays.asList("", "", "", ""));
+    directionalLinks = new ArrayList<>();
     backgroundImages = new ArrayList<>();
     tileSets = new HashMap<>();
   }
@@ -833,6 +833,8 @@ public final class Board extends BasicType implements Selectable {
    */
   public boolean open() {
     try {
+      binaryIO = new BinaryIO(new FileInputStream(file));
+
       if (binaryIO.readBinaryString().equals(FILE_HEADER)) {
         int majorVersion = binaryIO.readBinaryInteger();
         int minorVersion = binaryIO.readBinaryInteger();
@@ -966,8 +968,7 @@ public final class Board extends BasicType implements Selectable {
           int numberPoints = binaryIO.readBinaryInteger();
 
           for (int j = 0; j < numberPoints + 1; j++) {
-            newVector.addPoint(binaryIO.readBinaryLong(),
-                    binaryIO.readBinaryLong());
+            newVector.addPoint(binaryIO.readBinaryLong(), binaryIO.readBinaryLong());
           }
 
           newVector.setAttributes(binaryIO.readBinaryInteger());
@@ -997,7 +998,6 @@ public final class Board extends BasicType implements Selectable {
           newProgram.setLayer(binaryIO.readBinaryInteger());
 
           BoardVector programVector = new BoardVector();
-
           int numberPoints = binaryIO.readBinaryInteger();
 
           for (int j = 0; j < numberPoints + 1; j++) {
@@ -1073,8 +1073,7 @@ public final class Board extends BasicType implements Selectable {
 
         // Layer Titles
         // Geoff's random +1 here causes problems at save time!
-        //for (int i = 0; i < layerCount + 1; i++) 
-        for (int i = 0; i < layerCount; i++) {
+        for (int i = 0; i < layerCount + 1; i++) {
           layerTitles.add(binaryIO.readBinaryString());
         }
 
@@ -1086,10 +1085,7 @@ public final class Board extends BasicType implements Selectable {
         backgroundImage.setFileName(binaryIO.readBinaryString());
         backgroundImage.setDrawType(binaryIO.readBinaryLong());
         backgroundImage.setScrollRatio(20); // 1 Pixel for every 10 the player moves
-
-        if (!backgroundImage.getFileName().equals("")) {
-          backgroundImages.add(backgroundImage);
-        }
+        backgroundImages.add(backgroundImage);
 
         backgroundColour = binaryIO.readBinaryLong();
         backgroundMusic = binaryIO.readBinaryString();
@@ -1105,7 +1101,7 @@ public final class Board extends BasicType implements Selectable {
                   binaryIO.readBinaryInteger(),
                   binaryIO.readBinaryInteger(),
                   binaryIO.readBinaryInteger());
-        } catch (Exception e) { // Ignore it for now...
+        } catch (CorruptAssetException | IllegalArgumentException e) {
           ambientEffect = new Color(0, 0, 0);
         }
 
@@ -1115,7 +1111,8 @@ public final class Board extends BasicType implements Selectable {
       }
 
       binaryIO.closeInput();
-    } catch (CorruptAssetException e) {
+      inputStream.close();
+    } catch (CorruptAssetException | IOException e) {
       System.out.println(e.toString());
     }
 
@@ -1219,7 +1216,7 @@ public final class Board extends BasicType implements Selectable {
       binaryIO.writeBinaryInteger(vectors.size() - 1);
 
       for (BoardVector vector : vectors) {
-        binaryIO.writeBinaryInteger(vector.getPoints().size());
+        binaryIO.writeBinaryInteger(vector.getPoints().size() - 1);
 
         for (Point point : vector.getPoints()) {
           binaryIO.writeBinaryLong((long) point.x);
@@ -1255,6 +1252,7 @@ public final class Board extends BasicType implements Selectable {
         binaryIO.writeBinaryInteger((int) program.getLayer());
 
         BoardVector programVector = program.getVector();
+        binaryIO.writeBinaryInteger(programVector.getPointCount() - 1);
 
         for (Point point : programVector.getPoints()) {
           binaryIO.writeBinaryLong((long) point.x);
@@ -1322,6 +1320,9 @@ public final class Board extends BasicType implements Selectable {
         binaryIO.writeBinaryString(constant);
       }
 
+      // Bug must write out a null string here.
+      binaryIO.writeBinaryString("");
+
       // Layer Titles
       for (String layerTitle : layerTitles) {
         binaryIO.writeBinaryString(layerTitle);
@@ -1333,11 +1334,9 @@ public final class Board extends BasicType implements Selectable {
       }
 
       // Background Image 
-      if (backgroundImages.size() > 0) {
-        BoardImage backgroundImage = backgroundImages.get(0);
-        binaryIO.writeBinaryString(backgroundImage.getFileName());
-        binaryIO.writeBinaryLong(backgroundImage.getDrawType());
-      }
+      BoardImage backgroundImage = backgroundImages.get(0);
+      binaryIO.writeBinaryString(backgroundImage.getFileName());
+      binaryIO.writeBinaryLong(backgroundImage.getDrawType());
 
       // Misc 
       binaryIO.writeBinaryLong(backgroundColour);
@@ -1367,7 +1366,6 @@ public final class Board extends BasicType implements Selectable {
       binaryIO.writeBinaryInteger(startingLayer);
 
       binaryIO.closeOutput();
-      outputStream.close();
 
       return true;
     } catch (IOException e) {
@@ -1441,7 +1439,7 @@ public final class Board extends BasicType implements Selectable {
 
   /**
    * Fires the <code>BoardChangedEvent</code> informs all the listeners that this board has changed.
-   * 
+   *
    * @param layer new layer
    */
   public void fireBoardLayerAdded(BoardLayer layer) {
@@ -1460,7 +1458,7 @@ public final class Board extends BasicType implements Selectable {
 
   /**
    * Fires the <code>BoardChangedEvent</code> informs all the listeners that this board has changed.
-   * 
+   *
    * @param layer effected layer
    */
   public void fireBoardLayerMovedUp(BoardLayer layer) {
@@ -1479,7 +1477,7 @@ public final class Board extends BasicType implements Selectable {
 
   /**
    * Fires the <code>BoardChangedEvent</code> informs all the listeners that this board has changed.
-   * 
+   *
    * @param layer effected layer
    */
   public void fireBoardLayerMovedDown(BoardLayer layer) {
@@ -1498,7 +1496,7 @@ public final class Board extends BasicType implements Selectable {
 
   /**
    * Fires the <code>BoardChangedEvent</code> informs all the listeners that this board has changed.
-   * 
+   *
    * @param layer cloned layer
    */
   public void fireBoardLayerCloned(BoardLayer layer) {
@@ -1517,7 +1515,7 @@ public final class Board extends BasicType implements Selectable {
 
   /**
    * Fires the <code>BoardChangedEvent</code> informs all the listeners that this board has changed.
-   * 
+   *
    * @param layer deleted layer
    */
   public void fireBoardLayerDeleted(BoardLayer layer) {
@@ -1533,7 +1531,7 @@ public final class Board extends BasicType implements Selectable {
       ((BoardChangeListener) iterator.next()).boardLayerDeleted(event);
     }
   }
-  
+
   /**
    * Add a new blank layer to this board.
    */
@@ -1550,7 +1548,7 @@ public final class Board extends BasicType implements Selectable {
 
   /**
    * Moves the layer up to the specified index if possible.
-   * 
+   *
    * @param index higher index
    * @return was it moved
    */
@@ -1569,13 +1567,13 @@ public final class Board extends BasicType implements Selectable {
     up.moveLayerUp();
 
     fireBoardLayerMovedUp(up);
-    
+
     return true;
   }
 
   /**
    * Moves the layer down to the specified index if possible.
-   * 
+   *
    * @param index lower index
    * @return was it moved
    */
@@ -1594,13 +1592,13 @@ public final class Board extends BasicType implements Selectable {
     up.moveLayerUp();
 
     fireBoardLayerMovedDown(down);
-    
+
     return true;
   }
 
   /**
    * Clones the layer at the specified index.
-   * 
+   *
    * @param index clone layer at index
    */
   public void cloneLayer(int index) {
@@ -1624,7 +1622,7 @@ public final class Board extends BasicType implements Selectable {
 
   /**
    * Deletes the layer at the specified index.
-   * 
+   *
    * @param index delete layer at index
    */
   public void deleteLayer(int index) {
@@ -1656,8 +1654,11 @@ public final class Board extends BasicType implements Selectable {
 
       for (int j = 0; j < count; j++) {
         if (boardDimensions[x][y][i] - 1 >= 0) {
-          layer.getTiles()[x][y] = getTileFromIndex(
-                  boardDimensions[x][y][i] - 1);
+          try {
+            layer.getTiles()[x][y] = getTileFromIndex(boardDimensions[x][y][i] - 1);
+          } catch (Exception e) {
+            System.out.println(boardDimensions[x][y][i] - 1);
+          }
         }
 
         x++;
@@ -1777,13 +1778,25 @@ public final class Board extends BasicType implements Selectable {
       int y = 0;
 
       for (int i = 0; i < count; i++) {
-        boardDimensions[x][y][layerIndex] = layer.getTiles()[x][y]
-                .getIndex();
+        Tile tile = layer.getTileAt(x, y);
+
+        if (tile.getTileSet() != null) {
+          int index = tileIndex.indexOf(layer.getTileAt(x, y).getName());
+
+          if (index == -1) {
+            tileIndex.add(layer.getTileAt(x, y).getName());
+            index = tileIndex.size() - 1;
+          }
+
+          boardDimensions[x][y][layerIndex] = index + 1;
+        }
 
         x++;
+
         if (x == width) {
           x = 0;
           y++;
+
           if (y == height) {
             break;
           }

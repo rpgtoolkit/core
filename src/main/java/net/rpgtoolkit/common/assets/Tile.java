@@ -72,6 +72,10 @@ public class Tile extends WritableRaster {
   public String getName() {
     return tileSet.getName() + getIndex();
   }
+  
+  public TileSet getTileSet() {
+    return tileSet;
+  }
 
   /**
    *

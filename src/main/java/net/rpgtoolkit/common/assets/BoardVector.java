@@ -68,7 +68,7 @@ public class BoardVector implements Cloneable, Selectable {
    * @return
    */
   public int getPointCount() {
-    return (points.size());
+    return points.size();
   }
 
   /**
