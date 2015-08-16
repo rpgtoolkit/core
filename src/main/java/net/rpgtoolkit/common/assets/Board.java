@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -818,7 +819,7 @@ public final class Board extends BasicType implements Selectable {
     sprites = new ArrayList<>();
     constants = new ArrayList<>();
     layerTitles = new ArrayList<>();
-    directionalLinks = new ArrayList<>();
+    directionalLinks = new ArrayList<>(Arrays.asList("", "", "", ""));
     backgroundImages = new ArrayList<>();
     tileSets = new HashMap<>();
   }
@@ -1551,11 +1552,12 @@ public final class Board extends BasicType implements Selectable {
    * Moves the layer up to the specified index if possible.
    * 
    * @param index higher index
+   * @return was it moved
    */
-  public void moveLayerUp(int index) {
+  public boolean moveLayerUp(int index) {
     // Highest possible index, can't be move up!
     if (index == layers.size()) {
-      return;
+      return false;
     }
 
     BoardLayer down = layers.get(index + 1);
@@ -1567,17 +1569,20 @@ public final class Board extends BasicType implements Selectable {
     up.moveLayerUp();
 
     fireBoardLayerMovedUp(up);
+    
+    return true;
   }
 
   /**
    * Moves the layer down to the specified index if possible.
    * 
    * @param index lower index
+   * @return was it moved
    */
-  public void moveLayerDown(int index) {
+  public boolean moveLayerDown(int index) {
     // Lowest possible layer, can't be move down!
     if (index == 0) {
-      return;
+      return false;
     }
 
     BoardLayer down = layers.get(index);
@@ -1589,6 +1594,8 @@ public final class Board extends BasicType implements Selectable {
     up.moveLayerUp();
 
     fireBoardLayerMovedDown(down);
+    
+    return true;
   }
 
   /**
