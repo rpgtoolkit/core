@@ -1,280 +1,375 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+ * the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package net.rpgtoolkit.common.assets;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import net.rpgtoolkit.common.Selectable;
 
-public class BoardSprite extends BasicType implements Cloneable, Selectable
-{
+/**
+ * A board sprite.
+ * 
+ * @author Joshua Michael Daly
+ */
+public class BoardSprite extends BasicType implements Cloneable, Selectable {
 
-    private Item spriteFile; // Item filename
-    private String fileName;
-    
-    private long x;
-    private long y;
-    private long layer;
-    private long activate;
-    
-    private String initialVariable;
-    private String finalVariable;
-    private String initialValue;
-    private String finalValue;
-    private String loadingVariable;
-    private String loadingValue;
-    
-    private long activationType; // Defines how the sprite is activated (step-on or key-press)
+  private Item spriteFile; // Item filename
+  private String fileName;
 
-    private String activationProgram; // Override activation program
-    private String multitaskingProgram; // Override multitask program
+  private long x;
+  private long y;
+  private long layer;
+  private long activate;
 
-    private BoardVector boardPath; // TK3.10 relic - not used.
+  private String initialVariable;
+  private String initialValue;
+  private String finalVariable;
+  private String finalValue;
+  private String loadingVariable;
+  private String loadingValue;
 
-    private boolean selected;
+  private long activationType; // Defines how the sprite is activated (step-on or key-press)
 
-    /*
-     * ************************************************************************* 
-     * Public Constructors
-     * *************************************************************************
-     */
-    public BoardSprite()
-    {
-        super();
-        
-    }
+  private String activationProgram; // Override activation program
+  private String multitaskingProgram; // Override multitask program
 
-    /*
-     * ************************************************************************* 
-     * Public Getters and Setters
-     * *************************************************************************
-     */
-    public String getFileName()
-    {
-        return this.fileName;
-    }
+  private BoardVector boardPath; // TK3.10 relic - not used.
 
-    public void setFileName(String fileName)
-    {
-        this.fileName = fileName;
+  private boolean selected;
 
-        System.out.println("Loading Item: " + fileName);
-//        spriteFile = new Item(new File(System.getProperty("project.path")
-//                + "/Item/" + fileName));
-//        spriteFile.loadAnimations();
-//        spriteFile.setActiveAnimation(0); // SOUTH FACING
-    }
+  /**
+   *
+   */
+  public BoardSprite() {
+    super();
 
-    public BufferedImage getAnimationFrame()
-    {
-        return null; // return spriteFile.getAnimationFrame();
-    }
+    x = 0;
+    y = 0;
+    layer = 0;
+    activate = 0;
+    initialVariable = "";
+    initialValue = "";
+    finalVariable = "";
+    finalValue = "";
+    loadingVariable = "";
+    loadingValue = "";
+    activationType = 0;
+    activationProgram = "";
+    multitaskingProgram = "";
+    selected = false;
+  }
 
-    public void setX(long x)
-    {
-        this.x = x;
-    }
+  /**
+   *
+   * @return
+   */
+  public String getFileName() {
+    return fileName;
+  }
+  
+  /**
+   *
+   * @return
+   */
+  public long getX() {
+    return x;
+  }
 
-    public void setY(long y)
-    {
-        this.y = y;
-    }
+  /**
+   *
+   * @return
+   */
+  public long getY() {
+    return y;
+  }
 
-    public void setLayer(long layer)
-    {
-        this.layer = layer;
-    }
+  /**
+   *
+   * @return
+   */
+  public int getWidth() {
+    return 0; // return spriteFile.getAnimationFrame().getWidth();
+  }
 
-    public void setActivate(long activate)
-    {
-        this.activate = activate;
-    }
+  /**
+   *
+   * @return
+   */
+  public int getHeight() {
+    return 0; // return spriteFile.getAnimationFrame().getHeight();
+  }
 
-    public void setInitialVariable(String initialVariable)
-    {
-        this.initialVariable = initialVariable;
-    }
+  /**
+   *
+   * @return
+   */
+  public long getLayer() {
+    return layer;
+  }
 
-    public void setFinalVariable(String finalVariable)
-    {
-        this.finalVariable = finalVariable;
-    }
+  /**
+   *
+   * @return
+   */
+  public long getActivate() {
+    return activate;
+  }
 
-    public void setInitialValue(String initialValue)
-    {
-        this.initialValue = initialValue;
-    }
+  /**
+   *
+   * @return
+   */
+  public Item getSpriteFile() {
+    return spriteFile;
+  }
 
-    public void setFinalValue(String finalValue)
-    {
-        this.finalValue = finalValue;
-    }
+  /**
+   *
+   * @return
+   */
+  public String getInitialVariable() {
+    return initialVariable;
+  }
 
-    public void setLoadingVariable(String loadingVariable)
-    {
-        this.loadingVariable = loadingVariable;
-    }
+  /**
+   *
+   * @return
+   */
+  public String getFinalVariable() {
+    return finalVariable;
+  }
 
-    public void setLoadingValue(String loadingValue)
-    {
-        this.loadingValue = loadingValue;
-    }
+  /**
+   *
+   * @return
+   */
+  public String getInitialValue() {
+    return initialValue;
+  }
 
-    public void setActivationType(long activationType)
-    {
-        this.activationType = activationType;
-    }
+  /**
+   *
+   * @return
+   */
+  public String getFinalValue() {
+    return finalValue;
+  }
 
-    public void setActivationProgram(String activationProgram)
-    {
-        this.activationProgram = activationProgram;
-    }
+  /**
+   *
+   * @return
+   */
+  public String getLoadingVariable() {
+    return loadingVariable;
+  }
 
-    public void setMultitaskingProgram(String multitaskingProgram)
-    {
-        this.multitaskingProgram = multitaskingProgram;
-    }
+  /**
+   *
+   * @return
+   */
+  public String getLoadingValue() {
+    return loadingValue;
+  }
 
-    public void setBoardPath(BoardVector boardPath)
-    {
-        this.boardPath = boardPath;
-    }
+  /**
+   *
+   * @return
+   */
+  public long getActivationType() {
+    return activationType;
+  }
 
-    public long getX()
-    {
-        return x;
-    }
+  /**
+   *
+   * @return
+   */
+  public String getActivationProgram() {
+    return activationProgram;
+  }
 
-    public long getY()
-    {
-        return y;
-    }
+  /**
+   *
+   * @return
+   */
+  public String getMultitaskingProgram() {
+    return multitaskingProgram;
+  }
 
-    public int getWidth()
-    {
-        return 0; // return spriteFile.getAnimationFrame().getWidth();
-    }
+  /**
+   *
+   * @return
+   */
+  public BoardVector getBoardPath() {
+    return boardPath;
+  }
 
-    public int getHeight()
-    {
-        return 0; // return spriteFile.getAnimationFrame().getHeight();
-    }
+  /**
+   *
+   * @param fileName
+   */
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
 
-    public long getLayer()
-    {
-        return layer;
-    }
+    //System.out.println("Loading Item: " + fileName);
+    //spriteFile = new Item(new File(System.getProperty("project.path")
+    //        + "/Item/" + fileName));
+    //spriteFile.loadAnimations();
+    //spriteFile.setActiveAnimation(0); // SOUTH FACING
+  }
 
-    public long getActivate()
-    {
-        return activate;
-    }
+  /**
+   *
+   * @param x
+   */
+  public void setX(long x) {
+    this.x = x;
+  }
 
-    public Item getSpriteFile()
-    {
-        return spriteFile;
-    }
+  /**
+   *
+   * @param y
+   */
+  public void setY(long y) {
+    this.y = y;
+  }
 
-    public String getInitialVariable()
-    {
-        return initialVariable;
-    }
+  /**
+   *
+   * @param layer
+   */
+  public void setLayer(long layer) {
+    this.layer = layer;
+  }
 
-    public String getFinalVariable()
-    {
-        return finalVariable;
-    }
+  /**
+   *
+   * @param activate
+   */
+  public void setActivate(long activate) {
+    this.activate = activate;
+  }
 
-    public String getInitialValue()
-    {
-        return initialValue;
-    }
+  /**
+   *
+   * @param initialVariable
+   */
+  public void setInitialVariable(String initialVariable) {
+    this.initialVariable = initialVariable;
+  }
 
-    public String getFinalValue()
-    {
-        return finalValue;
-    }
+  /**
+   *
+   * @param finalVariable
+   */
+  public void setFinalVariable(String finalVariable) {
+    this.finalVariable = finalVariable;
+  }
 
-    public String getLoadingVariable()
-    {
-        return loadingVariable;
-    }
+  /**
+   *
+   * @param initialValue
+   */
+  public void setInitialValue(String initialValue) {
+    this.initialValue = initialValue;
+  }
 
-    public String getLoadingValue()
-    {
-        return loadingValue;
-    }
+  /**
+   *
+   * @param finalValue
+   */
+  public void setFinalValue(String finalValue) {
+    this.finalValue = finalValue;
+  }
 
-    public long getActivationType()
-    {
-        return activationType;
-    }
+  /**
+   *
+   * @param loadingVariable
+   */
+  public void setLoadingVariable(String loadingVariable) {
+    this.loadingVariable = loadingVariable;
+  }
 
-    public String getActivationProgram()
-    {
-        return activationProgram;
-    }
+  /**
+   *
+   * @param loadingValue
+   */
+  public void setLoadingValue(String loadingValue) {
+    this.loadingValue = loadingValue;
+  }
 
-    public String getMultitaskingProgram()
-    {
-        return multitaskingProgram;
-    }
+  /**
+   *
+   * @param activationType
+   */
+  public void setActivationType(long activationType) {
+    this.activationType = activationType;
+  }
 
-    public BoardVector getBoardPath()
-    {
-        return boardPath;
-    }
+  /**
+   *
+   * @param activationProgram
+   */
+  public void setActivationProgram(String activationProgram) {
+    this.activationProgram = activationProgram;
+  }
 
-    @Override
-    public boolean isSelected()
-    {
-        return this.selected;
-    }
+  /**
+   *
+   * @param multitaskingProgram
+   */
+  public void setMultitaskingProgram(String multitaskingProgram) {
+    this.multitaskingProgram = multitaskingProgram;
+  }
 
-    @Override
-    public void setSelected(boolean state)
-    {
-        this.selected = state;
-    }
+  /**
+   *
+   * @param boardPath
+   */
+  public void setBoardPath(BoardVector boardPath) {
+    this.boardPath = boardPath;
+  }
 
-    /*
-     * ************************************************************************* 
-     * Public Methods
-     * *************************************************************************
-     */
-    /**
-     *
-     * @return @throws CloneNotSupportedException
-     */
-    @Override
-    public Object clone() throws CloneNotSupportedException
-    {
-        super.clone();
+  @Override
+  public boolean isSelected() {
+    return selected;
+  }
 
-        BoardSprite clone = new BoardSprite();
-        clone.activate = this.activate;
-        clone.activationProgram = this.activationProgram;
-        clone.activationType = this.activationType;
-        clone.boardPath = (BoardVector) this.boardPath.clone();
-        clone.finalValue = this.finalValue;
-        clone.finalVariable = this.finalVariable;
-        clone.initialValue = this.initialValue;
-        clone.initialVariable = this.initialVariable;
-        clone.layer = this.layer;
-        clone.loadingValue = this.loadingValue;
-        clone.loadingVariable = this.loadingVariable;
-        clone.multitaskingProgram = this.multitaskingProgram;
-        clone.spriteFile = this.spriteFile;
-        clone.fileName = this.fileName;
-        clone.x = this.x;
-        clone.y = this.y;
+  @Override
+  public void setSelectedState(boolean state) {
+    selected = state;
+  }
 
-        return clone;
-    }
+  /**
+   * Directly clones the board sprite.
+   * 
+   * @return a clone
+   * @throws CloneNotSupportedException
+   */
+  @Override
+  public Object clone() throws CloneNotSupportedException {
+    super.clone();
+
+    BoardSprite clone = new BoardSprite();
+    clone.activate = activate;
+    clone.activationProgram = activationProgram;
+    clone.activationType = activationType;
+    clone.boardPath = (BoardVector) boardPath.clone();
+    clone.finalValue = finalValue;
+    clone.finalVariable = finalVariable;
+    clone.initialValue = initialValue;
+    clone.initialVariable = initialVariable;
+    clone.layer = layer;
+    clone.loadingValue = loadingValue;
+    clone.loadingVariable = loadingVariable;
+    clone.multitaskingProgram = multitaskingProgram;
+    clone.spriteFile = spriteFile;
+    clone.fileName = fileName;
+    clone.x = x;
+    clone.y = y;
+
+    return clone;
+  }
 
 }

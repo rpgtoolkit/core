@@ -7,7 +7,7 @@
  */
 package net.rpgtoolkit.common.utilities;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 
 /**
