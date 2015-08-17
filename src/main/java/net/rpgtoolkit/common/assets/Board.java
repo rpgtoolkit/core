@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.rpgtoolkit.common.utilities.TileSetCache;
 import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.Selectable;
@@ -32,7 +34,7 @@ import net.rpgtoolkit.common.utilities.BinaryIO;
  * @author Geoff Wilson
  * @author Joshua Michael Daly
  */
-public final class Board extends BasicType implements Selectable {
+public final class Board extends BasicType implements Asset, Selectable {
 
   // Non-IO
   private final LinkedList<BoardChangeListener> boardChangeListeners = new LinkedList<>();
@@ -41,19 +43,19 @@ public final class Board extends BasicType implements Selectable {
   private boolean selectedState;
 
   // Constants
-  private final String FILE_HEADER = "RPGTLKIT BOARD";
-  private final int MAJOR_VERSION = 2;
-  private final int MINOR_VERSION = 4;
-  private final int STANDARD = 1;
-  private final int ISO_STACKED = 2;
-  private final int ISO_ROTATED = 6;
+  private static String FILE_HEADER = "RPGTLKIT BOARD";
+  private static int MAJOR_VERSION = 2;
+  private static int MINOR_VERSION = 4;
+  private static int STANDARD = 1;
+  private static int ISO_STACKED = 2;
+  private static int ISO_ROTATED = 6;
 
   // Variables
   private int width;
   private int height;
   private int layerCount;
   private int coordinateType;
-  private ArrayList<String> tileIndex;      // Contains string names e.g. default.tst1
+  private ArrayList<String> tileNameIndex;      // Contains string names e.g. default.tst1
   private ArrayList<Tile> loadedTilesIndex; // Contains tile objects of e.g. default.tst1
   private int[][][] boardDimensions;        // x, y, z
   private byte[] tileType;
@@ -105,10 +107,9 @@ public final class Board extends BasicType implements Selectable {
    */
   public Board(File file) throws FileNotFoundException {
     super(file);
-    init();
+    reset();
 
     System.out.println("Loading Board " + file);
-    open();
   }
 
   /**
@@ -118,7 +119,7 @@ public final class Board extends BasicType implements Selectable {
    * @param height board height
    */
   public Board(int width, int height) {
-    init();
+    reset();
 
     this.width = width;
     this.height = height;
@@ -188,8 +189,8 @@ public final class Board extends BasicType implements Selectable {
    *
    * @return index list of tiles
    */
-  public ArrayList<String> getTileIndex() {
-    return tileIndex;
+  public ArrayList<String> getTileNameIndex() {
+    return tileNameIndex;
   }
 
   /**
@@ -197,8 +198,8 @@ public final class Board extends BasicType implements Selectable {
    *
    * @param tileIndex new index list of tiles
    */
-  public void setTileIndex(ArrayList<String> tileIndex) {
-    this.tileIndex = tileIndex;
+  public void getTileNameIndex(ArrayList<String> tileIndex) {
+    tileNameIndex = tileIndex;
   }
 
   /**
@@ -804,24 +805,103 @@ public final class Board extends BasicType implements Selectable {
   }
 
   /**
-   * Assigns default values to the members that require them.
+   * Gets the compressed tile index for writing to a file.
+   *
+   * @return
    */
-  public void init() {
-    tileIndex = new ArrayList<>();
-    loadedTilesIndex = new ArrayList<>();
-    tileShading = new ArrayList<>();
-    boardImages = new ArrayList<>();
-    spriteImages = new ArrayList<>();
-    programs = new ArrayList<>();
-    threads = new ArrayList<>();
-    lights = new ArrayList<>();
-    vectors = new ArrayList<>();
-    sprites = new ArrayList<>();
-    constants = new ArrayList<>();
-    layerTitles = new ArrayList<>();
-    directionalLinks = new ArrayList<>();
-    backgroundImages = new ArrayList<>();
-    tileSets = new HashMap<>();
+  public ArrayList<Integer> getCompressedTileIndex() {
+    int x;
+    int y;
+    int z;
+    int count;
+    int index;
+    int[] array;
+    ArrayList<Integer> compressedIndex = new ArrayList<>();
+
+    for (int k = 0; k < layerCount; k++) {
+      for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; i++) {
+          x = i;
+          y = j;
+          z = k;
+
+          array = findDuplicateTiles(x, y, z);
+
+          count = array[0];
+          index = boardDimensions[x][y][z];
+
+          if (count > 1) {
+            compressedIndex.add(-count);
+            compressedIndex.add(index);
+
+            i = array[1] - 1;
+            j = array[2];
+            k = array[3];
+          } else {
+            compressedIndex.add(index);
+          }
+        }
+      }
+    }
+
+    return compressedIndex;
+  }
+
+  /**
+   * Sets the boards compressed tile index.
+   * 
+   * @param indices 
+   */
+  public void setCompressedTileIndex(ArrayList<Integer> indices) {
+    int x = 0;
+    int y = 0;
+    int z = 0;
+    int tilesLoaded = 0;
+    int totalTiles = width * height * layerCount;
+
+    while (tilesLoaded < totalTiles) {
+      int index = indices.remove(0);
+      int count = 1;
+
+      if (index < 0) { // compressed data
+        count = -index;
+        index = indices.remove(0);
+      }
+
+      for (int i = 0; i < count; i++) {
+        boardDimensions[x][y][z] = index;
+        tilesLoaded++;
+        x++;
+
+        if (x == width) {
+          x = 0;
+          y++;
+
+          if (y == height) {
+            y = 0;
+            z++;
+          }
+        }
+      }
+    }
+  }
+
+  public boolean open() {
+    return true;
+  }
+
+  public boolean save() {
+    if (this.file.getName().endsWith(".brd")) {
+      this.file = new File(this.file.getPath() + ".json");
+    }
+
+    try {
+      AssetManager.getInstance().serialize(AssetManager.getInstance().getHandle(this));
+      return true;
+    } catch (IOException | CorruptAssetException ex) {
+      Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+      return false;
+    }
   }
 
   /**
@@ -831,7 +911,7 @@ public final class Board extends BasicType implements Selectable {
    *
    * @return true for success, false for failure
    */
-  public boolean open() {
+  public boolean openBinary() {
     try {
       binaryIO = new BinaryIO(new FileInputStream(file));
 
@@ -866,7 +946,7 @@ public final class Board extends BasicType implements Selectable {
 
         for (int i = 0; i < lookUpTableSize; i++) {
           // Read in the name of the tiles used on this board.
-          tileIndex.add(binaryIO.readBinaryString());
+          tileNameIndex.add(binaryIO.readBinaryString());
         }
 
         int totalTiles = width * height * layerCount;
@@ -1125,7 +1205,7 @@ public final class Board extends BasicType implements Selectable {
    *
    * @return
    */
-  public boolean save() {
+  public boolean saveBinary() {
     updateBoardIO();
 
     try {
@@ -1141,10 +1221,10 @@ public final class Board extends BasicType implements Selectable {
       binaryIO.writeBinaryInteger(layerCount);
       binaryIO.writeBinaryInteger(coordinateType);
 
-      binaryIO.writeBinaryInteger(tileIndex.size());
+      binaryIO.writeBinaryInteger(tileNameIndex.size());
       binaryIO.writeBinaryByte(randomByte);
 
-      for (String tile : tileIndex) {
+      for (String tile : tileNameIndex) {
         binaryIO.writeBinaryString(tile);
       }
 
@@ -1374,6 +1454,54 @@ public final class Board extends BasicType implements Selectable {
     }
   }
 
+  @Override
+  public AssetDescriptor getDescriptor() {
+    return new AssetDescriptor(this.getFile().toURI());
+  }
+
+  @Override
+  public void reset() {
+    tileNameIndex = new ArrayList<>();
+    loadedTilesIndex = new ArrayList<>();
+    tileShading = new ArrayList<>();
+    boardImages = new ArrayList<>();
+    spriteImages = new ArrayList<>();
+    programs = new ArrayList<>();
+    threads = new ArrayList<>();
+    lights = new ArrayList<>();
+    vectors = new ArrayList<>();
+    sprites = new ArrayList<>();
+    constants = new ArrayList<>();
+    layerTitles = new ArrayList<>();
+    directionalLinks = new ArrayList<>();
+    backgroundImages = new ArrayList<>();
+    tileSets = new HashMap<>();
+
+    width = 0;
+    height = 0;
+    layerCount = 0;
+    coordinateType = STANDARD;
+    boardDimensions = new int[width][height][layerCount];
+    tileType = new byte[1];
+    ubShading = 0;
+    shadingLayer = 0;
+    backgroundColour = 0;
+    backgroundMusic = "";
+    firstRunProgram = "";
+    battleBackground = "";
+    enemyBattleLevel = 0;
+    allowBattles = false;
+    allowSaving = false;
+    ambientEffect = null;
+    startingPositionX = 0;
+    startingPositionY = 0;
+    startingLayer = 0;
+    lastLoadedTileSet = "";
+    randomByte = (byte) 0;
+    associatedVector = 0;
+    imageTransluceny = 0;
+  }
+
   /**
    * Update the global <code>TileSetCache</code> with any new tile sets that appear on this board.
    */
@@ -1381,7 +1509,7 @@ public final class Board extends BasicType implements Selectable {
     TileSetCache cache = TileSetCache.getInstance();
 
     // Load the tiles into memory
-    for (String indexString : tileIndex) {
+    for (String indexString : tileNameIndex) {
       if (!indexString.isEmpty()) {
         if (indexString.substring(indexString.length() - 3).equals("tan")) {
           AnimatedTile aTile = new AnimatedTile(new File(
@@ -1716,7 +1844,7 @@ public final class Board extends BasicType implements Selectable {
    * of duplicate tile, the others contain the positions of x, y, and z at the end of the loop. They
    * would have normally been passed by reference but Java doesn't support
    */
-  private int[] findDuplicateTiles(int x, int y, int z) {
+  public int[] findDuplicateTiles(int x, int y, int z) {
     int tile = boardDimensions[x][y][z];
     int count = 0;
 
@@ -1758,7 +1886,7 @@ public final class Board extends BasicType implements Selectable {
    * layers that have been created. Maintains compatability with Geoff's original open and save
    * routines.
    */
-  private void updateBoardIO() {
+  public void updateBoardIO() {
     layerCount = layers.size();
     layerTitles.clear();
     lights.clear();
@@ -1781,11 +1909,11 @@ public final class Board extends BasicType implements Selectable {
         Tile tile = layer.getTileAt(x, y);
 
         if (tile.getTileSet() != null) {
-          int index = tileIndex.indexOf(layer.getTileAt(x, y).getName());
+          int index = tileNameIndex.indexOf(layer.getTileAt(x, y).getName());
 
           if (index == -1) {
-            tileIndex.add(layer.getTileAt(x, y).getName());
-            index = tileIndex.size() - 1;
+            tileNameIndex.add(layer.getTileAt(x, y).getName());
+            index = tileNameIndex.size() - 1;
           }
 
           boardDimensions[x][y][layerIndex] = index + 1;
