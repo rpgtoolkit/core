@@ -33,6 +33,7 @@ public class BoardProgram extends BasicType implements Cloneable, Selectable {
    */
   public BoardProgram() {
     super();
+    vector = new BoardVector();
   }
 
   /**
