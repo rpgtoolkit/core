@@ -22,7 +22,6 @@ import net.rpgtoolkit.common.io.Paths;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONStringer;
-import org.json.JSONWriter;
 
 /**
  *
