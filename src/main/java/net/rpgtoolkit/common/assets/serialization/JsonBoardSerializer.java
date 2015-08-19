@@ -192,6 +192,8 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     board.setStartingPositionX(json.getInt("startingPositionX"));
     board.setStartingPositionY(json.getInt("startingPositionY"));
     board.setStartingLayer(json.getInt("startingLayer"));
+    board.updateTileSetCache();
+    board.createLayers();
   }
   
   private ArrayList<String> getStringArrayList(JSONArray array) {

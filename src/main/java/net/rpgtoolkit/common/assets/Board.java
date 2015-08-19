@@ -41,12 +41,12 @@ public final class Board extends BasicType implements Asset, Selectable {
   private boolean selectedState;
 
   // Constants
-  public static String FILE_HEADER = "RPGTLKIT BOARD";
-  public static int MAJOR_VERSION = 2;
-  public static int MINOR_VERSION = 4;
-  public static int STANDARD = 1;
-  public static int ISO_STACKED = 2;
-  public static int ISO_ROTATED = 6;
+  public static final String FILE_HEADER = "RPGTLKIT BOARD";
+  public static final int MAJOR_VERSION = 2;
+  public static final int MINOR_VERSION = 4;
+  public static final int STANDARD = 1;
+  public static final int ISO_STACKED = 2;
+  public static final int ISO_ROTATED = 6;
 
   // Variables
   private int width;
@@ -1661,6 +1661,9 @@ public final class Board extends BasicType implements Asset, Selectable {
         startingPositionX = binaryIO.readBinaryInteger();
         startingPositionY = binaryIO.readBinaryInteger();
         startingLayer = binaryIO.readBinaryInteger();
+        
+        updateTileSetCache();
+        createLayers();
       }
 
       binaryIO.closeInput();
