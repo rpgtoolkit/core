@@ -60,6 +60,10 @@ public class Item implements Asset {
     private BoardVector vectorBase;
     private BoardVector vectorActivate;
 
+    public List<Animation> getStandardAnimations(){
+        return this.standardAnimations;
+    }
+    
     public Item() {
         this.userChar = new ArrayList<>();
         this.equipLocation = new ArrayList<>();

@@ -1,382 +1,512 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+ * the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package net.rpgtoolkit.common.assets;
 
-import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.ListIterator;
-import java.util.NoSuchElementException;
-import net.rpgtoolkit.common.assets.BoardImage;
-import net.rpgtoolkit.common.assets.BoardLight;
-import net.rpgtoolkit.common.assets.BoardProgram;
-import net.rpgtoolkit.common.assets.BoardSprite;
-import net.rpgtoolkit.common.assets.BoardVector;
 
 /**
- *
+ * Represents a layer on a board.
  *
  * @author Joshua Michael Daly
  */
-public class BoardLayer implements Cloneable
-{
+public class BoardLayer implements Cloneable {
 
-    /**
-     * The name of the layer.
-     */
-    private String name;
-    /**
-     * What number is this layer on the board?
-     */
-    private int number;
-    /**
-     * A reference to the board this layer belongs to.
-     */
-    private Board board;
-    /**
-     * A list of all the tiles used on this layer.
-     */
-    private Tile[][] tiles;
-    /**
-     * A list of all the lights used on this layer.
-     */
-    private ArrayList<BoardLight> lights;
-    /**
-     * A list of all the vectors on this layer.
-     */
-    private ArrayList<BoardVector> vectors;
-    /**
-     * A list of all the programs on this layer.
-     */
-    private ArrayList<BoardProgram> programs;
-    /**
-     * A list of all the sprites on this layer.
-     */
-    private ArrayList<BoardSprite> sprites;
-    /**
-     * A list of all the images on this layer.
-     */
-    private ArrayList<BoardImage> images;
+  /**
+   * The name of the layer.
+   */
+  private String name;
+  /**
+   * What number is this layer on the board?
+   */
+  private int number;
+  /**
+   * A reference to the board this layer belongs to.
+   */
+  private Board board;
+  /**
+   * A list of all the tiles used on this layer.
+   */
+  private Tile[][] tiles;
+  /**
+   * A list of all the lights used on this layer.
+   */
+  private ArrayList<BoardLight> lights;
+  /**
+   * A list of all the vectors on this layer.
+   */
+  private ArrayList<BoardVector> vectors;
+  /**
+   * A list of all the programs on this layer.
+   */
+  private ArrayList<BoardProgram> programs;
+  /**
+   * A list of all the sprites on this layer.
+   */
+  private ArrayList<BoardSprite> sprites;
+  /**
+   * A list of all the images on this layer.
+   */
+  private ArrayList<BoardImage> images;
 
-    /*
-     * *************************************************************************
-     * Public Constructors
-     * *************************************************************************
-     */
-    public BoardLayer(Board parentBoard)
-    {
-        this.board = parentBoard;
-        this.tiles = new Tile[this.board.getWidth()][this.board.getHeight()];
-        this.lights = new ArrayList<>();
-        this.vectors = new ArrayList<>();
-        this.programs = new ArrayList<>();
-        this.sprites = new ArrayList<>();
-        this.images = new ArrayList<>();
+  /**
+   * Creates a new layer with a parent board.
+   *
+   * @param parentBoard associated board
+   */
+  public BoardLayer(Board parentBoard) {
+    board = parentBoard;
+    tiles = new Tile[board.getWidth()][board.getHeight()];
+    lights = new ArrayList<>();
+    vectors = new ArrayList<>();
+    programs = new ArrayList<>();
+    sprites = new ArrayList<>();
+    images = new ArrayList<>();
 
-        this.clearTiles();
+    clearTiles();
+  }
+
+  /**
+   * Gets the layer name.
+   *
+   * @return layer name
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Sets the layer name.
+   *
+   * @param name layer name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+   * Gets the layer number.
+   *
+   * @return layer number
+   */
+  public int getNumber() {
+    return number;
+  }
+
+  /**
+   * Sets the layer number.
+   *
+   * @param number layer number
+   */
+  public void setNumber(int number) {
+    this.number = number;
+  }
+
+  /**
+   * Gets the associated board with this layer.
+   *
+   * @return associated board
+   */
+  public Board getBoard() {
+    return board;
+  }
+
+  /**
+   * Sets the associated board with this layer
+   *
+   * @param board associated board
+   */
+  public void setBoard(Board board) {
+    this.board = board;
+  }
+
+  /**
+   * Gets the tiles used on this layer.
+   *
+   * @return tiles used on this layer
+   */
+  public Tile[][] getTiles() {
+    return tiles;
+  }
+
+  /**
+   * Sets the tiles used on this layer.
+   *
+   * @param tiles tile used on this layer
+   */
+  public void setTiles(Tile[][] tiles) {
+    this.tiles = tiles;
+  }
+
+  /**
+   * Gets the board lights used on this layer.
+   *
+   * @return board lights on this layer
+   */
+  public ArrayList<BoardLight> getLights() {
+    return lights;
+  }
+
+  /**
+   * Sets the board lights used on this layer.
+   *
+   * @param lights board lights on this layer
+   */
+  public void setLights(ArrayList<BoardLight> lights) {
+    this.lights = lights;
+  }
+
+  /**
+   * Gets the vectors used on this layer.
+   *
+   * @return vectors on this layer
+   */
+  public ArrayList<BoardVector> getVectors() {
+    return vectors;
+  }
+
+  /**
+   * Sets the vectors used on this layer.
+   *
+   * @param vectors vectors on this layer
+   */
+  public void setVectors(ArrayList<BoardVector> vectors) {
+    this.vectors = vectors;
+  }
+
+  /**
+   * Gets the programs used on this layer.
+   *
+   * @return programs used on this layer
+   */
+  public ArrayList<BoardProgram> getPrograms() {
+    return programs;
+  }
+
+  /**
+   * Sets the programs used on this layer.
+   *
+   * @param programs programs used on this layer
+   */
+  public void setPrograms(ArrayList<BoardProgram> programs) {
+    this.programs = programs;
+  }
+
+  /**
+   * Gets the sprites used on this layer.
+   *
+   * @return sprites used on this layer
+   */
+  public ArrayList<BoardSprite> getSprites() {
+    return sprites;
+  }
+
+  /**
+   * Sets the sprites used on this layer.
+   *
+   * @param sprites sprites used on this layer
+   */
+  public void setSprites(ArrayList<BoardSprite> sprites) {
+    this.sprites = sprites;
+  }
+
+  /**
+   * Gets the images used on this layer.
+   *
+   * @return images used on this layer
+   */
+  public ArrayList<BoardImage> getImages() {
+    return images;
+  }
+
+  /**
+   * Sets the images used on this layer
+   *
+   * @param images images used on this layer
+   */
+  public void setImages(ArrayList<BoardImage> images) {
+    this.images = images;
+  }
+
+  /**
+   * Gets the tile at the specified coordinates.
+   *
+   * @param x x position of tile
+   * @param y y position of tile
+   * @return the tile
+   */
+  public Tile getTileAt(int x, int y) {
+    return tiles[x][y];
+  }
+
+  /**
+   * Sets the tile at the specified coordinates
+   *
+   * @param x x position of tile
+   * @param y y position of tile
+   * @param tile the tile
+   */
+  public void setTileAt(int x, int y, Tile tile) {
+    tiles[x][y] = tile;
+    board.fireBoardChanged();
+  }
+
+  /**
+   * Does this layer contain the coordinates.
+   *
+   * @param x x position
+   * @param y y position
+   * @return true = yes, false = no
+   */
+  public boolean contains(int x, int y) {
+    if (x < 0 || y < 0) {
+      return false;
     }
 
-    /*
-     * *************************************************************************
-     * Public Getters and Setters
-     * *************************************************************************
-     */
-    public String getName()
-    {
-        return name;
+    return x < tiles.length && y < tiles[0].length;
+  }
+
+  /**
+   * Moves the layer up on the board.
+   */
+  public void moveLayerUp() {
+    number++;
+
+    for (BoardLight light : lights) {
+      light.setLayer(number);
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
+    for (BoardVector vector : vectors) {
+      vector.setLayer(number);
     }
 
-    public int getNumber()
-    {
-        return number;
+    for (BoardProgram program : programs) {
+      program.setLayer(number);
     }
 
-    public void setNumber(int number)
-    {
-        this.number = number;
+    for (BoardSprite sprite : sprites) {
+      sprite.setLayer(number);
     }
 
-    public Board getBoard()
-    {
-        return board;
+    for (BoardImage image : images) {
+      image.setLayer(number);
+    }
+  }
+
+  /**
+   * Moves the layer down on the board.
+   */
+  public void moveLayerDown() {
+    number--;
+
+    for (BoardLight light : lights) {
+      light.setLayer(number);
     }
 
-    public void setBoard(Board board)
-    {
-        this.board = board;
+    for (BoardVector vector : vectors) {
+      vector.setLayer(number);
     }
 
-    public Tile[][] getTiles()
-    {
-        return tiles;
+    for (BoardProgram program : programs) {
+      program.setLayer(number);
     }
 
-    public void setTiles(Tile[][] tiles)
-    {
-        this.tiles = tiles;
+    for (BoardSprite sprite : sprites) {
+      sprite.setLayer(number);
     }
 
-    public ArrayList<BoardLight> getLights()
-    {
-        return lights;
+    for (BoardImage image : images) {
+      image.setLayer(number);
     }
+  }
 
-    public void setLights(ArrayList<BoardLight> lights)
-    {
-        this.lights = lights;
-    }
-
-    public ArrayList<BoardVector> getVectors()
-    {
-        return vectors;
-    }
-
-    public void setVectors(ArrayList<BoardVector> vectors)
-    {
-        this.vectors = vectors;
-    }
-
-    public ArrayList<BoardProgram> getPrograms()
-    {
-        return programs;
-    }
-
-    public void setPrograms(ArrayList<BoardProgram> programs)
-    {
-        this.programs = programs;
-    }
-
-    public ArrayList<BoardSprite> getSprites()
-    {
-        return sprites;
-    }
-
-    public void setSprites(ArrayList<BoardSprite> sprites)
-    {
-        this.sprites = sprites;
-    }
-
-    public ArrayList<BoardImage> getImages()
-    {
-        return images;
-    }
-
-    public void setImages(ArrayList<BoardImage> images)
-    {
-        this.images = images;
-    }
-
-    public Tile getTileAt(int x, int y)
-    {
-        return this.tiles[x][y];
-    }
-
-    public void setTileAt(int x, int y, Tile tile)
-    {
-        this.tiles[x][y] = tile;
-        this.board.fireBoardChanged();
-    }
-
-    /*
-     * *************************************************************************
-     * Public Methods
-     * *************************************************************************
-     */
-    public boolean contains(int x, int y)
-    {
-        if (x < 0 || y < 0)
-        {
-            return false;
-        }
-
-        return x < this.tiles.length && y < this.tiles[0].length;
-    }
-
-    public void moveLayerUp()
-    {
-        this.number++;
-
-        for (BoardLight light : this.lights)
-        {
-            light.setLayer(this.number);
-        }
-
-        for (BoardVector vector : this.vectors)
-        {
-            vector.setLayer(this.number);
-        }
-
-        for (BoardProgram program : this.programs)
-        {
-            program.setLayer(this.number);
-        }
-
-        for (BoardSprite sprite : this.sprites)
-        {
-            sprite.setLayer(this.number);
-        }
-
-        for (BoardImage image : this.images)
-        {
-            image.setLayer(this.number);
-        }
-    }
-
-    public void moveLayerDown()
-    {
-        this.number--;
-
-        for (BoardLight light : this.lights)
-        {
-            light.setLayer(this.number);
-        }
-
-        for (BoardVector vector : this.vectors)
-        {
-            vector.setLayer(this.number);
-        }
-
-        for (BoardProgram program : this.programs)
-        {
-            program.setLayer(this.number);
-        }
-
-        for (BoardSprite sprite : this.sprites)
-        {
-            sprite.setLayer(this.number);
-        }
-
-        for (BoardImage image : this.images)
-        {
-            image.setLayer(this.number);
-        }
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException
-    {
-        BoardLayer layer = new BoardLayer(this.board);
-        layer.images = (ArrayList<BoardImage>) this.images.clone();
-        layer.lights = (ArrayList<BoardLight>) this.lights.clone();
-        layer.name = this.name + "_clone";
-        layer.number = this.number;
-        layer.programs = (ArrayList<BoardProgram>) this.programs.clone();
-        layer.sprites = (ArrayList<BoardSprite>) this.sprites.clone();
-        layer.tiles = (Tile[][]) this.tiles.clone();
-        layer.vectors = (ArrayList<BoardVector>) this.vectors.clone();
-        layer.moveLayerUp();
-
-        return layer;
-    }
-
-    public BoardVector findVectorAt(int x, int y)
-    {
-        // Create a small rectangle to represent the bounds of the mouse.
-        Rectangle2D mouse = new Rectangle2D.Double(x - 5, y - 5, 10, 10);
-
-        for (BoardVector vector : this.vectors)
-        {
-            // There are no lines.
-            if (vector.getPoints().size() < 2)
-            {
-                continue;
-            }
-
-            for (int i = 0; i < vector.getPoints().size() - 1; i++)
-            {
-                // Build a line from the points in the polygon.
-                Line2D line2D = new Line2D.Double(vector.getPoints().get(i),
-                        vector.getPoints().get(i + 1));
-
-                // See if the mouse intersects the line of the polygon.
-                if (line2D.intersects(mouse))
-                {
-                    return vector;
-                }
-            }
-        }
-
-        return null;
-    }
+  /**
+   * Directly clones the layer.
+   *
+   * @return clone of layer
+   * @throws CloneNotSupportedException
+   */
+  @Override
+  public Object clone() throws CloneNotSupportedException {
+    super.clone();
     
-    public BoardVector removeVectorAt(int x, int y)
-    {
-        BoardVector vector = findVectorAt(x, y);
-        
-        if (vector != null)
-        {
-            this.vectors.remove(vector);
-            this.board.fireBoardChanged();
+    BoardLayer layer = new BoardLayer(board);
+    layer.images = (ArrayList<BoardImage>) images.clone();
+    layer.lights = (ArrayList<BoardLight>) lights.clone();
+    layer.name = name + "_clone";
+    layer.number = number;
+    layer.programs = (ArrayList<BoardProgram>) programs.clone();
+    layer.sprites = (ArrayList<BoardSprite>) sprites.clone();
+    layer.tiles = (Tile[][]) tiles.clone();
+    layer.vectors = (ArrayList<BoardVector>) vectors.clone();
+    layer.moveLayerUp();
+
+    return layer;
+  }
+
+  /**
+   * Finds a vector at the coordinates based on a small bounding box around the mouse click.
+   *
+   * @param x mouse click x
+   * @param y mouse click y
+   * @return a vector or null
+   */
+  public BoardVector findVectorAt(int x, int y) {
+    // Create a small rectangle to represent the bounds of the mouse.
+    Rectangle2D mouse = new Rectangle2D.Double(x - 5, y - 5, 10, 10);
+
+    for (BoardVector vector : vectors) {
+      // There are no lines.
+      if (vector.getPoints().size() < 2) {
+        continue;
+      }
+
+      for (int i = 0; i < vector.getPoints().size() - 1; i++) {
+        // Build a line from the points in the polygon.
+        Line2D line2D = new Line2D.Double(vector.getPoints().get(i),
+                vector.getPoints().get(i + 1));
+
+        // See if the mouse intersects the line of the polygon.
+        if (line2D.intersects(mouse)) {
+          return vector;
         }
-        
-        return vector;
+      }
     }
-    
-    public BoardSprite findSpriteAt(int x, int y)
-    {
-        for (BoardSprite sprite : this.sprites)
-        {
-            if (sprite.getX() == x && sprite.getY() == y)
-            {
-                return sprite;
-            }
-        }
-        
-        return null;
+
+    return null;
+  }
+
+  /**
+   * Removes the vector at the specified mouse click location.
+   *
+   * @param x mouse click x
+   * @param y mouse click y
+   * @return removed vector if any
+   */
+  public BoardVector removeVectorAt(int x, int y) {
+    BoardVector vector = findVectorAt(x, y);
+
+    if (vector != null) {
+      vectors.remove(vector);
+      board.fireBoardChanged();
     }
-    
-    public BoardSprite removeSpriteAt(int x, int y)
-    {
-        BoardSprite sprite = findSpriteAt(x, y);
-        
-        if (sprite != null)
-        {
-            this.sprites.remove(sprite);
-            this.board.fireBoardChanged();
+
+    return vector;
+  }
+
+  /**
+   * Finds a program at the coordinates based on a small bounding box around the mouse click.
+   *
+   * @param x mouse click x
+   * @param y mouse click y
+   * @return a program or null
+   */
+  public BoardProgram findProgramAt(int x, int y) {
+    // Create a small rectangle to represent the bounds of the mouse.
+    Rectangle2D mouse = new Rectangle2D.Double(x - 5, y - 5, 10, 10);
+
+    for (BoardProgram program : programs) {
+      BoardVector vector = program.getVector();
+
+      // There are no lines.
+      if (vector.getPoints().size() < 2) {
+        continue;
+      }
+
+      for (int i = 0; i < vector.getPoints().size() - 1; i++) {
+        // Build a line from the points in the polygon.
+        Line2D line2D = new Line2D.Double(vector.getPoints().get(i),
+                vector.getPoints().get(i + 1));
+
+        // See if the mouse intersects the line of the polygon.
+        if (line2D.intersects(mouse)) {
+          return program;
         }
-        
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Removes the program at the specified mouse click location.
+   *
+   * @param x mouse click x
+   * @param y mouse click y
+   * @return removed if any
+   */
+  public BoardProgram removeProgramAt(int x, int y) {
+    BoardProgram program = findProgramAt(x, y);
+
+    if (program != null) {
+      programs.remove(program);
+      board.fireBoardChanged();
+    }
+
+    return program;
+  }
+
+  /**
+   * Finds a sprite at the coordinates based on a small bounding box around the mouse click.
+   *
+   * @param x mouse click x
+   * @param y mouse click y
+   * @return a sprite or null
+   */
+  public BoardSprite findSpriteAt(int x, int y) {
+    for (BoardSprite sprite : sprites) {
+      if (sprite.getX() == x && sprite.getY() == y) {
         return sprite;
+      }
     }
 
-    /*
-     * *************************************************************************
-     * Private Methods
-     * *************************************************************************
-     */
-    private void clearTiles()
-    {
-        int count = this.board.getWidth() * this.board.getHeight();
-        Tile blankTile = new Tile();
-        int x = 0;
-        int y = 0;
+    return null;
+  }
 
-        // Clear all the tiles.
-        for (int i = 0; i < count; i++)
-        {
-            this.tiles[x][y] = blankTile;
+  /**
+   * Removes the sprite at the specified mouse click location.
+   *
+   * @param x mouse click x
+   * @param y mouse click y
+   * @return removed if any
+   */
+  public BoardSprite removeSpriteAt(int x, int y) {
+    BoardSprite sprite = findSpriteAt(x, y);
 
-            x++;
-            if (x == this.board.getWidth())
-            {
-                x = 0;
-                y++;
-                if (y == this.board.getHeight())
-                {
-                    break;
-                }
-            }
+    if (sprite != null) {
+      sprites.remove(sprite);
+      board.fireBoardChanged();
+    }
+
+    return sprite;
+  }
+
+  /**
+   * Clears this layers tiles.
+   */
+  private void clearTiles() {
+    int count = board.getWidth() * board.getHeight();
+    Tile blankTile = new Tile();
+    int x = 0;
+    int y = 0;
+
+    for (int i = 0; i < count; i++) {
+      tiles[x][y] = blankTile;
+
+      x++;
+      if (x == board.getWidth()) {
+        x = 0;
+        y++;
+        if (y == board.getHeight()) {
+          break;
         }
+      }
     }
+  }
 
 }

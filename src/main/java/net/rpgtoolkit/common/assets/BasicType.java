@@ -28,7 +28,7 @@ public class BasicType
      */
     public BasicType()
     {
-
+        
     }
 
     public BasicType(File fileName)
