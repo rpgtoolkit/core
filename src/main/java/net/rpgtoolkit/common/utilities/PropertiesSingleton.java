@@ -16,19 +16,20 @@ import java.util.Properties;
  */
 public class PropertiesSingleton {
 
-  private final PropertiesSingleton instance = new PropertiesSingleton();
-  private static final Properties properties = new Properties();;
+  private static final PropertiesSingleton instance = new PropertiesSingleton();
+  private final Properties properties = new Properties();
   
-  private PropertiesSingleton() throws IOException {
-    
-    
-    try (InputStream in = getClass().getClassLoader().getResourceAsStream("toolkit.properties")) {
+  private PropertiesSingleton() {
+    try (InputStream in = PropertiesSingleton.class.getResourceAsStream("/core/properties/toolkit.properties")) {
       properties.load(in);
+    }
+    catch (IOException ex) {
+      System.out.println(ex.toString());
     }
   }
   
   public static String getProperty(String key) {
-    return properties.getProperty(key);
+    return instance.properties.getProperty(key);
   }
   
 }
