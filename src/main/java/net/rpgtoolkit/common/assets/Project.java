@@ -150,7 +150,8 @@ public class Project extends BasicType
                 String initBoardString = binaryIO.readBinaryString();
                 initBoard = new Board(new File(System.getProperty("project.path") + "Boards/" + initBoardString));
                 String initCharString = binaryIO.readBinaryString();
-                initChar = new Player(new File(System.getProperty("project.path") + "Chrs/" + initCharString));
+                initChar = new Player(new File(System.getProperty("project.path") +
+                        "Chrs/" + initCharString));
 
                 runTime = binaryIO.readBinaryString();
                 runKey = binaryIO.readBinaryInteger();
