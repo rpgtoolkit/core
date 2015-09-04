@@ -74,7 +74,9 @@ public class TileSetCache {
 
     if (!tileSets.containsKey(fileName)) {
       set = new TileSet(new File(System.getProperty("project.path")
-              + "/Tiles/" + fileName));
+              + "/"
+              + PropertiesSingleton.getProperty("toolkit.directory.tileset")
+              + "/" + fileName));
       tileSets.put(fileName, set);
 
       return set;

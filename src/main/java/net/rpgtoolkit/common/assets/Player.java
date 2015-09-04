@@ -18,6 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import net.rpgtoolkit.common.CorruptAssetException;
+import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
 public class Player extends BasicType
 {
@@ -933,7 +934,10 @@ public class Player extends BasicType
         {
             if (!anmFile.equals(""))
             {
-                Animation a = new Animation(new File(System.getProperty("project.path") + "/misc/" + anmFile));
+                Animation a = new Animation(new File(System.getProperty("project.path") 
+                        + "/"
+                        + PropertiesSingleton.getProperty("toolkit.directory.misc")
+                        + "/" + anmFile));
                 standardGraphicsAnimations.add(a);
             }
         }
