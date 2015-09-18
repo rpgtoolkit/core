@@ -9,4 +9,4 @@ deploy:
   on:
     repo: rpgtoolkit/core
     tags: true
-    all_branches: true
+    branch: master
