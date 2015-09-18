@@ -1,3 +1,10 @@
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
+deploy:
+  provider: releases
+  api_key:
+    secure: Kgk7J3p4V1JWVUzGusmwTnUkShz+yeEmiYEEM72fjhsXMobLh4o1aomQf/lFFhHk32gr98+yq6zc3i80ccUT+snVnlmsDvsHm5pgU1Gejdtq33g6U5+2wTSt49f2g7zUT/E1fdgQrhRPwWS9cJI9C8FINagWRIWInGB3ejmrZa6fbae8aY8mcjjqAFc4663OWJbZMbbDM9VuYKKc9lP3dX8sM7AFfZvk6FJBIqwgmIc25H6rNYS8km0FmyjgVqOxKl/KFQLtDlpDLAPzn84Cz8a3/6X8Bu44FLQi1yLEOMPriPCH5STAqVzbsZYQN1GftgEDDTwSsGjaz9mgjVwhGF3uaWCWvw1O/C1ccYE8ZZy7T/1LiqzD3+Tgzge+7G0t1k7phyZdVd8i6IXwKxqGpQ1zUAZidJcJwxSv7nAA0IVNyxUEE1CKFdo0d3pM9Icf1XEqFPLNJxzQOEz3luHHiBoUP/45XChsCLRV4Zt/WQLpu5BCnQUkMXvbxHUjZxIoWGn8yShUTKkZ3fnQo+wv/XrM7RS2+VG4cN9FHs+ojbRxPhTZCFb4uGfawGEPyWaDvx2Ot4+cMVEqQxrQnaZ4Yb3VtCDbLm862HG6UqMLOne0718304pSN07aHmF7ox9TyNz0hOVifWH3ni8ejIv3iTxoqSvk9QG3UEl5tRH2Kt4=
+  file: target/core-4.0.0.jar
+  on:
+    repo: rpgtoolkit/core
