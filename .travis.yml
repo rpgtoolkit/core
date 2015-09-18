@@ -8,3 +8,5 @@ deploy:
   file: target/core-4.0.0.jar
   on:
     repo: rpgtoolkit/core
+    tags: true
+    all_branches: true
