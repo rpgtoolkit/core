@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import net.rpgtoolkit.common.CorruptAssetException;
 import java.util.ArrayList;
+import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
 /**
  * This class manages the GAM file type for the RPG Toolkit
@@ -146,11 +147,17 @@ public class Project extends BasicType
                 languageFile = binaryIO.readBinaryString();
 
                 String startupPrgString = binaryIO.readBinaryString();
-                startupPrg = new Program(System.getProperty("project.path") + "Prg/" + startupPrgString);
+                startupPrg = new Program(System.getProperty("project.path") 
+                        + PropertiesSingleton.getProperty("toolkit.directory.program")
+                        + "/" + startupPrgString);
                 String initBoardString = binaryIO.readBinaryString();
-                initBoard = new Board(new File(System.getProperty("project.path") + "Boards/" + initBoardString));
+                initBoard = new Board(new File(System.getProperty("project.path") 
+                        + PropertiesSingleton.getProperty("toolkit.directory.board")
+                        + "/" + initBoardString));
                 String initCharString = binaryIO.readBinaryString();
-                initChar = new Player(new File(System.getProperty("project.path") + "Chrs/" + initCharString));
+                initChar = new Player(new File(System.getProperty("project.path") 
+                        + PropertiesSingleton.getProperty("toolkit.directory.character")
+                        + "/" + initCharString));
 
                 runTime = binaryIO.readBinaryString();
                 runKey = binaryIO.readBinaryInteger();

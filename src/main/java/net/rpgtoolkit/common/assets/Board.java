@@ -23,6 +23,7 @@ import net.rpgtoolkit.common.utilities.TileSetCache;
 import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.Selectable;
 import net.rpgtoolkit.common.utilities.BinaryIO;
+import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
 /**
  * A model that represents <code>Board</code> files in the RPGToolkit engine and editor. Used during
@@ -949,7 +950,10 @@ public final class Board extends BasicType implements Asset, Selectable {
       if (!indexString.isEmpty()) {
         if (indexString.substring(indexString.length() - 3).equals("tan")) {
           AnimatedTile aTile = new AnimatedTile(new File(
-                  System.getProperty("project.path") + "/Tiles/" + indexString));
+                  System.getProperty("project.path") 
+                          + "/"
+                          + PropertiesSingleton.getProperty("toolkit.directory.tileset")
+                          + "/" + indexString));
           indexString = aTile.getFirstFrame();
         }
 

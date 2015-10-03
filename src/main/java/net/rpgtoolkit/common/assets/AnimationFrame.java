@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
 /**
  * This class stores the necessary data for a single frame, Animations are made up of an
@@ -65,7 +66,11 @@ public class AnimationFrame
                 imageType = 1;    */
 
                 frameName = frameName.replace("\\", "/");
-                FileInputStream fis = new FileInputStream(System.getProperty("project.path") + "/Bitmap/" + frameName);
+                FileInputStream fis = new FileInputStream(System.getProperty("project.path") 
+                        + "/"
+                        + PropertiesSingleton.getProperty("toolkit.directory.bitmap")
+                        + "/" 
+                        + frameName);
                 image = ImageIO.read(fis);
                 imageType = 1;
             }
@@ -79,7 +84,10 @@ public class AnimationFrame
             // Loads the tileset and fetches the correct tile
             frameName = frameName.toLowerCase();
             String tilesetName = frameName.split(".tst")[0] + ".tst";
-            String tilesetPath = System.getProperty("project.path") + "/Tiles/" + tilesetName;
+            String tilesetPath = System.getProperty("project.path") 
+                    + "/"
+                    + PropertiesSingleton.getProperty("toolkit.directory.tileset")
+                    + "/" + tilesetName;
             TileSet tileSet = new TileSet(new File(tilesetPath), 1); // get a single tile from the set (faster...)
             frameTile = tileSet.getSingleTileFromSet(Integer.parseInt(frameName.split(".tst")[1]) - 1);
         }
