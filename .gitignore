@@ -12,9 +12,9 @@ buildNumber.properties
 # IntelliJ IDEA
 .idea/
 .idea_modules/
-.iml
-.ipr
-.iws
+*.iml
+*.ipr
+*.iws
 out/
 gen/
 
