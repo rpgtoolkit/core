@@ -32,7 +32,7 @@ import org.json.JSONStringer;
 public class JsonBoardSerializer extends AbstractJsonSerializer {
 
   @Override
-  public void populateJSON(JSONStringer json, AssetHandle handle) {
+  public void populate(JSONStringer json, AssetHandle handle) {
     Board board = (Board) handle.getAsset();
     board.updateBoardIO();
 
