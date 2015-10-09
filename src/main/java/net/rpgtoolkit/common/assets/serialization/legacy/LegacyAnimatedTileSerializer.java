@@ -17,6 +17,7 @@ import net.rpgtoolkit.common.io.Paths;
 
 import java.io.IOException;
 import java.nio.ByteOrder;
+import java.nio.file.Path;
 
 public class LegacyAnimatedTileSerializer extends AbstractAssetSerializer {
 
@@ -66,13 +67,16 @@ public class LegacyAnimatedTileSerializer extends AbstractAssetSerializer {
 
         final AnimatedTile tile = new AnimatedTile(handle.getDescriptor());
 
-        final int fps = reader.readInt32();
-        final int count = reader.readInt32();
+        final int fps = reader.readInt32();     // frame duration (ms)
+        final int count = reader.readInt32();   // frame count
 
         for (int i = 0; i < count; ++i) {
-            final String frame = reader.readTerminatedString();
-            if (frame != null) {
-                // tile.insertFrame(frame);
+            final String frameTarget = reader.readTerminatedString();
+            if (frameTarget != null && frameTarget.length() > 0) {
+                final AnimatedTile.Frame frame = new AnimatedTile.Frame(
+                        new AssetDescriptor("file:///" + frameTarget));
+                frame.setDuration(fps);
+                tile.getFrames().add(frame);
             }
         }
 

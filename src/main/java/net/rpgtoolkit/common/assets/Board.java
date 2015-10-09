@@ -949,12 +949,12 @@ public final class Board extends BasicType implements Asset, Selectable {
     for (String indexString : tileNameIndex) {
       if (!indexString.isEmpty()) {
         if (indexString.substring(indexString.length() - 3).equals("tan")) {
-          AnimatedTile aTile = new AnimatedTile(new File(
-                  System.getProperty("project.path") 
-                          + "/"
-                          + PropertiesSingleton.getProperty("toolkit.directory.tileset")
-                          + "/" + indexString));
-          indexString = aTile.getFirstFrame();
+//          AnimatedTile aTile = new AnimatedTile(new File(
+//                  System.getProperty("project.path")
+//                          + "/"
+//                          + PropertiesSingleton.getProperty("toolkit.directory.tileset")
+//                          + "/" + indexString));
+//          indexString = aTile.getFirstFrame();
         }
 
         String tileSetName = indexString.split(".tst")[0] + ".tst";
