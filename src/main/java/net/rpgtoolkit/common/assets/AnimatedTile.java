@@ -26,7 +26,7 @@ public class AnimatedTile extends AbstractAsset {
     /**
      * Animated tile frame descriptor.
      */
-    public static class Frame {
+    public class Frame {
 
         private AssetDescriptor descriptor;
         private int duration;

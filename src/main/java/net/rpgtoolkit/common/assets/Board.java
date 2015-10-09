@@ -864,7 +864,7 @@ public final class Board extends BasicType implements Asset, Selectable {
   /**
    * Saves the board file, if the existing file ends with the 3.x extension it writes
    * the new JSON format with the same file name but with an append ".json" extension.
-   * 
+   *
    * @return true = success, false = failure
    */
   public boolean save() {
@@ -875,15 +875,15 @@ public final class Board extends BasicType implements Asset, Selectable {
     try {
       AssetManager.getInstance().serialize(AssetManager.getInstance().getHandle(this));
       return true;
-    } catch (IOException | CorruptAssetException ex) {
+    } catch (IOException | AssetException ex) {
       Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
       return false;
     }
   }
-  
+
   /**
    * Saves the board file as the specified file.
-   * 
+   *
    * @param fileName
    * @return true = success, false = failure
    */
@@ -1411,7 +1411,7 @@ public final class Board extends BasicType implements Asset, Selectable {
 
         boardDimensions = new int[width][height][layerCount];
 
-        // Total number of distinct tile types used, if we add a 
+        // Total number of distinct tile types used, if we add a
         // new tile we will have to check if the tileIndex already
         // contains the name of the tile e.g. default.tst2
         int lookUpTableSize = binaryIO.readBinaryInteger();
@@ -1515,7 +1515,7 @@ public final class Board extends BasicType implements Asset, Selectable {
           lights.add(newLight);
         }
 
-        // Vector count is one less than it should be so +1 
+        // Vector count is one less than it should be so +1
         // to vectors all round!
         int numberVectors = binaryIO.readBinaryInteger();
         for (int i = 0; i < numberVectors + 1; i++) {
@@ -1665,7 +1665,7 @@ public final class Board extends BasicType implements Asset, Selectable {
         startingPositionX = binaryIO.readBinaryInteger();
         startingPositionY = binaryIO.readBinaryInteger();
         startingLayer = binaryIO.readBinaryInteger();
-        
+
         updateTileSetCache();
         createLayers();
       }
@@ -1895,12 +1895,12 @@ public final class Board extends BasicType implements Asset, Selectable {
         binaryIO.writeBinaryString(link);
       }
 
-      // Background Image 
+      // Background Image
       BoardImage backgroundImage = backgroundImages.get(0);
       binaryIO.writeBinaryString(backgroundImage.getFileName());
       binaryIO.writeBinaryLong(backgroundImage.getDrawType());
 
-      // Misc 
+      // Misc
       binaryIO.writeBinaryLong(backgroundColour);
       binaryIO.writeBinaryString(backgroundMusic);
 
