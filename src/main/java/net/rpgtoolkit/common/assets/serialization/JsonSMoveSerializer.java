@@ -40,18 +40,18 @@ public class JsonSMoveSerializer extends AbstractJsonSerializer {
   public void deserialize(AssetHandle handle)
     throws IOException, AssetException {
 
-    JSONObject json = load(handle);
+    final JSONObject json = this.load(handle);
     final SpecialMove asset = new SpecialMove(
       new File(handle.getDescriptor().getURI()));
-    this.harvestJSON(json, asset);
+    this.harvest(json, asset);
 
     handle.setAsset(asset);
 
   }
 
   @Override
-  public void populateJSON(JSONStringer json, AssetHandle handle) {
-    SpecialMove smove = (SpecialMove) handle.getAsset();
+  public void populate(JSONStringer json, AssetHandle handle) {
+    final SpecialMove smove = (SpecialMove) handle.getAsset();
     json.key("name").value(smove.getName());
     json.key("description").value(smove.getDescription());
     json.key("mpCost").value(smove.getMpCost());
@@ -65,7 +65,7 @@ public class JsonSMoveSerializer extends AbstractJsonSerializer {
   }
 
   //separate from deserialize() to make it easier for inheritance
-  public void harvestJSON(JSONObject json, SpecialMove smove) {
+  public void harvest(JSONObject json, SpecialMove smove) {
     smove.setName(json.optString("name"));
     smove.setDescription(json.optString("description"));
     smove.setMpCost(json.optLong("mpCost"));
