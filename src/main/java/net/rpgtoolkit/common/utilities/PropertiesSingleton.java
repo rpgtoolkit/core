@@ -20,7 +20,8 @@ public class PropertiesSingleton {
   private final Properties properties = new Properties();
   
   private PropertiesSingleton() {
-    try (InputStream in = PropertiesSingleton.class.getResourceAsStream("/core/properties/toolkit.properties")) {
+    try (InputStream in = PropertiesSingleton.class.
+            getResourceAsStream("/core/properties/toolkit.properties")) {
       properties.load(in);
     }
     catch (IOException ex) {
