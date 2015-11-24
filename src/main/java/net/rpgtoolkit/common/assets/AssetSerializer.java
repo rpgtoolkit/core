@@ -1,9 +1,8 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+ * the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package net.rpgtoolkit.common.assets;
 
@@ -14,20 +13,21 @@ import net.rpgtoolkit.common.CorruptAssetException;
 
 /**
  * Provides an interface for serializing game assets.
- * 
+ *
  * @author Chris Hutchinson <chris@cshutchinson.com>
  */
 public interface AssetSerializer {
-    
-    public class PriorityComparator 
-        implements Comparator<AssetSerializer> {
+
+    class PriorityComparator
+            implements Comparator<AssetSerializer> {
 
         @Override
         public int compare(AssetSerializer t, AssetSerializer t1) {
             int priorityCompare = t.priority() - t1.priority();
-            if(priorityCompare == 0) {
-                if(t.equals(t1)) { return 0; }
-                else {
+            if (priorityCompare == 0) {
+                if (t.equals(t1)) {
+                    return 0;
+                } else {
                     return t.getClass().getSimpleName()
                             .compareTo(t1.getClass().getSimpleName());
                 }
@@ -35,8 +35,10 @@ public interface AssetSerializer {
                 return priorityCompare;
             }
         }
-              
-    };
+
+    }
+
+    ;
 
     /**
      * Gets the priority of the serializer. Serializers sort in ascending order,
@@ -48,16 +50,16 @@ public interface AssetSerializer {
      * @return the priority of the serializer; lower numbers come first
      * (serializers are sorted in ascending order)
      */
-    public int priority();
-    
-    public boolean canSerialize(final AssetDescriptor descriptor);
-    
-    public boolean canDeserialize(final AssetDescriptor descriptor);
-    
-    public void serialize(AssetHandle handle)
-            throws IOException, CorruptAssetException;
-    
-    public void deserialize(AssetHandle handle)
-            throws IOException, CorruptAssetException;
-    
+    int priority();
+
+    boolean serializable(final AssetDescriptor descriptor);
+
+    boolean deserializable(final AssetDescriptor descriptor);
+
+    void serialize(AssetHandle handle)
+            throws IOException, AssetException;
+
+    void deserialize(AssetHandle handle)
+            throws IOException, AssetException;
+
 }

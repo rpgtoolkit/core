@@ -11,26 +11,28 @@ import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.assets.AssetDescriptor;
+import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.Board;
 import net.rpgtoolkit.common.assets.BoardProgram;
 import net.rpgtoolkit.common.assets.BoardSprite;
 import net.rpgtoolkit.common.assets.BoardVector;
 import net.rpgtoolkit.common.io.Paths;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
 /**
- *
  * @author Joshua Michael Daly
  */
 public class JsonBoardSerializer extends AbstractJsonSerializer {
 
   @Override
-  public void populateJSON(JSONStringer json, AssetHandle handle) {
+  public void populate(JSONStringer json, AssetHandle handle) {
     Board board = (Board) handle.getAsset();
     board.updateBoardIO();
 
@@ -44,14 +46,14 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
       json.value(tile);
     }
     json.endArray();
-    
+
     // Tile indexs in the look up table, compression is used to save space.
     json.key("tileIndex").array();
-    for(Integer index : board.getCompressedTileIndex()) {
+    for (Integer index : board.getCompressedTileIndex()) {
       json.value(index);
     }
     json.endArray();
-    
+
     // Vectors.
     json.key("vectors").array();
     for (BoardVector vector : board.getVectors()) {
@@ -72,7 +74,7 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
       json.endObject();
     }
     json.endArray();
-    
+
     // Programs.
     json.key("programs").array();
     for (BoardProgram program : board.getPrograms()) {
@@ -87,7 +89,7 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
       json.key("activationType").value(program.getActivationType());
       json.key("distanceRepeat").value(program.getDistanceRepeat());
       json.key("layer").value(program.getLayer());
-      
+
       json.key("points").array();
       for (Point point : program.getVector().getPoints()) {
         json.object();
@@ -96,13 +98,13 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
         json.endObject();
       }
       json.endArray();
-      
+
       json.key("isClosed").value(program.getVector().isClosed());
       json.key("handle").value(program.getVector().getHandle());
       json.endObject();
     }
     json.endArray();
-    
+
     // Sprites.
     json.key("sprites").array();
     for (BoardSprite sprite : board.getSprites()) {
@@ -124,56 +126,56 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
       json.endObject();
     }
     json.endArray();
-    
+
     // Layer Titles.
     json.key("layerTitles").array();
     for (String title : board.getLayerTitles()) {
       json.value(title);
     }
     json.endArray();
-    
+
     // Directional Links.
     json.key("directionalLinks").array();
     for (String link : board.getDirectionalLinks()) {
       json.value(link);
     }
     json.endArray();
-    
+
     json.key("backgroundMusic").value(board.getBackgroundMusic());
     json.key("firstRunProgram").value(board.getFirstRunProgram());
-    
+
     // Ambient Effect.
     json.key("ambientEffect").object();
     json.key("red").value(board.getAmbientEffect().getRed());
     json.key("green").value(board.getAmbientEffect().getGreen());
     json.key("blue").value(board.getAmbientEffect().getBlue());
     json.endObject();
-    
+
     json.key("startingPositionX").value(board.getStartingPositionX());
     json.key("startingPositionY").value(board.getStartingPositionY());
     json.key("startingLayer").value(board.getStartingLayer());
   }
 
   @Override
-  public boolean canSerialize(AssetDescriptor descriptor) {
-    final String ext = Paths.getExtension(descriptor.getURI().getPath());
+  public boolean serializable(AssetDescriptor descriptor) {
+    final String ext = Paths.extension(descriptor.getURI());
     return (ext.contains(".brd.json"));
   }
 
   @Override
-  public boolean canDeserialize(AssetDescriptor descriptor) {
-    return canSerialize(descriptor);
+  public boolean deserializable(AssetDescriptor descriptor) {
+    return serializable(descriptor);
   }
 
   @Override
-  public void deserialize(AssetHandle handle) throws IOException, CorruptAssetException {
+  public void deserialize(AssetHandle handle) throws IOException, AssetException {
     JSONObject json = load(handle);
     final Board asset = new Board(new File(handle.getDescriptor().getURI()));
     this.harvestJSON(json, asset);
-    
+
     handle.setAsset(asset);
   }
-  
+
   private void harvestJSON(JSONObject json, Board board) {
     board.setWidth(json.optInt("width"));
     board.setHeight(json.optInt("height"));
@@ -195,32 +197,32 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     board.updateTileSetCache();
     board.createLayers();
   }
-  
+
   private ArrayList<String> getStringArrayList(JSONArray array) {
     ArrayList<String> strings = new ArrayList<>();
-    
+
     int length = array.length();
     for (int i = 0; i < length; i++) {
       strings.add(array.getString(i));
     }
-    
+
     return strings;
   }
-  
+
   private ArrayList<Integer> getTileIndices(JSONArray array) {
     ArrayList<Integer> tileIndices = new ArrayList<>();
-    
+
     int length = array.length();
     for (int i = 0; i < length; i++) {
       tileIndices.add(array.getInt(i));
     }
-    
+
     return tileIndices;
   }
-  
+
   private ArrayList<BoardVector> getVectors(JSONArray array) {
     ArrayList<BoardVector> vectors = new ArrayList<>();
-    
+
     BoardVector vector;
     int length = array.length();
     for (int i = 0; i < length; i++) {
@@ -232,16 +234,16 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
       vector.setLayer(object.getInt("layer"));
       vector.setTileType(object.getInt("tileType"));
       vector.setHandle(object.getString("handle"));
-      
+
       vectors.add(vector);
     }
-    
+
     return vectors;
   }
-  
+
   private ArrayList<BoardProgram> getPrograms(JSONArray array) {
     ArrayList<BoardProgram> programs = new ArrayList<>();
-    
+
     BoardProgram program;
     int length = array.length();
     for (int i = 0; i < length; i++) {
@@ -260,19 +262,19 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
       program.getVector().setPoints(getPoints(object.getJSONArray("points")));
       program.getVector().setClosed(object.getBoolean("isClosed"));
       program.getVector().setHandle(object.getString("handle"));
-      
+
       programs.add(program);
     }
-    
+
     return programs;
   }
-  
+
   private ArrayList<BoardSprite> getSprites(JSONArray array) {
     ArrayList<BoardSprite> sprites = new ArrayList<>();
-    
+
     BoardSprite sprite;
     int length = array.length();
-    for (int i = 0; i< length; i++) {
+    for (int i = 0; i < length; i++) {
       JSONObject object = array.getJSONObject(i);
       sprite = new BoardSprite();
       sprite.setFileName(object.getString("fileName"));
@@ -289,31 +291,31 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
       sprite.setX(object.getLong("x"));
       sprite.setY(object.getLong("y"));
       sprite.setLayer(object.getLong("layer"));
-      
+
       sprites.add(sprite);
     }
-    
+
     return sprites;
   }
-  
+
   private ArrayList<Point> getPoints(JSONArray array) {
     ArrayList<Point> points = new ArrayList<>();
-    
+
     int length = array.length();
     for (int i = 0; i < length; i++) {
       JSONObject point = array.getJSONObject(i);
-      
+
       points.add(new Point(point.getInt("x"), point.getInt("y")));
     }
-    
+
     return points;
   }
-  
+
   private Color getColor(JSONObject object) {
     int r = object.getInt("red");
     int g = object.getInt("green");
     int b = object.getInt("blue");
-    
+
     return new Color(r, g, b);
   }
 
