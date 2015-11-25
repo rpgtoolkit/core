@@ -421,7 +421,8 @@ public class Player extends BasicType
     }
 
     /**
-     * @return the armourType
+     * @return an array of booleans indicating whether the Player can equip the type of armor for
+     * that slot
      */
     public boolean[] getArmourTypes() {
         return armourTypes;
