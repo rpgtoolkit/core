@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 import net.rpgtoolkit.common.utilities.TileSetCache;
 import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.Selectable;
-import net.rpgtoolkit.common.assets.files.FileAssetHandleResolver;
 import net.rpgtoolkit.common.utilities.BinaryIO;
 import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
@@ -870,7 +869,7 @@ public final class Board extends BasicType implements Asset, Selectable {
    */
   public boolean save() {
     if (file.getName().endsWith(".brd")) {
-      file = new File(file.getPath() + ".json");
+      saveBinary();
     }
 
     try {

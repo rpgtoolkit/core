@@ -48,7 +48,10 @@ public abstract class AbstractJsonSerializer
   /**
    * Loads a JSON object from disk using the handle provided.
    *
+   * @param handle
    * @return the JSONObject that was loaded, or null if load failed
+   * @throws java.io.IOException
+   * @throws net.rpgtoolkit.common.assets.AssetException
    */
   public static JSONObject load(AssetHandle handle)
     throws IOException, AssetException {
@@ -76,6 +79,8 @@ public abstract class AbstractJsonSerializer
 
   /**
    * Creates and populates a JSON object using the asset handle provided.
+   * @param handle
+   * @return 
    */
   public String toJSONString(AssetHandle handle) {
     final JSONStringer builder = new JSONStringer();

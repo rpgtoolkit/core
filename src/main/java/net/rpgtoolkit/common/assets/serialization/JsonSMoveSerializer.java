@@ -9,7 +9,6 @@ package net.rpgtoolkit.common.assets.serialization;
 import java.io.File;
 import java.io.IOException;
 
-import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.assets.AssetDescriptor;
 import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
@@ -40,7 +39,7 @@ public class JsonSMoveSerializer extends AbstractJsonSerializer {
   public void deserialize(AssetHandle handle)
     throws IOException, AssetException {
 
-    final JSONObject json = this.load(handle);
+    final JSONObject json = load(handle);
     final SpecialMove asset = new SpecialMove(
       new File(handle.getDescriptor().getURI()));
     this.harvest(json, asset);
