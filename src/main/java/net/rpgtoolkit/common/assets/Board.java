@@ -949,14 +949,13 @@ public final class Board extends BasicType implements Asset, Selectable {
     for (String indexString : tileNameIndex) {
       if (!indexString.isEmpty()) {
         if (indexString.substring(indexString.length() - 3).equals("tan")) {
-          String assetPath = "file:///"
-                  + System.getProperty("project.path")
+          String assetPath = System.getProperty("project.path")
                   + PropertiesSingleton.getProperty("toolkit.directory.tileset")
-                  + "/" + indexString;
+                  + File.separator + indexString;
 
           try {
             AnimatedTile aTile = (AnimatedTile) AssetManager.getInstance().deserialize(
-                    new AssetDescriptor(assetPath)).getAsset();
+                    new AssetDescriptor(new File(assetPath).toURI())).getAsset();
             indexString = aTile.getFrames().get(0).getFrameTarget();
           } catch (IOException | AssetException ex) {
             System.out.println(ex.toString());
@@ -969,9 +968,7 @@ public final class Board extends BasicType implements Asset, Selectable {
           tileSetNames.add(tileSetName);
           tileSets.put(tileSetName, cache.addTileSet(tileSetName));
         }
-
         loadedTilesIndex.add(tileSets.get(tileSetName).getTile(Integer.parseInt(indexString.split(".tst")[1]) - 1));
-
       } else {
         loadedTilesIndex.add(null);
       }
