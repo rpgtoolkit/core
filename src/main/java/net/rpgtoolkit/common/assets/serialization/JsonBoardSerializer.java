@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.assets.AssetDescriptor;
 import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
@@ -171,8 +170,8 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
   public void deserialize(AssetHandle handle) throws IOException, AssetException {
     JSONObject json = load(handle);
     final Board asset = new Board(new File(handle.getDescriptor().getURI()));
-    this.harvestJSON(json, asset);
-
+    harvestJSON(json, asset);
+ 
     handle.setAsset(asset);
   }
 

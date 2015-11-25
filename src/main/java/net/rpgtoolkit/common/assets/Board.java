@@ -23,7 +23,6 @@ import net.rpgtoolkit.common.utilities.TileSetCache;
 import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.Selectable;
 import net.rpgtoolkit.common.utilities.BinaryIO;
-import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
 /**
  * A model that represents <code>Board</code> files in the RPGToolkit engine and editor. Used during

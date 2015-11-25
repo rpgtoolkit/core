@@ -21,7 +21,7 @@ public class Program extends BasicType
     {
         try
         {
-            File file = new File(fileName);
+            file = new File(fileName);
             FileReader fr = new FileReader(file);
             programBuffer = new StringBuffer();
 
