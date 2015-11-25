@@ -6,15 +6,6 @@
  */
 package net.rpgtoolkit.common.assets;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import net.rpgtoolkit.common.CorruptAssetException;
-import net.rpgtoolkit.common.utilities.BinaryIO;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,47 +14,57 @@ import java.util.List;
  */
 public class AnimatedTile extends AbstractAsset {
 
-    /**
-     * Animated tile frame descriptor.
-     */
-    public class Frame {
+  /**
+   * Animated tile frame descriptor.
+   */
+  public class Frame {
 
-        private AssetDescriptor descriptor;
-        private int duration;
+    private AssetDescriptor descriptor;
+    private String frameTarget;
+    private int duration;
 
-        public Frame(AssetDescriptor descriptor) {
-            this.descriptor = descriptor;
-            this.duration = 0;
-        }
-
-        public AssetDescriptor getDescriptor() {
-            return this.descriptor;
-        }
-
-        public int getDuration() {
-            return this.duration;
-        }
-
-        public void setDuration(int value) {
-            this.duration = Math.max(0, value);
-        }
-
+    public Frame(AssetDescriptor descriptor, String frameTarget) {
+      this.descriptor = descriptor;
+      this.frameTarget = frameTarget;
+      duration = 0;
     }
 
-    private final List<Frame> frames;
-
-    public AnimatedTile(AssetDescriptor descriptor) {
-        super(descriptor);
-        this.frames = new ArrayList<Frame>();
+    public AssetDescriptor getDescriptor() {
+      return this.descriptor;
     }
 
-    /**
-     * Returns a list of animation frames associated with this animated tile.
-     *
-     * @return list of animation frames
-     */
-    public List<Frame> getFrames() {
-        return this.frames;
+    public String getFrameTarget() {
+      return frameTarget;
     }
+
+    public void setFrameTarget(String frameTarget) {
+      this.frameTarget = frameTarget;
+    }
+
+    public int getDuration() {
+      return this.duration;
+    }
+
+    public void setDuration(int value) {
+      this.duration = Math.max(0, value);
+    }
+
+  }
+
+  private final List<Frame> frames;
+
+  public AnimatedTile(AssetDescriptor descriptor) {
+    super(descriptor);
+    frames = new ArrayList<>();
+  }
+
+  /**
+   * Returns a list of animation frames associated with this animated tile.
+   *
+   * @return list of animation frames
+   */
+  public List<Frame> getFrames() {
+    return frames;
+  }
 
 }

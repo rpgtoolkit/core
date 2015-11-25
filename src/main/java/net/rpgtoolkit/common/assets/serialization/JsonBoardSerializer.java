@@ -170,12 +170,12 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
   public void deserialize(AssetHandle handle) throws IOException, AssetException {
     JSONObject json = load(handle);
     final Board asset = new Board(new File(handle.getDescriptor().getURI()));
-    harvestJSON(json, asset);
+    harvest(json, asset);
  
     handle.setAsset(asset);
   }
 
-  private void harvestJSON(JSONObject json, Board board) {
+  private void harvest(JSONObject json, Board board) {
     board.setWidth(json.optInt("width"));
     board.setHeight(json.optInt("height"));
     board.setLayerCount(json.optInt("layerCount"));

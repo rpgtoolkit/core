@@ -92,6 +92,9 @@ public abstract class AbstractJsonSerializer
    * Subclasses designed to handle a subclass of the asset type should override toJSONString() and
    * populateJSON(), calling both super.populateJSON() and populateJSON() from toJSONString() to add
    * the asset's parent class's info to the JSON object alongside the asset subclass's info.
+   * 
+   * @param json
+   * @param handle
    */
   public abstract void populate(JSONStringer json, AssetHandle handle);
 

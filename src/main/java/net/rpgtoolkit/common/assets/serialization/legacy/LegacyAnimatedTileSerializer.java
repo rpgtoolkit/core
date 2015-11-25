@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Path;
 
 /**
  * @author Chris Hutchinson <chris@cshutchinson.com>
@@ -43,18 +42,18 @@ public class LegacyAnimatedTileSerializer extends AbstractAssetSerializer {
 
   @Override
   public void serialize(AssetHandle handle)
-    throws IOException, AssetException {
+          throws IOException, AssetException {
 
   }
 
   @Override
   public void deserialize(AssetHandle handle)
-    throws IOException, AssetException {
+          throws IOException, AssetException {
 
     try (final ReadableByteChannel channel = handle.read()) {
 
-      final ByteBuffer buffer =
-        ByteBuffer.allocateDirect((int) handle.size());
+      final ByteBuffer buffer
+              = ByteBuffer.allocateDirect((int) handle.size());
 
       channel.read(buffer);
 
@@ -66,7 +65,6 @@ public class LegacyAnimatedTileSerializer extends AbstractAssetSerializer {
       final int versionMinor = buffer.getShort();
 
       // Ensure header magic is correct
-
       if (!header.equals(HEADER_MAGIC)) {
         throw new CorruptAssetException("Invalid asset header");
       }
@@ -84,15 +82,12 @@ public class LegacyAnimatedTileSerializer extends AbstractAssetSerializer {
         final String frameTarget = ByteBufferHelper.getTerminatedString(buffer);
         if (frameTarget != null && frameTarget.length() > 0) {
           final AnimatedTile.Frame frame = tile.new Frame(
-            new AssetDescriptor("file:///" + frameTarget));
+                  new AssetDescriptor("file:///" + frameTarget), frameTarget);
           frame.setDuration(fps);
           tile.getFrames().add(frame);
         }
       }
-
       handle.setAsset(tile);
-
     }
-
   }
 }

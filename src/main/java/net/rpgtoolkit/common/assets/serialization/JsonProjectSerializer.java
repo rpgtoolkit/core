@@ -131,12 +131,12 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
     JSONObject json = load(handle);
     final Project asset = new Project(new File(handle.getDescriptor().getURI()),
             System.getProperty("project.path"));
-    harvestJSON(json, asset);
+    harvest(json, asset);
 
     handle.setAsset(asset);
   }
 
-  private void harvestJSON(JSONObject json, Project project) {
+  private void harvest(JSONObject json, Project project) {
     try {
       project.setProjectPath(json.optString("projectPath"));
       project.setGameTitle(json.optString("gameTitle"));
