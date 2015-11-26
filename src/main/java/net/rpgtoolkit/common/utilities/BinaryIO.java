@@ -38,6 +38,13 @@ public class BinaryIO {
 
   /**
    * Constructs an instance of the Common Binary IO emulator class
+   */
+  public BinaryIO() {
+    inputStream = null;
+  }
+  
+  /**
+   * Constructs an instance of the Common Binary IO emulator class
    *
    * @param inputStream Input stream to read the data from
    */

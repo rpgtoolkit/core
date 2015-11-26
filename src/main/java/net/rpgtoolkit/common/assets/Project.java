@@ -104,7 +104,7 @@ public class Project extends BasicType implements Asset {
 
     this.openBinary();
   }
-  
+
   public long getResolutionHeight() {
     return resolutionHeight;
   }
@@ -583,12 +583,12 @@ public class Project extends BasicType implements Asset {
         startupPrg = new Program(System.getProperty("project.path")
                 + PropertiesSingleton.getProperty("toolkit.directory.program")
                 + "/" + startupPrgString);
-        
+
         String initBoardString = binaryIO.readBinaryString();
         initBoard = new Board(new File(System.getProperty("project.path")
                 + PropertiesSingleton.getProperty("toolkit.directory.board")
                 + "/" + initBoardString));
-        
+
         String initCharString = binaryIO.readBinaryString();
         initChar = new Player(new File(System.getProperty("project.path")
                 + PropertiesSingleton.getProperty("toolkit.directory.character")
@@ -769,34 +769,34 @@ public class Project extends BasicType implements Asset {
       binaryIO.writeBinaryInteger(mainResolution);
       binaryIO.writeBinaryInteger(mainDisableProtectReg);
       binaryIO.writeBinaryString(languageFile);
-      
+
       if (startupPrg.getFile() != null) {
         String path = startupPrg.getFile().getPath();
         path = path.replace(
-                        System.getProperty("project.path")
-                  + PropertiesSingleton.getProperty("toolkit.directory.program")
-                  + "/", "");
+                System.getProperty("project.path")
+                + PropertiesSingleton.getProperty("toolkit.directory.program")
+                + "/", "");
         binaryIO.writeBinaryString(path);
       }
-      
+
       if (initBoard.getFile() != null) {
         String path = initBoard.getFile().getPath();
         path = path.replace(
-                        System.getProperty("project.path")
-                  + PropertiesSingleton.getProperty("toolkit.directory.board")
-                  + "/", "");
+                System.getProperty("project.path")
+                + PropertiesSingleton.getProperty("toolkit.directory.board")
+                + "/", "");
         binaryIO.writeBinaryString(path);
       }
-      
+
       if (initChar.getFile() != null) {
         String path = initChar.getFile().getPath();
         path = path.replace(
-                        System.getProperty("project.path")
-                  + PropertiesSingleton.getProperty("toolkit.directory.character")
-                  + "/", "");
+                System.getProperty("project.path")
+                + PropertiesSingleton.getProperty("toolkit.directory.character")
+                + "/", "");
         binaryIO.writeBinaryString(path);
       }
-      
+
       binaryIO.writeBinaryString(runTime);
       binaryIO.writeBinaryInteger(runKey);
       binaryIO.writeBinaryInteger(menuKey);
@@ -872,7 +872,7 @@ public class Project extends BasicType implements Asset {
 
   @Override
   public void reset() {
-    
+
   }
 
 }

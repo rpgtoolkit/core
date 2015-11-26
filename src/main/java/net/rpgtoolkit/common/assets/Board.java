@@ -869,6 +869,9 @@ public final class Board extends BasicType implements Asset, Selectable {
    */
   public boolean save() {
     if (file.getName().endsWith(".brd")) {
+      if (binaryIO == null) {
+        binaryIO = new BinaryIO();
+      }
       saveBinary();
     }
 
@@ -1752,11 +1755,21 @@ public final class Board extends BasicType implements Asset, Selectable {
       binaryIO.writeBinaryInteger(ubShading);
       binaryIO.writeBinaryLong(shadingLayer);
 
-      for (BoardLayerShade layerShade : tileShading) {
-        binaryIO.writeBinaryInteger((int) layerShade.getLayer());
-        binaryIO.writeBinaryInteger(layerShade.getColour().getRed());
-        binaryIO.writeBinaryInteger(layerShade.getColour().getGreen());
-        binaryIO.writeBinaryInteger(layerShade.getColour().getBlue());
+      if (tileShading.size() > 0) {
+        for (BoardLayerShade layerShade : tileShading) {
+          binaryIO.writeBinaryInteger((int) layerShade.getLayer());
+          binaryIO.writeBinaryInteger(layerShade.getColour().getRed());
+          binaryIO.writeBinaryInteger(layerShade.getColour().getGreen());
+          binaryIO.writeBinaryInteger(layerShade.getColour().getBlue());
+        } 
+      } else {
+        int totalShading = width * height;
+        for (int i = 0; i < totalShading; i++) {
+          binaryIO.writeBinaryInteger(1);
+          binaryIO.writeBinaryInteger(0);
+          binaryIO.writeBinaryInteger(0);
+          binaryIO.writeBinaryInteger(0);
+        }
       }
 
       // Lights
@@ -1900,9 +1913,14 @@ public final class Board extends BasicType implements Asset, Selectable {
       }
 
       // Background Image
-      BoardImage backgroundImage = backgroundImages.get(0);
-      binaryIO.writeBinaryString(backgroundImage.getFileName());
-      binaryIO.writeBinaryLong(backgroundImage.getDrawType());
+      if (backgroundImages.size() > 0) {
+        BoardImage backgroundImage = backgroundImages.get(0);
+        binaryIO.writeBinaryString(backgroundImage.getFileName());
+        binaryIO.writeBinaryLong(backgroundImage.getDrawType());
+      } else {
+        binaryIO.writeBinaryString("");
+        binaryIO.writeBinaryLong(0);
+      }
 
       // Misc
       binaryIO.writeBinaryLong(backgroundColour);

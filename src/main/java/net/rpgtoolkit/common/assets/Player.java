@@ -799,7 +799,7 @@ public class Player extends BasicType
 
             inputStream.close();
 
-            this.save();
+            this.saveBinary();
 
             return true;
         }
@@ -815,7 +815,11 @@ public class Player extends BasicType
         }
     }
 
-    public boolean save()
+    /**
+     * @deprecated 
+     * @return 
+     */
+    public boolean saveBinary()
     {
         try
         {
@@ -916,7 +920,7 @@ public class Player extends BasicType
     public boolean saveAs(File fileName)
     {
         this.file = fileName;
-        return this.save();
+        return this.saveBinary();
     }
 
     /**
