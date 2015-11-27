@@ -88,6 +88,7 @@ public class Project extends BasicType implements Asset {
 
   /**
    * Creates a new project file
+   *
    * @param path
    * @param title
    */
@@ -155,8 +156,6 @@ public class Project extends BasicType implements Asset {
 
     // Property is not shared between editor and common projects!
     System.setProperty("project.path", projectPath);
-
-    this.openBinary();
   }
 
   public long getResolutionHeight() {
@@ -598,7 +597,7 @@ public class Project extends BasicType implements Asset {
    * @return true for success, false for failure
    * @deprecated
    */
-  private boolean openBinary() {
+  public boolean openBinary() {
     try {
       // Prepare objects be we begin
       runTimeArray = new ArrayList<>();
@@ -913,7 +912,7 @@ public class Project extends BasicType implements Asset {
       return false;
     }
   }
-  
+
   public boolean save() {
     if (file.getName().endsWith(".brd")) {
       if (binaryIO == null) {
