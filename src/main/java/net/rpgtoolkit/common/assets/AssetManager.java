@@ -101,8 +101,8 @@ public class AssetManager {
     for (AssetSerializer serializer : serializers) {
       if (serializer.serializable(descriptor)) {
         serializer.serialize(handle);
+        break;
       }
-      break;
     }
 
     return handle;

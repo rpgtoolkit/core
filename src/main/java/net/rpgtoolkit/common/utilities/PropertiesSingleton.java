@@ -6,6 +6,7 @@
  */
 package net.rpgtoolkit.common.utilities;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -48,6 +49,11 @@ public class PropertiesSingleton {
   
   public static String getProperty(String key) {
     return instance.properties.getProperty(key);
+  }
+  
+  public static String getProjectsDirectory() {
+    return System.getProperty("user.home") + File.separator + 
+            instance.properties.getProperty("toolkit.directory.projects");
   }
   
   public static String[] getDirectories() {

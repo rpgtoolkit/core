@@ -42,19 +42,36 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
     json.key("mainResolution").value(project.getResolutionMode());
     json.key("mainDisableProtectReg").value(project.getMainDisableProtectReg());
     json.key("languageFile").value(project.getLanguageFile());
-    json.key("startupPrg").value(project.getStartupPrg());
-    json.key("initBoard").value(project.getInitBoard());
-    json.key("initChar").value(project.getInitChar());
+    
+    if (project.getStartupPrg() != null) {
+      json.key("startupPrg").value(project.getStartupPrg());
+    } else {
+      json.key("startupPrg").value("");
+    }
+    
+    if (project.getInitBoard() != null) {
+      json.key("initBoard").value(project.getInitBoard());
+    } else {
+      json.key("initBoard").value("");
+    }
+    
+    if (project.getInitChar() != null) {
+      json.key("initChar").value(project.getInitChar());
+    } else {
+      json.key("initChar").value("");
+    }
+    
     json.key("runTime").value(project.getRunTime());
     json.key("runKey").value(project.getRunKey());
     json.key("menuKey").value(project.getMenuKey());
     json.key("key").value(project.getKey());
 
     json.key("runTimeArray").array();
-    for (int i = 0; i < 51; i++) {
+    ArrayList<RunTimeKey> runTimeArray = project.getRunTimeArray();
+    for (RunTimeKey runTime : runTimeArray) {
       json.key("runTimeValue").array();
-      json.value(project.getRunTimeArray().get(i).getKey());
-      json.value(project.getRunTimeArray().get(i).getProgram());
+      json.value(runTime.getKey());
+      json.value(runTime.getProgram());
       json.endArray();
     }
     json.endArray();
@@ -64,10 +81,11 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
     json.key("fightingEnabled").value(project.getFightingEnabled());
 
     json.key("enemyArray").array();
-    for (int i = 0; i < 501; i++) {
+    ArrayList<EnemySkillPair> enemyArray = project.getEnemyArray();
+    for (EnemySkillPair enemySkillPair : enemyArray) {
       json.key("enemy").array();
-      json.key(project.getEnemyArray().get(i).getEnemy());
-      json.key(Integer.toString(project.getEnemyArray().get(i).getSkill()));
+      json.key(enemySkillPair.getEnemy());
+      json.key(Integer.toString(enemySkillPair.getSkill()));
       json.endArray();
     }
     json.endArray();
@@ -145,18 +163,31 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
       project.setMainResolution(json.optInt("MainResolution"));
       project.setMainDisableProtectReg(json.optInt("mainDisableProtectReg"));
       project.setLanguageFile(json.getString("languageFile"));
+      
+      String startupPrg = json.getString("startupPrg");
+      if (!startupPrg.isEmpty()) {
       project.setStartupPrg(
               new Program(System.getProperty("project.path")
                       + PropertiesSingleton.getProperty("toolkit.directory.program")
-                      + "/" + json.get("startupPrg")));
-      project.setInitBoard(
-              new Board(new File(System.getProperty("project.path")
-                      + PropertiesSingleton.getProperty("toolkit.directory.board")
-                      + "/" + json.get("initBoard"))));
+                      + "/" + startupPrg));
+      }
+      
+      String initBoard = json.getString("initBoard");
+      if (!initBoard.isEmpty()) {
+        project.setInitBoard(
+                new Board(new File(System.getProperty("project.path")
+                        + PropertiesSingleton.getProperty("toolkit.directory.board")
+                        + "/" + initBoard)));
+      }
+      
+      String initChar = json.getString("initChar");
+      if (!initChar.isEmpty()) {
       project.setInitChar(
               new Player(new File(System.getProperty("project.path")
                       + PropertiesSingleton.getProperty("toolkit.directory.character")
-                      + "/" + json.get("initChar"))));
+                      + "/" + initChar)));
+      }
+      
       project.setRunTime(json.optString("runTime"));
       project.setRunKey(json.optInt("runKey"));
       project.setMenuKey(json.optInt("menuKey"));

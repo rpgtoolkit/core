@@ -12,6 +12,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import net.rpgtoolkit.common.CorruptAssetException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.rpgtoolkit.common.utilities.BinaryIO;
 import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
 /**
@@ -85,9 +88,60 @@ public class Project extends BasicType implements Asset {
 
   /**
    * Creates a new project file
+   * @param path
+   * @param title
    */
-  public Project() {
-
+  public Project(String path, String title) {
+    file = new File(path + File.separator + title + ".gam.json");
+    projectPath = path;
+    gameTitle = title;
+    mainScreenType = 1;
+    extendToFullScreen = 0;
+    mainResolution = 0;
+    mainDisableProtectReg = 0;
+    languageFile = "";
+    startupPrg = null;
+    initBoard = null;
+    initChar = null;
+    runTime = "";
+    runKey = 0;
+    menuKey = 0;
+    key = 0;
+    runTimeArray = new ArrayList<>();
+    menuPlugin = "";
+    fightPlugin = "";
+    fightingEnabled = 0;
+    enemyArray = new ArrayList<>();
+    fightType = 0;
+    fightChance = 0;
+    useCustomBattleSystem = 0;
+    battleSystemProgram = "";
+    gameOverProgram = "";
+    buttonGraphic = "";
+    windowGraphic = "";
+    pluginArray = new ArrayList<>();
+    useDayNight = 0;
+    dayNightType = 0;
+    dayLengthInMins = 0;
+    cursorMoveSound = "";
+    cursorSelectSound = "";
+    cursorCancelSound = "";
+    enableJoyStick = 1;
+    colordepth = 0;
+    gameSpeed = 128;
+    usePixelBasedMovement = 0;
+    mouseCursor = "";
+    hotSpotX = 0;
+    hotSpotY = 0;
+    transpcolor = 255;
+    resolutionWidth = 0;
+    resolutionHeight = 0;
+    displayFPSInTitle = 0;
+    pathfindingAlgo = 1;
+    drawVectors = 0;
+    pathColor = 0;
+    movementControls = 0;
+    movementKeys = new ArrayList<>();
   }
 
   /**
@@ -856,6 +910,23 @@ public class Project extends BasicType implements Asset {
       return false;
     } catch (IOException e) {
       e.printStackTrace();
+      return false;
+    }
+  }
+  
+  public boolean save() {
+    if (file.getName().endsWith(".brd")) {
+      if (binaryIO == null) {
+        binaryIO = new BinaryIO();
+      }
+      saveBinary();
+    }
+
+    try {
+      AssetManager.getInstance().serialize(AssetManager.getInstance().getHandle(this));
+      return true;
+    } catch (IOException | AssetException ex) {
+      Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
       return false;
     }
   }
