@@ -44,19 +44,19 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
     json.key("languageFile").value(project.getLanguageFile());
     
     if (project.getStartupPrg() != null) {
-      json.key("startupPrg").value(project.getStartupPrg());
+      json.key("startupPrg").value(project.getStartupPrg().getFile().getAbsolutePath());
     } else {
       json.key("startupPrg").value("");
     }
     
     if (project.getInitBoard() != null) {
-      json.key("initBoard").value(project.getInitBoard());
+      json.key("initBoard").value(project.getInitBoard().getFile().getAbsolutePath());
     } else {
       json.key("initBoard").value("");
     }
     
     if (project.getInitChar() != null) {
-      json.key("initChar").value(project.getInitChar());
+      json.key("initChar").value(project.getInitChar().getFile().getAbsolutePath());
     } else {
       json.key("initChar").value("");
     }
