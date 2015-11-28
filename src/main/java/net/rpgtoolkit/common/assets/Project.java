@@ -41,9 +41,9 @@ public class Project extends BasicType implements Asset {
   private int mainResolution;
   private int mainDisableProtectReg;
   private String languageFile;
-  private Program startupPrg;
-  private Board initBoard;
-  private Player initChar;
+  private String startupPrg;
+  private String initBoard;
+  private String initChar;
   private String runTime;
   private int runKey;
   private int menuKey;
@@ -101,9 +101,9 @@ public class Project extends BasicType implements Asset {
     mainResolution = 0;
     mainDisableProtectReg = 0;
     languageFile = "";
-    startupPrg = null;
-    initBoard = null;
-    initChar = null;
+    startupPrg = "";
+    initBoard = "";
+    initChar = "";
     runTime = "";
     runKey = 0;
     menuKey = 0;
@@ -230,15 +230,15 @@ public class Project extends BasicType implements Asset {
     return enableJoyStick == 1;
   }
 
-  public Board getInitBoard() {
+  public String getInitBoard() {
     return initBoard;
   }
 
-  public Player getInitChar() {
+  public String getInitChar() {
     return initChar;
   }
 
-  public Program getStartupPrg() {
+  public String getStartupPrg() {
     return startupPrg;
   }
 
@@ -430,15 +430,15 @@ public class Project extends BasicType implements Asset {
     this.languageFile = languageFile;
   }
 
-  public void setStartupPrg(Program startupPrg) {
+  public void setStartupPrg(String startupPrg) {
     this.startupPrg = startupPrg;
   }
 
-  public void setInitBoard(Board initBoard) {
+  public void setInitBoard(String initBoard) {
     this.initBoard = initBoard;
   }
 
-  public void setInitChar(Player initChar) {
+  public void setInitChar(String initChar) {
     this.initChar = initChar;
   }
 
@@ -632,20 +632,9 @@ public class Project extends BasicType implements Asset {
         mainDisableProtectReg = binaryIO.readBinaryInteger();
         languageFile = binaryIO.readBinaryString();
 
-        String startupPrgString = binaryIO.readBinaryString();
-        startupPrg = new Program(System.getProperty("project.path")
-                + PropertiesSingleton.getProperty("toolkit.directory.program")
-                + "/" + startupPrgString);
-
-        String initBoardString = binaryIO.readBinaryString();
-        initBoard = new Board(new File(System.getProperty("project.path")
-                + PropertiesSingleton.getProperty("toolkit.directory.board")
-                + "/" + initBoardString));
-
-        String initCharString = binaryIO.readBinaryString();
-        initChar = new Player(new File(System.getProperty("project.path")
-                + PropertiesSingleton.getProperty("toolkit.directory.character")
-                + "/" + initCharString));
+        startupPrg = binaryIO.readBinaryString();
+        initBoard = binaryIO.readBinaryString();
+        initChar = binaryIO.readBinaryString();
 
         runTime = binaryIO.readBinaryString();
         runKey = binaryIO.readBinaryInteger();
@@ -822,34 +811,9 @@ public class Project extends BasicType implements Asset {
       binaryIO.writeBinaryInteger(mainResolution);
       binaryIO.writeBinaryInteger(mainDisableProtectReg);
       binaryIO.writeBinaryString(languageFile);
-
-      if (startupPrg.getFile() != null) {
-        String path = startupPrg.getFile().getPath();
-        path = path.replace(
-                System.getProperty("project.path")
-                + PropertiesSingleton.getProperty("toolkit.directory.program")
-                + "/", "");
-        binaryIO.writeBinaryString(path);
-      }
-
-      if (initBoard.getFile() != null) {
-        String path = initBoard.getFile().getPath();
-        path = path.replace(
-                System.getProperty("project.path")
-                + PropertiesSingleton.getProperty("toolkit.directory.board")
-                + "/", "");
-        binaryIO.writeBinaryString(path);
-      }
-
-      if (initChar.getFile() != null) {
-        String path = initChar.getFile().getPath();
-        path = path.replace(
-                System.getProperty("project.path")
-                + PropertiesSingleton.getProperty("toolkit.directory.character")
-                + "/", "");
-        binaryIO.writeBinaryString(path);
-      }
-
+      binaryIO.writeBinaryString(startupPrg);
+      binaryIO.writeBinaryString(initBoard);
+      binaryIO.writeBinaryString(initChar);
       binaryIO.writeBinaryString(runTime);
       binaryIO.writeBinaryInteger(runKey);
       binaryIO.writeBinaryInteger(menuKey);
