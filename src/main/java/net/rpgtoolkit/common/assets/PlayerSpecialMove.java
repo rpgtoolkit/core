@@ -49,8 +49,30 @@ public class PlayerSpecialMove
         return this.conditionVariable;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMinExperience(long minExperience) {
+        this.minExperience = minExperience;
+    }
+
+    public void setMinLevel(long minLevel) {
+        this.minLevel = minLevel;
+    }
+
+    public void setConditionVariable(String conditionVariable) {
+        this.conditionVariable = conditionVariable;
+    }
+
+    public void setConditionVariableTest(String conditionVariableTest) {
+        this.conditionVariableTest = conditionVariableTest;
+    }
+
     public String getConditionVariableTest()
     {
         return this.conditionVariableTest;
     }
+    
+    
 }
