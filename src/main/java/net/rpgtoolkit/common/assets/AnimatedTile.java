@@ -6,111 +6,65 @@
  */
 package net.rpgtoolkit.common.assets;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import net.rpgtoolkit.common.CorruptAssetException;
-import net.rpgtoolkit.common.utilities.BinaryIO;
-
 import java.util.ArrayList;
+import java.util.List;
 
-public class AnimatedTile extends BasicType {
-
-  // Constants
-  private final String FILE_HEADER = "RPGTLKIT TILEANIM";
-  private final int MAJOR_VERSION = 2;
-  private final int MINOR_VERSION = 0;
-
-  // Animated Tile Variables
-  private long frameCount;
-  private ArrayList<String> frames;
-  private long framesPerSecond;
+/**
+ * Animated tile asset.
+ */
+public class AnimatedTile extends AbstractAsset {
 
   /**
-   * Create a <code>AnimatedTile</code> from an existing file.
-   *
-   * @param fileName file to open
+   * Animated tile frame descriptor.
    */
-  public AnimatedTile(File fileName) {
-    super(fileName);
-    open();
-  }
+  public class Frame {
 
-  /**
-   * Get the first frame.
-   *
-   * @return first frame.
-   */
-  public String getFirstFrame() {
-    return frames.get(0);
-  }
+    private AssetDescriptor descriptor;
+    private String frameTarget;
+    private int duration;
 
-  /**
-   * Attempt to open the <code>AnimatedTile</code>.
-   *
-   * @return true for success, false for failure
-   */
-  public final boolean open() {
-    try {
-      inputStream = new FileInputStream(file);
-      binaryIO = new BinaryIO(inputStream);
-      frames = new ArrayList<>();
-
-      if (binaryIO.readBinaryString().equals(FILE_HEADER)) {
-        int majorVersion = binaryIO.readBinaryInteger();
-        binaryIO.readBinaryInteger();
-
-        if (majorVersion == MAJOR_VERSION) {
-          framesPerSecond = binaryIO.readBinaryLong();
-          frameCount = binaryIO.readBinaryLong();
-          for (int i = 0; i < frameCount; i++) {
-            frames.add(binaryIO.readBinaryString());
-          }
-        }
-      }
-
-      inputStream.close();
-
-      return true;
-    } catch (FileNotFoundException e) {
-      System.out.println(e.toString());
-      return false;
-    } catch (CorruptAssetException | IOException e) {
-      System.out.println(e.toString());
-      return false;
+    public Frame(AssetDescriptor descriptor, String frameTarget) {
+      this.descriptor = descriptor;
+      this.frameTarget = frameTarget;
+      duration = 0;
     }
-  }
 
-  public boolean save() {
-    try {
-      outputStream = new FileOutputStream(file);
-      binaryIO.setOutputStream(outputStream);
-
-      binaryIO.writeBinaryString(FILE_HEADER);
-      binaryIO.writeBinaryInteger(MAJOR_VERSION);
-      binaryIO.writeBinaryInteger(MINOR_VERSION);
-      binaryIO.writeBinaryLong(framesPerSecond);
-      binaryIO.writeBinaryLong(frames.size() - 1);
-
-      for (String string : frames) {
-        binaryIO.writeBinaryString(string);
-      }
-
-      outputStream.close();
-      return true;
-    } catch (FileNotFoundException e) {
-      System.out.println(e.toString());
-      return false;
-    } catch (IOException e) {
-      System.out.println(e.toString());
-      return false;
+    public AssetDescriptor getDescriptor() {
+      return this.descriptor;
     }
+
+    public String getFrameTarget() {
+      return frameTarget;
+    }
+
+    public void setFrameTarget(String frameTarget) {
+      this.frameTarget = frameTarget;
+    }
+
+    public int getDuration() {
+      return this.duration;
+    }
+
+    public void setDuration(int value) {
+      this.duration = Math.max(0, value);
+    }
+
   }
 
-  public boolean saveAs(File fileName) {
-    file = fileName;
-    return this.save();
+  private final List<Frame> frames;
+
+  public AnimatedTile(AssetDescriptor descriptor) {
+    super(descriptor);
+    frames = new ArrayList<>();
   }
+
+  /**
+   * Returns a list of animation frames associated with this animated tile.
+   *
+   * @return list of animation frames
+   */
+  public List<Frame> getFrames() {
+    return frames;
+  }
+
 }

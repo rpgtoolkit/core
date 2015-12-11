@@ -862,28 +862,31 @@ public final class Board extends BasicType implements Asset, Selectable {
   }
 
   /**
-   * Saves the board file, if the existing file ends with the 3.x extension it writes
-   * the new JSON format with the same file name but with an append ".json" extension.
-   * 
+   * Saves the board file, if the existing file ends with the 3.x extension it writes the new JSON
+   * format with the same file name but with an append ".json" extension.
+   *
    * @return true = success, false = failure
    */
   public boolean save() {
     if (file.getName().endsWith(".brd")) {
-      file = new File(file.getPath() + ".json");
+      if (binaryIO == null) {
+        binaryIO = new BinaryIO();
+      }
+      saveBinary();
     }
 
     try {
       AssetManager.getInstance().serialize(AssetManager.getInstance().getHandle(this));
       return true;
-    } catch (IOException | CorruptAssetException ex) {
+    } catch (IOException | AssetException ex) {
       Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
       return false;
     }
   }
-  
+
   /**
    * Saves the board file as the specified file.
-   * 
+   *
    * @param fileName
    * @return true = success, false = failure
    */
@@ -949,12 +952,17 @@ public final class Board extends BasicType implements Asset, Selectable {
     for (String indexString : tileNameIndex) {
       if (!indexString.isEmpty()) {
         if (indexString.substring(indexString.length() - 3).equals("tan")) {
-          AnimatedTile aTile = new AnimatedTile(new File(
-                  System.getProperty("project.path") 
-                          + "/"
-                          + PropertiesSingleton.getProperty("toolkit.directory.tileset")
-                          + "/" + indexString));
-          indexString = aTile.getFirstFrame();
+          String assetPath = System.getProperty("project.path")
+                  + PropertiesSingleton.getProperty("toolkit.directory.tileset")
+                  + File.separator + indexString;
+
+          try {
+            AnimatedTile aTile = (AnimatedTile) AssetManager.getInstance().deserialize(
+                    new AssetDescriptor(new File(assetPath).toURI())).getAsset();
+            indexString = aTile.getFrames().get(0).getFrameTarget();
+          } catch (IOException | AssetException ex) {
+            System.out.println(ex.toString());
+          }
         }
 
         String tileSetName = indexString.split(".tst")[0] + ".tst";
@@ -963,7 +971,6 @@ public final class Board extends BasicType implements Asset, Selectable {
           tileSetNames.add(tileSetName);
           tileSets.put(tileSetName, cache.addTileSet(tileSetName));
         }
-
         loadedTilesIndex.add(tileSets.get(tileSetName).getTile(Integer.parseInt(indexString.split(".tst")[1]) - 1));
       } else {
         loadedTilesIndex.add(null);
@@ -1411,7 +1418,7 @@ public final class Board extends BasicType implements Asset, Selectable {
 
         boardDimensions = new int[width][height][layerCount];
 
-        // Total number of distinct tile types used, if we add a 
+        // Total number of distinct tile types used, if we add a
         // new tile we will have to check if the tileIndex already
         // contains the name of the tile e.g. default.tst2
         int lookUpTableSize = binaryIO.readBinaryInteger();
@@ -1515,7 +1522,7 @@ public final class Board extends BasicType implements Asset, Selectable {
           lights.add(newLight);
         }
 
-        // Vector count is one less than it should be so +1 
+        // Vector count is one less than it should be so +1
         // to vectors all round!
         int numberVectors = binaryIO.readBinaryInteger();
         for (int i = 0; i < numberVectors + 1; i++) {
@@ -1665,14 +1672,14 @@ public final class Board extends BasicType implements Asset, Selectable {
         startingPositionX = binaryIO.readBinaryInteger();
         startingPositionY = binaryIO.readBinaryInteger();
         startingLayer = binaryIO.readBinaryInteger();
-        
+
         updateTileSetCache();
         createLayers();
       }
 
       binaryIO.closeInput();
       inputStream.close();
-    } catch (CorruptAssetException | IOException e) {
+    } catch (AssetException | IOException e) {
       System.out.println(e.toString());
     }
 
@@ -1748,11 +1755,21 @@ public final class Board extends BasicType implements Asset, Selectable {
       binaryIO.writeBinaryInteger(ubShading);
       binaryIO.writeBinaryLong(shadingLayer);
 
-      for (BoardLayerShade layerShade : tileShading) {
-        binaryIO.writeBinaryInteger((int) layerShade.getLayer());
-        binaryIO.writeBinaryInteger(layerShade.getColour().getRed());
-        binaryIO.writeBinaryInteger(layerShade.getColour().getGreen());
-        binaryIO.writeBinaryInteger(layerShade.getColour().getBlue());
+      if (tileShading.size() > 0) {
+        for (BoardLayerShade layerShade : tileShading) {
+          binaryIO.writeBinaryInteger((int) layerShade.getLayer());
+          binaryIO.writeBinaryInteger(layerShade.getColour().getRed());
+          binaryIO.writeBinaryInteger(layerShade.getColour().getGreen());
+          binaryIO.writeBinaryInteger(layerShade.getColour().getBlue());
+        } 
+      } else {
+        int totalShading = width * height;
+        for (int i = 0; i < totalShading; i++) {
+          binaryIO.writeBinaryInteger(1);
+          binaryIO.writeBinaryInteger(0);
+          binaryIO.writeBinaryInteger(0);
+          binaryIO.writeBinaryInteger(0);
+        }
       }
 
       // Lights
@@ -1895,12 +1912,17 @@ public final class Board extends BasicType implements Asset, Selectable {
         binaryIO.writeBinaryString(link);
       }
 
-      // Background Image 
-      BoardImage backgroundImage = backgroundImages.get(0);
-      binaryIO.writeBinaryString(backgroundImage.getFileName());
-      binaryIO.writeBinaryLong(backgroundImage.getDrawType());
+      // Background Image
+      if (backgroundImages.size() > 0) {
+        BoardImage backgroundImage = backgroundImages.get(0);
+        binaryIO.writeBinaryString(backgroundImage.getFileName());
+        binaryIO.writeBinaryLong(backgroundImage.getDrawType());
+      } else {
+        binaryIO.writeBinaryString("");
+        binaryIO.writeBinaryLong(0);
+      }
 
-      // Misc 
+      // Misc
       binaryIO.writeBinaryLong(backgroundColour);
       binaryIO.writeBinaryString(backgroundMusic);
 
