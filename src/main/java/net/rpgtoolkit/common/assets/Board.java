@@ -6,6 +6,8 @@
  */
 package net.rpgtoolkit.common.assets;
 
+import net.rpgtoolkit.common.assets.listeners.BoardChangeListener;
+import net.rpgtoolkit.common.assets.events.BoardChangedEvent;
 import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
