@@ -23,5 +23,26 @@ public interface PlayerChangeListener  extends EventListener  {
      * @param e
      */
     public void playerChanged(PlayerChangedEvent e);
+    
+    /**
+     * A new animation has been added to the player.
+     * 
+     * @param e
+     */
+    public void playerAnimationAdded(PlayerChangedEvent e);
+    
+    /**
+     * An animation has been updated.
+     * 
+     * @param e
+     */
+    public void playerAnimationUpdated(PlayerChangedEvent e);
+    
+    /**
+     * A animation has been removed.
+     * 
+     * @param e
+     */
+    public void playerAnimationRemoved(PlayerChangedEvent e);
 
 }
