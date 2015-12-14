@@ -895,6 +895,11 @@ public class Player extends BasicType {
     firePlayerAnimationUpdated();
   }
   
+  public void updateStandingGraphics(int index, String path) {
+      standingGraphics.set(index, path);
+      firePlayerAnimationUpdated();
+  }
+  
   public void addCustomGraphics(String path) {
     customGraphics.add("");
     firePlayerAnimationAdded();
