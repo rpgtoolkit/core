@@ -31,7 +31,6 @@ public class AnimationFrame {
   private BufferedImage image;
   private int imageType = 0; // temp 0 = tile, 1 = png
 
-  //private Texture glTexture;
   /**
    * Creates a new frame based on the specified parameters.
    *
@@ -46,17 +45,6 @@ public class AnimationFrame {
     // Check if we are using PNG or TST frames, will add more file formats in a future version.
     if ((frameName.toLowerCase().endsWith("png")) || (frameName.toLowerCase().endsWith("gif"))) {
       try {
-        /*
-                // Create the full path to the frame file, and load the frame data
-                FileInputStream fis = new FileInputStream(System.getProperty("project.path") + "/bitmap/" + frameName);
-                Raster wr = ImageIO.read(fis).getData();
-
-                // We are creating an image from a raster rather than reading directly from IO because we need to specify the
-                // image type correctly, this is for the engine.
-                image = new BufferedImage(wr.getWidth(), wr.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                image.setData(wr);
-                imageType = 1;    */
-
         frameName = frameName.replace("\\", "/");
         FileInputStream fis = new FileInputStream(System.getProperty("project.path")
                 + "/"
@@ -83,7 +71,6 @@ public class AnimationFrame {
     // Set the transparent color and frame sound, these are not currently used.
     this.transparentColour = transparentColour;
     this.frameSound = frameSound;
-
   }
 
   public String getFrameName() {
@@ -117,7 +104,6 @@ public class AnimationFrame {
   public BufferedImage getFrameImage() {
     if (imageType == 1) {
       return image;
-
     } else {
       return frameTile.getTileAsImage();
     }

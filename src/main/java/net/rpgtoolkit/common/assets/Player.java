@@ -87,9 +87,11 @@ public class Player extends BasicType {
   private ArrayList<String> customGraphics;
   private ArrayList<String> customGraphicNames;
   private ArrayList<String> standingGraphics;
+  
   private double idleTimeBeforeStanding;
   private double frameRate; //Seconds between each step
   private long loopSpeed;
+  
   private BoardVector baseVector;
   private BoardVector activationVector;
   private Area baseArea;
