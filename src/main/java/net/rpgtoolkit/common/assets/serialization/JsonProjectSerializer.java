@@ -8,20 +8,15 @@
 package net.rpgtoolkit.common.assets.serialization;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import net.rpgtoolkit.common.assets.AssetDescriptor;
 import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
-import net.rpgtoolkit.common.assets.Board;
 import net.rpgtoolkit.common.assets.EnemySkillPair;
-import net.rpgtoolkit.common.assets.Player;
-import net.rpgtoolkit.common.assets.Program;
 import net.rpgtoolkit.common.assets.Project;
 import net.rpgtoolkit.common.assets.RunTimeKey;
 import net.rpgtoolkit.common.io.Paths;
-import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONStringer;

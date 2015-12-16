@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.rpgtoolkit.common.utilities.BinaryIO;
 import net.rpgtoolkit.common.CorruptAssetException;
@@ -26,7 +28,7 @@ import net.rpgtoolkit.common.assets.listeners.AnimationChangeListener;
  * @author geoff wilson
  * @version svn
  */
-public class Animation extends BasicType {
+public class Animation extends BasicType implements Asset {
 
   private final LinkedList<AnimationChangeListener> animationChangeListeners = new LinkedList<>();
 
@@ -58,7 +60,15 @@ public class Animation extends BasicType {
     super(fileName);
     init();
     System.out.println("\tLoading Animation: " + fileName);
-    this.openBinary();
+  }
+  
+  /**
+   * Returns all of an Animation's frames.
+   * 
+   * @return 
+   */
+  public ArrayList<AnimationFrame> getFrames() {
+    return frames;
   }
 
   /**
@@ -250,7 +260,7 @@ public class Animation extends BasicType {
    * @return
    * @deprecated 
    */
-  private boolean openBinary() {
+  public boolean openBinary() {
     try {
       // Configure the IO
       inputStream = new FileInputStream(this.file);
@@ -352,6 +362,29 @@ public class Animation extends BasicType {
       return false;
     }
   }
+  
+  /**
+   * Saves the animation file, if the existing file ends with the 3.x extension it writes the new JSON
+   * format with the same file name but with an append ".json" extension.
+   *
+   * @return true = success, false = failure
+   */
+  public boolean save() {
+    if (file.getName().endsWith(".anm")) {
+      if (binaryIO == null) {
+        binaryIO = new BinaryIO();
+      }
+      saveBinary();
+    }
+
+    try {
+      AssetManager.getInstance().serialize(AssetManager.getInstance().getHandle(this));
+      return true;
+    } catch (IOException | AssetException ex) {
+      Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+      return false;
+    }
+  }
 
   /**
    * Saves the Animation to a new file
@@ -384,6 +417,16 @@ public class Animation extends BasicType {
     frames.remove(frameIndex);
     frameCount = frames.size();
     fireAnimationFrameRemoved();
+  }
+
+  @Override
+  public AssetDescriptor getDescriptor() {
+    return new AssetDescriptor(this.getFile().toURI());
+  }
+
+  @Override
+  public void reset() {
+    init();
   }
 
 }

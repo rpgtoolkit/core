@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.rpgtoolkit.common.utilities.BinaryIO;
-import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
 /**
  * This class manages the GAM file type for the RPG Toolkit
