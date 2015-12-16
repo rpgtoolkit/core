@@ -46,14 +46,7 @@ public class Animation extends BasicType {
   private double frameRate;
 
   public Animation() {
-    animationWidth = 50;
-    animationHeight = 50;
-    
-    soundEffect = "";
-    
-    frameCount = 0;
-    frames = new ArrayList<>();
-    frameRate = 0.5;
+    init();
   }
   
   /**
@@ -63,6 +56,7 @@ public class Animation extends BasicType {
    */
   public Animation(File fileName) {
     super(fileName);
+    init();
     System.out.println("\tLoading Animation: " + fileName);
     this.openBinary();
   }
@@ -236,6 +230,17 @@ public class Animation extends BasicType {
 
       ((AnimationChangeListener) iterator.next()).animationFrameRemoved(event);
     }
+  }
+  
+  private void init() {
+    animationWidth = 50;
+    animationHeight = 50;
+    
+    soundEffect = "";
+    
+    frameCount = 0;
+    frames = new ArrayList<>();
+    frameRate = 0.5;
   }
 
   /**
