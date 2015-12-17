@@ -394,7 +394,7 @@ public class Animation extends BasicType implements Asset {
    */
   public boolean saveAs(File fileName) {
     this.file = fileName;
-    return this.saveBinary();
+    return save();
   }
 
   /**
