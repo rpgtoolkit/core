@@ -14,15 +14,11 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 
-import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.assets.AbstractAssetSerializer;
 import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
-import net.rpgtoolkit.common.utilities.JSON;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 /**
  * Abstract base class for implementing asset serializers that load or store
