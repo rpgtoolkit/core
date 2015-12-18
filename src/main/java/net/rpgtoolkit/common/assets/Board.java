@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
- *
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
  * the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import net.rpgtoolkit.common.utilities.TileSetCache;
 import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.Selectable;
@@ -33,7 +34,7 @@ import net.rpgtoolkit.common.utilities.PropertiesSingleton;
  * @author Geoff Wilson
  * @author Joshua Michael Daly
  */
-public final class Board extends BasicType implements Asset, Selectable {
+public final class Board extends AbstractAsset implements Selectable {
 
   // Non-IO
   private final LinkedList<BoardChangeListener> boardChangeListeners = new LinkedList<>();
@@ -42,9 +43,6 @@ public final class Board extends BasicType implements Asset, Selectable {
   private boolean selectedState;
 
   // Constants
-  public static final String FILE_HEADER = "RPGTLKIT BOARD";
-  public static final int MAJOR_VERSION = 2;
-  public static final int MINOR_VERSION = 4;
   public static final int STANDARD = 1;
   public static final int ISO_STACKED = 2;
   public static final int ISO_ROTATED = 6;
@@ -57,7 +55,6 @@ public final class Board extends BasicType implements Asset, Selectable {
   private ArrayList<String> tileNameIndex;      // Contains string names e.g. default.tst1
   private ArrayList<Tile> loadedTilesIndex;     // Contains tile objects of e.g. default.tst1
   private int[][][] boardDimensions;            // x, y, z
-  private long shadingLayer;
   private ArrayList<BoardLayerShade> tileShading;
   private ArrayList<BoardImage> boardImages;
   private ArrayList<BoardImage> spriteImages;
@@ -84,42 +81,39 @@ public final class Board extends BasicType implements Asset, Selectable {
   private String lastLoadedTileSet;
   private HashMap<String, TileSet> tileSets;
 
-  // TODO: Remove these attributes from 4.1.
-  private int ubShading;
-  private byte randomByte;
-  private int associatedVector;
-  private int imageTransluceny;
-
   /**
    * Creates an empty board.
    */
-  public Board() {
-
-  }
-
-  /**
-   * Opens the specified board.
-   *
-   * @param file board file to open
-   * @throws java.io.FileNotFoundException
-   */
-  public Board(File file) throws FileNotFoundException {
-    super(file);
-    reset();
-
-    System.out.println("Loading Board " + file);
+  public Board(AssetDescriptor descriptor) {
+    super(descriptor);
+    this.tileNameIndex = new ArrayList<>();
+    this.loadedTilesIndex = new ArrayList<>();
+    this.tileShading = new ArrayList<>();
+    this.boardImages = new ArrayList<>();
+    this.spriteImages = new ArrayList<>();
+    this.programs = new ArrayList<>();
+    this.threads = new ArrayList<>();
+    this.lights = new ArrayList<>();
+    this.vectors = new ArrayList<>();
+    this.sprites = new ArrayList<>();
+    this.constants = new ArrayList<>();
+    this.layerTitles = new ArrayList<>();
+    this.directionalLinks = new ArrayList<>();
+    this.backgroundImages = new ArrayList<>();
+    this.tileSets = new HashMap<>();
   }
 
   /**
    * Creates a new board with the specified width and height.
    *
-   * @param width board width
+   * @param width  board width
    * @param height board height
    */
-  public Board(int width, int height) {
+  public Board(AssetDescriptor descriptor, int width, int height) {
+    this(descriptor);
     reset();
-    this.width = width;
-    this.height = height;
+    this.setWidth(width);
+    this.setHeight(height);
   }
 
   /**
@@ -156,6 +150,9 @@ public final class Board extends BasicType implements Asset, Selectable {
    * @param width new width
    */
   public void setWidth(int width) {
+    if (width <= 0) {
+      throw new IllegalArgumentException("width must be > 0");
+    }
     this.width = width;
   }
 
@@ -174,6 +171,9 @@ public final class Board extends BasicType implements Asset, Selectable {
    * @param height new height
    */
   public void setHeight(int height) {
+    if (height <= 0) {
+      throw new IllegalArgumentException("height must be > 0");
+    }
     this.height = height;
   }
 
@@ -861,70 +861,30 @@ public final class Board extends BasicType implements Asset, Selectable {
     }
   }
 
-  /**
-   * Saves the board file, if the existing file ends with the 3.x extension it writes the new JSON
-   * format with the same file name but with an append ".json" extension.
-   *
-   * @return true = success, false = failure
-   */
-  public boolean save() {
-    if (file.getName().endsWith(".brd")) {
-      if (binaryIO == null) {
-        binaryIO = new BinaryIO();
-      }
-      saveBinary();
-    }
-
-    try {
-      AssetManager.getInstance().serialize(AssetManager.getInstance().getHandle(this));
-      return true;
-    } catch (IOException | AssetException ex) {
-      Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
-      return false;
-    }
-  }
-
-  /**
-   * Saves the board file as the specified file.
-   *
-   * @param fileName
-   * @return true = success, false = failure
-   */
-  public boolean saveAs(File fileName) {
-    file = fileName;
-    return save();
-  }
-
-  @Override
-  public AssetDescriptor getDescriptor() {
-    return new AssetDescriptor(this.getFile().toURI());
-  }
-
   @Override
   public void reset() {
-    tileNameIndex = new ArrayList<>();
-    loadedTilesIndex = new ArrayList<>();
-    tileShading = new ArrayList<>();
-    boardImages = new ArrayList<>();
-    spriteImages = new ArrayList<>();
-    programs = new ArrayList<>();
-    threads = new ArrayList<>();
-    lights = new ArrayList<>();
-    vectors = new ArrayList<>();
-    sprites = new ArrayList<>();
-    constants = new ArrayList<>();
-    layerTitles = new ArrayList<>();
-    directionalLinks = new ArrayList<>();
-    backgroundImages = new ArrayList<>();
-    tileSets = new HashMap<>();
+    
+    tileNameIndex.clear();
+    loadedTilesIndex.clear();
+    tileShading.clear();
+    boardImages.clear();
+    spriteImages.clear();
+    programs.clear();
+    threads.clear();
+    lights.clear();
+    vectors.clear();
+    sprites.clear();
+    constants.clear();
+    layerTitles.clear();
+    directionalLinks.clear();
+    backgroundImages.clear();
+    tileSets.clear();
 
     width = 0;
     height = 0;
     layerCount = 0;
     coordinateType = STANDARD;
     boardDimensions = new int[width][height][layerCount];
-    ubShading = 0;
-    shadingLayer = 0;
     backgroundColour = 0;
     backgroundMusic = "";
     firstRunProgram = "";
@@ -937,9 +897,7 @@ public final class Board extends BasicType implements Asset, Selectable {
     startingPositionY = 0;
     startingLayer = 0;
     lastLoadedTileSet = "";
-    randomByte = (byte) 0;
-    associatedVector = 0;
-    imageTransluceny = 0;
+
   }
 
   /**
@@ -953,12 +911,12 @@ public final class Board extends BasicType implements Asset, Selectable {
       if (!indexString.isEmpty()) {
         if (indexString.substring(indexString.length() - 3).equals("tan")) {
           String assetPath = System.getProperty("project.path")
-                  + PropertiesSingleton.getProperty("toolkit.directory.tileset")
-                  + File.separator + indexString;
+            + PropertiesSingleton.getProperty("toolkit.directory.tileset")
+            + File.separator + indexString;
 
           try {
             AnimatedTile aTile = (AnimatedTile) AssetManager.getInstance().deserialize(
-                    new AssetDescriptor(new File(assetPath).toURI())).getAsset();
+              new AssetDescriptor(new File(assetPath).toURI())).getAsset();
             indexString = aTile.getFrames().get(0).getFrameTarget();
           } catch (IOException | AssetException ex) {
             System.out.println(ex.toString());
@@ -1304,9 +1262,9 @@ public final class Board extends BasicType implements Asset, Selectable {
         for (i = x; i < width; i++) {
           if (boardDimensions[i][j][k] != tile) {
             int[] array
-                    = {
-                      count, i, j, k
-                    };
+              = {
+              count, i, j, k
+            };
 
             return array;
           }
@@ -1321,9 +1279,9 @@ public final class Board extends BasicType implements Asset, Selectable {
     }
 
     int[] array
-            = {
-              count, i, j, k
-            };
+      = {
+      count, i, j, k
+    };
 
     return array;
   }
@@ -1386,576 +1344,7 @@ public final class Board extends BasicType implements Asset, Selectable {
 
       layerIndex++;
     }
-  }
 
-  /**
-   * Used to open the old binary file format from the TK 3.x era, this remains here simply for those
-   * few who wish to migrate to TK 4.0. However it will be removed in the next iteration of 4.1.
-   *
-   * @return true for success, false for failure
-   * @deprecated
-   */
-  public boolean openBinary() {
-    try {
-      binaryIO = new BinaryIO(new FileInputStream(file));
-
-      if (binaryIO.readBinaryString().equals(FILE_HEADER)) {
-        int majorVersion = binaryIO.readBinaryInteger();
-        int minorVersion = binaryIO.readBinaryInteger();
-
-        width = binaryIO.readBinaryInteger();
-        height = binaryIO.readBinaryInteger();
-        layerCount = binaryIO.readBinaryInteger();
-        coordinateType = binaryIO.readBinaryInteger();
-
-        if (coordinateType == ISO_ROTATED) {
-          int tmpWidth = width;
-          int tmpHeight = height;
-
-          width += tmpHeight;
-          height += tmpWidth;
-        }
-
-        boardDimensions = new int[width][height][layerCount];
-
-        // Total number of distinct tile types used, if we add a
-        // new tile we will have to check if the tileIndex already
-        // contains the name of the tile e.g. default.tst2
-        int lookUpTableSize = binaryIO.readBinaryInteger();
-
-        // Appears to be a random "" null string at the start of
-        // the look up table. To avoid any issues we must "eat" this
-        // null string.
-        randomByte = binaryIO.readBinaryByte();
-
-        for (int i = 0; i < lookUpTableSize; i++) {
-          // Read in the name of the tiles used on this board.
-          tileNameIndex.add(binaryIO.readBinaryString());
-        }
-
-        int totalTiles = width * height * layerCount;
-
-        int x = 0;
-        int y = 0;
-        int z = 0;
-        int tilesLoaded = 0;
-
-        while (tilesLoaded < totalTiles) {
-          int index = binaryIO.readBinaryInteger();
-          int count = 1;
-
-          if (index < 0) { // compressed data
-            count = -index;
-            index = binaryIO.readBinaryInteger();
-          }
-
-          for (int i = 0; i < count; i++) {
-            boardDimensions[x][y][z] = index;
-            tilesLoaded++;
-            x++;
-
-            if (x == width) {
-              x = 0;
-              y++;
-
-              if (y == height) {
-                y = 0;
-                z++;
-              }
-            }
-          }
-        }
-
-        /* Tile Shading Data Notes
-         *
-         * Unsure why ubShading and then shadingLayer are read since 
-         * the shading is only applied to one(?)
-         * layer, perhaps this was to allow for more shading layerCount in 
-         * the future, however it is now unnecessary
-         * and so the ubShading will be ignored.
-         */
-        ubShading = binaryIO.readBinaryInteger();
-
-        // apply shading from this layer down
-        shadingLayer = binaryIO.readBinaryLong();
-
-        // WE ARE ASSUMING NO SHADING FOR NOW!
-        // only one layer, so total tiles is just w * h
-        int totalShading = width * height;
-        int shadingLoaded = 0;
-
-        while (shadingLoaded < totalShading) {
-          int count = binaryIO.readBinaryInteger();
-          shadingLoaded += count;
-
-          int red = binaryIO.readBinaryInteger();
-          int green = binaryIO.readBinaryInteger();
-          int blue = binaryIO.readBinaryInteger();
-
-          tileShading.add(new BoardLayerShade(red, green, blue,
-                  count));
-        }
-
-        // Lights
-        int numberLights = binaryIO.readBinaryInteger();
-        for (int i = 0; i < numberLights + 1; i++) {
-          BoardLight newLight = new BoardLight();
-
-          newLight.setLayer(binaryIO.readBinaryLong());
-          newLight.setType(binaryIO.readBinaryLong());
-
-          int numberPoints = binaryIO.readBinaryInteger();
-          for (int j = 0; j < numberPoints + 1; j++) {
-            newLight.addPoint(new Point(
-                    (int) binaryIO.readBinaryLong(),
-                    (int) binaryIO.readBinaryLong()));
-          }
-
-          int numColors = binaryIO.readBinaryInteger();
-          for (int j = 0; j < numColors + 1; j++) {
-            newLight.addColor(new Color(
-                    binaryIO.readBinaryInteger(),
-                    binaryIO.readBinaryInteger(),
-                    binaryIO.readBinaryInteger()));
-          }
-
-          lights.add(newLight);
-        }
-
-        // Vector count is one less than it should be so +1
-        // to vectors all round!
-        int numberVectors = binaryIO.readBinaryInteger();
-        for (int i = 0; i < numberVectors + 1; i++) {
-          BoardVector newVector = new BoardVector();
-
-          // How Many Points in said vector?
-          int numberPoints = binaryIO.readBinaryInteger();
-
-          for (int j = 0; j < numberPoints + 1; j++) {
-            newVector.addPoint(binaryIO.readBinaryLong(), binaryIO.readBinaryLong());
-          }
-
-          newVector.setAttributes(binaryIO.readBinaryInteger());
-          newVector.setClosed(binaryIO.readBinaryInteger() == 1);
-          newVector.setLayer(binaryIO.readBinaryInteger());
-          newVector.setTileType(binaryIO.readBinaryInteger());
-          newVector.setHandle(binaryIO.readBinaryString());
-
-          vectors.add(newVector);
-        }
-
-        // Programs
-        int numberPrograms = binaryIO.readBinaryInteger();
-
-        for (int i = 0; i < numberPrograms + 1; i++) {
-          BoardProgram newProgram = new BoardProgram();
-
-          newProgram.setFileName(binaryIO.readBinaryString());
-          newProgram.setGraphic(binaryIO.readBinaryString());
-          newProgram.setInitialVariable(binaryIO.readBinaryString());
-          newProgram.setInitialValue(binaryIO.readBinaryString());
-          newProgram.setFinalVariable(binaryIO.readBinaryString());
-          newProgram.setFinalValue(binaryIO.readBinaryString());
-          newProgram.setActivate(binaryIO.readBinaryInteger());
-          newProgram.setActivationType(binaryIO.readBinaryInteger());
-          newProgram.setDistanceRepeat(binaryIO.readBinaryInteger());
-          newProgram.setLayer(binaryIO.readBinaryInteger());
-
-          BoardVector programVector = new BoardVector();
-          int numberPoints = binaryIO.readBinaryInteger();
-
-          for (int j = 0; j < numberPoints + 1; j++) {
-            programVector.addPoint(binaryIO.readBinaryLong(),
-                    binaryIO.readBinaryLong());
-          }
-
-          programVector.setClosed(binaryIO.readBinaryInteger() == 1);
-          programVector.setHandle(binaryIO.readBinaryString());
-
-          newProgram.setVector(programVector);
-          programs.add(newProgram);
-        }
-
-        // Sprites
-        int numberSprites = binaryIO.readBinaryInteger();
-
-        for (int i = 0; i < numberSprites + 1; i++) {
-          BoardSprite newSprite = new BoardSprite();
-
-          newSprite.setFileName(binaryIO.readBinaryString());
-          newSprite.setActivationProgram(binaryIO.readBinaryString());
-          newSprite.setMultitaskingProgram(binaryIO.readBinaryString());
-          newSprite.setInitialVariable(binaryIO.readBinaryString());
-          newSprite.setInitialValue(binaryIO.readBinaryString());
-          newSprite.setFinalVariable(binaryIO.readBinaryString());
-          newSprite.setFinalValue(binaryIO.readBinaryString());
-          newSprite.setLoadingVariable(binaryIO.readBinaryString());
-          newSprite.setLoadingValue(binaryIO.readBinaryString());
-          newSprite.setActivate(binaryIO.readBinaryInteger());
-          newSprite.setActivationType(binaryIO.readBinaryInteger());
-          newSprite.setX(binaryIO.readBinaryInteger());
-          newSprite.setY(binaryIO.readBinaryInteger());
-          newSprite.setLayer(binaryIO.readBinaryInteger());
-
-          // skip one INT of data
-          associatedVector = binaryIO.readBinaryInteger();
-
-          sprites.add(newSprite);
-        }
-
-        //Images
-        int numberImage = binaryIO.readBinaryInteger();
-
-        for (int i = 0; i < numberImage + 1; i++) {
-          BoardImage newImage = new BoardImage();
-          newImage.setFileName(binaryIO.readBinaryString());
-          newImage.setBoundLeft(binaryIO.readBinaryLong());
-          newImage.setBoundTop(binaryIO.readBinaryLong());
-          newImage.setLayer(binaryIO.readBinaryInteger());
-          newImage.setDrawType(binaryIO.readBinaryInteger());
-          newImage.setTransparentColour(binaryIO.readBinaryLong());
-
-          // skip one INT of data
-          imageTransluceny = binaryIO.readBinaryInteger();
-
-          boardImages.add(newImage);
-        }
-
-        // Threads
-        int numberThread = binaryIO.readBinaryInteger();
-
-        for (int i = 0; i < numberThread + 1; i++) {
-          threads.add(binaryIO.readBinaryString());
-        }
-
-        // Constants
-        int numberConstants = binaryIO.readBinaryInteger();
-
-        for (int i = 0; i < numberConstants + 1; i++) {
-          constants.add(binaryIO.readBinaryString());
-        }
-
-        // Layer Titles
-        // Geoff's random +1 here causes problems at save time!
-        for (int i = 0; i < layerCount + 1; i++) {
-          layerTitles.add(binaryIO.readBinaryString());
-        }
-
-        for (int i = 0; i < 4; i++) {
-          directionalLinks.add(binaryIO.readBinaryString());
-        }
-
-        BoardImage backgroundImage = new BoardImage();
-        backgroundImage.setFileName(binaryIO.readBinaryString());
-        backgroundImage.setDrawType(binaryIO.readBinaryLong());
-        backgroundImage.setScrollRatio(20); // 1 Pixel for every 10 the player moves
-        backgroundImages.add(backgroundImage);
-
-        backgroundColour = binaryIO.readBinaryLong();
-        backgroundMusic = binaryIO.readBinaryString();
-
-        firstRunProgram = binaryIO.readBinaryString();
-        battleBackground = binaryIO.readBinaryString();
-        enemyBattleLevel = binaryIO.readBinaryInteger();
-        allowBattles = binaryIO.readBinaryInteger() == -1;
-        allowSaving = !(binaryIO.readBinaryInteger() == -1);
-
-        try {
-          ambientEffect = new Color(
-                  binaryIO.readBinaryInteger(),
-                  binaryIO.readBinaryInteger(),
-                  binaryIO.readBinaryInteger());
-        } catch (CorruptAssetException | IllegalArgumentException e) {
-          ambientEffect = new Color(0, 0, 0);
-        }
-
-        startingPositionX = binaryIO.readBinaryInteger();
-        startingPositionY = binaryIO.readBinaryInteger();
-        startingLayer = binaryIO.readBinaryInteger();
-
-        updateTileSetCache();
-        createLayers();
-      }
-
-      binaryIO.closeInput();
-      inputStream.close();
-    } catch (AssetException | IOException e) {
-      System.out.println(e.toString());
-    }
-
-    return true;
-  }
-
-  /**
-   * Used to save the old binary file format from the TK 3.x era, this remains here simply because
-   * it took so long to implement it that throwing it away for 4.0 would be a waste of work. It will
-   * be removed in 4.1.
-   *
-   * @return true for success, and false for failure
-   * @deprecated
-   */
-  public boolean saveBinary() {
-    updateBoardIO();
-
-    try {
-      outputStream = new FileOutputStream(file);
-      binaryIO.setOutputStream(outputStream);
-
-      binaryIO.writeBinaryString(FILE_HEADER);
-      binaryIO.writeBinaryInteger(MAJOR_VERSION);
-      binaryIO.writeBinaryInteger(MINOR_VERSION);
-
-      binaryIO.writeBinaryInteger(width);
-      binaryIO.writeBinaryInteger(height);
-      binaryIO.writeBinaryInteger(layerCount);
-      binaryIO.writeBinaryInteger(coordinateType);
-
-      binaryIO.writeBinaryInteger(tileNameIndex.size());
-      binaryIO.writeBinaryByte(randomByte);
-
-      for (String tile : tileNameIndex) {
-        binaryIO.writeBinaryString(tile);
-      }
-
-      // Tiles
-      int x;
-      int y;
-      int z;
-      int count;
-      int index;
-      int[] array;
-
-      for (int k = 0; k < layerCount; k++) {
-        for (int j = 0; j < height; j++) {
-          for (int i = 0; i < width; i++) {
-            x = i;
-            y = j;
-            z = k;
-
-            array = findDuplicateTiles(x, y, z);
-
-            count = array[0];
-            index = boardDimensions[x][y][z];
-
-            if (count > 1) {
-              binaryIO.writeBinaryInteger(-count);
-              binaryIO.writeBinaryInteger(index);
-
-              i = array[1] - 1;
-              j = array[2];
-              k = array[3];
-            } else {
-              binaryIO.writeBinaryInteger(index);
-            }
-          }
-        }
-      }
-
-      // Shading
-      binaryIO.writeBinaryInteger(ubShading);
-      binaryIO.writeBinaryLong(shadingLayer);
-
-      if (tileShading.size() > 0) {
-        for (BoardLayerShade layerShade : tileShading) {
-          binaryIO.writeBinaryInteger((int) layerShade.getLayer());
-          binaryIO.writeBinaryInteger(layerShade.getColour().getRed());
-          binaryIO.writeBinaryInteger(layerShade.getColour().getGreen());
-          binaryIO.writeBinaryInteger(layerShade.getColour().getBlue());
-        } 
-      } else {
-        int totalShading = width * height;
-        for (int i = 0; i < totalShading; i++) {
-          binaryIO.writeBinaryInteger(1);
-          binaryIO.writeBinaryInteger(0);
-          binaryIO.writeBinaryInteger(0);
-          binaryIO.writeBinaryInteger(0);
-        }
-      }
-
-      // Lights
-      binaryIO.writeBinaryInteger(lights.size() - 1);
-
-      for (BoardLight light : lights) {
-        binaryIO.writeBinaryLong(light.getLayer());
-        binaryIO.writeBinaryLong(light.getType());
-
-        for (Point point : light.getPoints()) {
-          binaryIO.writeBinaryLong(point.x);
-          binaryIO.writeBinaryLong(point.y);
-        }
-
-        for (Color color : light.getColors()) {
-          binaryIO.writeBinaryInteger(color.getRed());
-          binaryIO.writeBinaryInteger(color.getGreen());
-          binaryIO.writeBinaryInteger(color.getBlue());
-        }
-      }
-
-      // Vectors
-      binaryIO.writeBinaryInteger(vectors.size() - 1);
-
-      for (BoardVector vector : vectors) {
-        binaryIO.writeBinaryInteger(vector.getPoints().size() - 1);
-
-        for (Point point : vector.getPoints()) {
-          binaryIO.writeBinaryLong((long) point.x);
-          binaryIO.writeBinaryLong((long) point.y);
-        }
-
-        binaryIO.writeBinaryInteger(vector.getAttributes());
-
-        if (vector.isClosed()) {
-          binaryIO.writeBinaryInteger(1);
-        } else {
-          binaryIO.writeBinaryInteger(0);
-        }
-
-        binaryIO.writeBinaryInteger(vector.getLayer());
-        binaryIO.writeBinaryInteger(vector.getTileType());
-        binaryIO.writeBinaryString(vector.getHandle());
-      }
-
-      // Programs
-      binaryIO.writeBinaryInteger(programs.size() - 1);
-
-      for (BoardProgram program : programs) {
-        binaryIO.writeBinaryString(program.getFileName());
-        binaryIO.writeBinaryString(program.getGraphic());
-        binaryIO.writeBinaryString(program.getInitialVariable());
-        binaryIO.writeBinaryString(program.getInitialValue());
-        binaryIO.writeBinaryString(program.getFinalVariable());
-        binaryIO.writeBinaryString(program.getFinalValue());
-        binaryIO.writeBinaryInteger((int) program.getActivate());
-        binaryIO.writeBinaryInteger((int) program.getActivationType());
-        binaryIO.writeBinaryInteger((int) program.getDistanceRepeat());
-        binaryIO.writeBinaryInteger((int) program.getLayer());
-
-        BoardVector programVector = program.getVector();
-        binaryIO.writeBinaryInteger(programVector.getPointCount() - 1);
-
-        for (Point point : programVector.getPoints()) {
-          binaryIO.writeBinaryLong((long) point.x);
-          binaryIO.writeBinaryLong((long) point.y);
-        }
-
-        if (programVector.isClosed()) {
-          binaryIO.writeBinaryInteger(1);
-        } else {
-          binaryIO.writeBinaryInteger(0);
-        }
-
-        binaryIO.writeBinaryString(programVector.getHandle());
-      }
-
-      // Sprites
-      binaryIO.writeBinaryInteger(sprites.size() - 1);
-
-      for (BoardSprite sprite : sprites) {
-        binaryIO.writeBinaryString(sprite.getFileName());
-        binaryIO.writeBinaryString(sprite.getActivationProgram());
-        binaryIO.writeBinaryString(sprite.getMultitaskingProgram());
-        binaryIO.writeBinaryString(sprite.getInitialVariable());
-        binaryIO.writeBinaryString(sprite.getInitialValue());
-        binaryIO.writeBinaryString(sprite.getFinalVariable());
-        binaryIO.writeBinaryString(sprite.getFinalValue());
-        binaryIO.writeBinaryString(sprite.getLoadingVariable());
-        binaryIO.writeBinaryString(sprite.getLoadingValue());
-        binaryIO.writeBinaryInteger((int) sprite.getActivate());
-        binaryIO.writeBinaryInteger((int) sprite.getActivationType());
-        binaryIO.writeBinaryInteger((int) sprite.getX());
-        binaryIO.writeBinaryInteger((int) sprite.getY());
-        binaryIO.writeBinaryInteger((int) sprite.getLayer());
-
-        // INT will be skipped.
-        binaryIO.writeBinaryInteger(associatedVector);
-      }
-
-      // Images
-      binaryIO.writeBinaryInteger(boardImages.size() - 1);
-
-      for (BoardImage image : boardImages) {
-        binaryIO.writeBinaryString(image.getFileName());
-        binaryIO.writeBinaryLong(image.getBoundLeft());
-        binaryIO.writeBinaryLong(image.getBoundTop());
-        binaryIO.writeBinaryInteger((int) image.getLayer());
-        binaryIO.writeBinaryInteger((int) image.getDrawType());
-        binaryIO.writeBinaryLong(image.getTransparentColour());
-
-        // INT will be skipped.
-        binaryIO.writeBinaryInteger(imageTransluceny);
-      }
-
-      // Threads
-      binaryIO.writeBinaryInteger(threads.size() - 1);
-
-      for (String thread : threads) {
-        binaryIO.writeBinaryString(thread);
-      }
-
-      // Constants
-      binaryIO.writeBinaryInteger(constants.size() - 1);
-
-      for (String constant : constants) {
-        binaryIO.writeBinaryString(constant);
-      }
-
-      // Bug must write out a null string here.
-      binaryIO.writeBinaryString("");
-
-      // Layer Titles
-      for (String layerTitle : layerTitles) {
-        binaryIO.writeBinaryString(layerTitle);
-      }
-
-      // Directonal Links
-      for (String link : directionalLinks) {
-        binaryIO.writeBinaryString(link);
-      }
-
-      // Background Image
-      if (backgroundImages.size() > 0) {
-        BoardImage backgroundImage = backgroundImages.get(0);
-        binaryIO.writeBinaryString(backgroundImage.getFileName());
-        binaryIO.writeBinaryLong(backgroundImage.getDrawType());
-      } else {
-        binaryIO.writeBinaryString("");
-        binaryIO.writeBinaryLong(0);
-      }
-
-      // Misc
-      binaryIO.writeBinaryLong(backgroundColour);
-      binaryIO.writeBinaryString(backgroundMusic);
-
-      binaryIO.writeBinaryString(firstRunProgram);
-      binaryIO.writeBinaryString(battleBackground);
-      binaryIO.writeBinaryInteger(enemyBattleLevel);
-
-      if (allowBattles) {
-        binaryIO.writeBinaryInteger(-1);
-      } else {
-        binaryIO.writeBinaryInteger(0);
-      }
-
-      if (allowSaving) {
-        binaryIO.writeBinaryInteger(0);
-      } else {
-        binaryIO.writeBinaryInteger(-1);
-      }
-
-      binaryIO.writeBinaryInteger(ambientEffect.getRed());
-      binaryIO.writeBinaryInteger(ambientEffect.getGreen());
-      binaryIO.writeBinaryInteger(ambientEffect.getBlue());
-      binaryIO.writeBinaryInteger(startingPositionX);
-      binaryIO.writeBinaryInteger(startingPositionY);
-      binaryIO.writeBinaryInteger(startingLayer);
-
-      binaryIO.closeOutput();
-
-      return true;
-    } catch (IOException e) {
-      System.out.println(e.toString());
-      return false;
-    }
   }
 
 }

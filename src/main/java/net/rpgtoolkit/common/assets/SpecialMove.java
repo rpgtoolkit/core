@@ -6,41 +6,21 @@
  */
 package net.rpgtoolkit.common.assets;
 
-import net.rpgtoolkit.common.CorruptAssetException;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import static java.lang.System.out;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-public class SpecialMove extends BasicType implements Asset {
-  // Constants
-  private final String FILE_HEADER = "RPGTLKIT SPLMOVE";
-  private final int MAJOR_VERSION = 2;
-  private final int MINOR_VERSION = 2;
+public class SpecialMove extends AbstractAsset {
 
   private String name;
+  private String description;
+  private AssetDescriptor rpgcodeProgram;
+  private AssetDescriptor associatedStatusEffect;
+  private AssetDescriptor associatedAnimation;
   private long fightPower;
   private long mpCost;
-  private String rpgcodeProgram;
   private long mpDrainedFromTarget;
-  private byte canUseInBattle; // Should be a bool
-  private byte canUseInMenu;   // Should be a bool :'(
-  private String associatedStatusEffect;
-  private String associatedAnimation;
-  private String description;
+  private boolean canUseInBattle;
+  private boolean canUseInMenu;
 
-  public SpecialMove() {
-
-  }
-
-  public SpecialMove(File file) {
-    super(file);
-    this.open();
+  public SpecialMove(AssetDescriptor descriptor) {
+    super(descriptor);
   }
 
   public String getName() {
@@ -67,11 +47,11 @@ public class SpecialMove extends BasicType implements Asset {
     this.mpCost = mpCost;
   }
 
-  public String getRpgcodeProgram() {
+  public AssetDescriptor getRpgcodeProgram() {
     return rpgcodeProgram;
   }
 
-  public void setRpgcodeProgram(String rpgcodeProgram) {
+  public void setRpgcodeProgram(AssetDescriptor rpgcodeProgram) {
     this.rpgcodeProgram = rpgcodeProgram;
   }
 
@@ -84,42 +64,34 @@ public class SpecialMove extends BasicType implements Asset {
   }
 
   public boolean getCanUseInBattle() {
-    return canUseInBattle == 1;
+    return canUseInBattle;
   }
 
   public void setCanUseInBattle(boolean canUseInBattle) {
-    if (canUseInBattle == true) {
-      this.canUseInBattle = 1;
-    } else {
-      this.canUseInBattle = 0;
-    }
+    this.canUseInBattle = canUseInBattle;
   }
 
   public boolean getCanUseInMenu() {
-    return canUseInMenu == 1;
+    return canUseInMenu;
   }
 
   public void setCanUseInMenu(boolean canUseInMenu) {
-    if (canUseInMenu == true) {
-      this.canUseInMenu = 1;
-    } else {
-      this.canUseInMenu = 0;
-    }
+    this.canUseInMenu = canUseInMenu;
   }
 
-  public String getAssociatedStatusEffect() {
+  public AssetDescriptor getAssociatedStatusEffect() {
     return associatedStatusEffect;
   }
 
-  public void setAssociatedStatusEffect(String associatedStatusEffect) {
+  public void setAssociatedStatusEffect(AssetDescriptor associatedStatusEffect) {
     this.associatedStatusEffect = associatedStatusEffect;
   }
 
-  public String getAssociatedAnimation() {
+  public AssetDescriptor getAssociatedAnimation() {
     return associatedAnimation;
   }
 
-  public void setAssociatedAnimation(String associatedAnimation) {
+  public void setAssociatedAnimation(AssetDescriptor associatedAnimation) {
     this.associatedAnimation = associatedAnimation;
   }
 
@@ -131,107 +103,9 @@ public class SpecialMove extends BasicType implements Asset {
     this.description = description;
   }
 
-  public boolean open() {
-    try {
-      this.inputStream.close(); //not using binary
-      return true;
-    } catch (IOException e)// | CorruptAssetException e)
-    {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      return false;
-    }
-  }
-
-  public boolean save() {
-    //convert to new format without overwriting old file
-    if (this.file.getName().endsWith(".spc")) {
-      this.file = new File(this.file.getPath() + ".json");
-    }
-    try {
-      AssetManager.getInstance().serialize(
-        AssetManager.getInstance().getHandle(this));
-      return true;
-    } catch (IOException | AssetException ex) {
-      Logger.getLogger(SpecialMove.class.getName()).log(Level.SEVERE, null, ex);
-      return false;
-    }
-  }
-
-  public boolean saveAs(File fileName) {
-    this.file = fileName;
-    return this.save();
-  }
-
-  public boolean openBinary() {
-    out.println("Attempting to open file as binary.");
-    try {
-      if (binaryIO.readBinaryString().equals(FILE_HEADER)) // Valid Status File
-      {
-        int majorVersion = binaryIO.readBinaryInteger();
-        int minorVersion = binaryIO.readBinaryInteger();
-
-        if (majorVersion == MAJOR_VERSION) {
-          name = binaryIO.readBinaryString();
-          fightPower = binaryIO.readBinaryLong();
-          mpCost = binaryIO.readBinaryLong();
-          rpgcodeProgram = binaryIO.readBinaryString();
-          mpDrainedFromTarget = binaryIO.readBinaryLong();
-          canUseInBattle = binaryIO.readBinaryByte();
-          canUseInMenu = binaryIO.readBinaryByte();
-          associatedStatusEffect = binaryIO.readBinaryString();
-          associatedAnimation = binaryIO.readBinaryString();
-          description = binaryIO.readBinaryString();
-        }
-      }
-
-      inputStream.close();
-
-      return true;
-    } catch (CorruptAssetException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      return false;
-    } catch (IOException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      return false;
-
-    }
-  }
-
-  public boolean saveBinary() {
-    try {
-      outputStream = new FileOutputStream(this.file);
-      binaryIO.setOutputStream(outputStream);
-
-      binaryIO.writeBinaryString(FILE_HEADER);
-      binaryIO.writeBinaryInteger(MAJOR_VERSION);
-      binaryIO.writeBinaryInteger(MINOR_VERSION);
-      binaryIO.writeBinaryString(name);
-      binaryIO.writeBinaryLong(fightPower);
-      binaryIO.writeBinaryLong(mpCost);
-      binaryIO.writeBinaryString(rpgcodeProgram);
-      binaryIO.writeBinaryLong(mpDrainedFromTarget);
-      binaryIO.writeBinaryByte(canUseInBattle);
-      binaryIO.writeBinaryByte(canUseInMenu);
-      binaryIO.writeBinaryString(associatedStatusEffect);
-      binaryIO.writeBinaryString(associatedAnimation);
-      binaryIO.writeBinaryString(description);
-
-      outputStream.close();
-      return true;
-    } catch (IOException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      return false;
-    }
-  }
-
   @Override
   public String toString() {
     return getName();
-  }
-
-  @Override
-  public AssetDescriptor getDescriptor() {
-    return new AssetDescriptor(this.getFile().toURI());
   }
 
   @Override
@@ -240,11 +114,11 @@ public class SpecialMove extends BasicType implements Asset {
     this.description = "";
     this.mpCost = 0;
     this.fightPower = 0;
-    this.rpgcodeProgram = "";
+    this.rpgcodeProgram = null;
     this.mpDrainedFromTarget = 0;
-    this.associatedStatusEffect = "";
-    this.associatedAnimation = "";
-    this.setCanUseInBattle(false);
-    this.setCanUseInMenu(false);
+    this.associatedStatusEffect = null;
+    this.associatedAnimation = null;
+    this.canUseInBattle = false;
+    this.canUseInMenu = false;
   }
 }

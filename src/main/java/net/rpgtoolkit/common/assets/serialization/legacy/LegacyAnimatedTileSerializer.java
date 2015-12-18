@@ -82,7 +82,7 @@ public class LegacyAnimatedTileSerializer extends AbstractAssetSerializer {
         final String frameTarget = ByteBufferHelper.getTerminatedString(buffer);
         if (frameTarget != null && frameTarget.length() > 0) {
           final AnimatedTile.Frame frame = tile.new Frame(
-                  new AssetDescriptor("file:///" + frameTarget), frameTarget);
+                  AssetDescriptor.parse("file:///" + frameTarget), frameTarget);
           frame.setDuration(fps);
           tile.getFrames().add(frame);
         }
