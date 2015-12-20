@@ -27,7 +27,7 @@ public class BoardVector implements Cloneable, Selectable {
   private int attributes;             //???
   private boolean isClosed;           //whether the vector is closed
   private String handle;              //vector's handle
-  private int tileType;
+  private TileType tileType;
 
   private ArrayList<Point> points;    //the points in the vector
   private Polygon polygon;
@@ -42,7 +42,7 @@ public class BoardVector implements Cloneable, Selectable {
     isClosed = false;
     points = new ArrayList<>();
     handle = "";
-    tileType = 1;
+    tileType = TileType.SOLID;
     polygon = new Polygon();
     selected = false;
   }
@@ -59,7 +59,7 @@ public class BoardVector implements Cloneable, Selectable {
    *
    * @return
    */
-  public int getTileType() {
+  public TileType getTileType() {
     return tileType;
   }
 
@@ -167,7 +167,7 @@ public class BoardVector implements Cloneable, Selectable {
    *
    * @param tileType
    */
-  public void setTileType(int tileType) {
+  public void setTileType(TileType tileType) {
     this.tileType = tileType;
   }
 

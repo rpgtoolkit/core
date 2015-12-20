@@ -7,23 +7,12 @@
 package net.rpgtoolkit.common.assets;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
 
-import net.rpgtoolkit.common.utilities.TileSetCache;
-import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.Selectable;
-import net.rpgtoolkit.common.utilities.BinaryIO;
+import net.rpgtoolkit.common.utilities.TileSetCache;
 import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
 /**
@@ -36,22 +25,31 @@ import net.rpgtoolkit.common.utilities.PropertiesSingleton;
  */
 public final class Board extends AbstractAsset implements Selectable {
 
+  /**
+   * Geometric perspective of a board for use with directional movement, rendering, raycasting,
+   * and other mathematical transformations.
+   *
+   * @author Chris Hutchinson
+   */
+  public enum Perspective {
+
+    ORTHOGONAL,
+    ISOMETRIC_STACKED,
+    ISOMETRIC_ROTATED;
+
+  }
+
   // Non-IO
   private final LinkedList<BoardChangeListener> boardChangeListeners = new LinkedList<>();
   private final LinkedList<BoardLayer> layers = new LinkedList<>();
   private LinkedList<String> tileSetNames = new LinkedList<>();
   private boolean selectedState;
 
-  // Constants
-  public static final int STANDARD = 1;
-  public static final int ISO_STACKED = 2;
-  public static final int ISO_ROTATED = 6;
-
   // Variables
   private int width;
   private int height;
   private int layerCount;
-  private int coordinateType;
+  private Perspective perspective;
   private ArrayList<String> tileNameIndex;      // Contains string names e.g. default.tst1
   private ArrayList<Tile> loadedTilesIndex;     // Contains tile objects of e.g. default.tst1
   private int[][][] boardDimensions;            // x, y, z
@@ -121,8 +119,8 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return the board layers
    */
-  public LinkedList<BoardLayer> getLayers() {
-    return layers;
+  public List<BoardLayer> getLayers() {
+    return this.layers;
   }
 
   /**
@@ -348,25 +346,28 @@ public final class Board extends AbstractAsset implements Selectable {
    * @param count new layer count
    */
   public void setLayerCount(int count) {
-    layerCount = count;
+    if (count <= 0) {
+      throw new IllegalArgumentException("layer count must be > 0");
+    }
+    this.layerCount = count;
   }
 
   /**
-   * Gets the board coordinate type.
+   * Gets the board's geometric perspective.
    *
-   * @return current coordinate type
+   * @return current geometric perspective
    */
-  public int getCoordinateType() {
-    return coordinateType;
+  public Perspective getPerspective() {
+    return this.perspective;
   }
 
   /**
-   * Sets the board coordinate type.
+   * Sets the board's geometric perspective.
    *
-   * @param coordinateType new coordinate type
+   * @param perspective new geometric perspective
    */
-  public void setCoordinateType(int coordinateType) {
-    this.coordinateType = coordinateType;
+  public void setPerspective(Perspective perspective) {
+    this.perspective = perspective;
   }
 
   /**
@@ -518,7 +519,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return board constants
    */
-  public ArrayList<String> getConstants() {
+  public List<String> getConstants() {
     return constants;
   }
 
@@ -536,7 +537,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return board layer titles
    */
-  public ArrayList<String> getLayerTitles() {
+  public List<String> getLayerTitles() {
     return layerTitles;
   }
 
@@ -545,8 +546,9 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @param layerTitles new board layer titles
    */
-  public void setLayerTitles(ArrayList<String> layerTitles) {
-    this.layerTitles = layerTitles;
+  public void setLayerTitles(Collection<String> layerTitles) {
+    this.layerTitles.clear();
+    this.layerTitles.addAll(layerTitles);
   }
 
   /**
@@ -575,7 +577,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return directional links
    */
-  public ArrayList<String> getDirectionalLinks() {
+  public List<String> getDirectionalLinks() {
     return directionalLinks;
   }
 
@@ -584,8 +586,9 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @param directionalLinks new directional links
    */
-  public void setDirectionalLinks(ArrayList<String> directionalLinks) {
-    this.directionalLinks = directionalLinks;
+  public void setDirectionalLinks(Collection<String> directionalLinks) {
+    this.directionalLinks.clear();
+    this.directionalLinks.addAll(directionalLinks);
   }
 
   /**
@@ -728,7 +731,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return tile set hash
    */
-  public HashMap<String, TileSet> getTileSets() {
+  public Map<String, TileSet> getTileSets() {
     return tileSets;
   }
 
@@ -737,8 +740,9 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @param tileSets new tile set hash
    */
-  public void setTileSets(HashMap<String, TileSet> tileSets) {
-    this.tileSets = tileSets;
+  public void setTileSets(Map<String, TileSet> tileSets) {
+    this.tileSets.clear();
+    this.tileSets.putAll(tileSets);
   }
 
   /**
@@ -746,7 +750,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return tile set names
    */
-  public LinkedList<String> getTileSetNames() {
+  public List<String> getTileSetNames() {
     return tileSetNames;
   }
 
@@ -755,8 +759,9 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @param tileSetNames new tile set names.
    */
-  public void setTileSetNames(LinkedList<String> tileSetNames) {
-    this.tileSetNames = tileSetNames;
+  public void setTileSetNames(Collection<String> tileSetNames) {
+    this.tileSetNames.clear();
+    this.tileSetNames.addAll(tileSetNames);
   }
 
   /**
@@ -883,7 +888,7 @@ public final class Board extends AbstractAsset implements Selectable {
     width = 0;
     height = 0;
     layerCount = 0;
-    coordinateType = STANDARD;
+    perspective = Perspective.ORTHOGONAL;
     boardDimensions = new int[width][height][layerCount];
     backgroundColour = 0;
     backgroundMusic = "";

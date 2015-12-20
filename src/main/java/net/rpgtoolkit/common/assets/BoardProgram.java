@@ -15,6 +15,10 @@ import net.rpgtoolkit.common.Selectable;
  */
 public class BoardProgram extends BasicType implements Cloneable, Selectable {
 
+  public enum ActivationType {
+
+  };
+
   private long layer;
   private String graphic;
   private String fileName;
@@ -264,7 +268,8 @@ public class BoardProgram extends BasicType implements Cloneable, Selectable {
   public Object clone() throws CloneNotSupportedException {
     super.clone();
 
-    BoardProgram clone = new BoardProgram();
+    final BoardProgram clone = new BoardProgram();
+
     clone.activate = this.activate;
     clone.activationType = this.activationType;
     clone.distanceRepeat = this.distanceRepeat;
