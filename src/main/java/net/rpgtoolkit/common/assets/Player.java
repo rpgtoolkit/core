@@ -24,7 +24,7 @@ import net.rpgtoolkit.common.assets.events.PlayerChangedEvent;
 import net.rpgtoolkit.common.assets.listeners.PlayerChangeListener;
 import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
-public class Player extends BasicType {
+public class Player extends BasicType implements Asset {
 
   // Non-IO
   private final LinkedList<PlayerChangeListener> playerChangeListeners = new LinkedList<>();
@@ -949,6 +949,16 @@ public class Player extends BasicType {
   public BufferedImage getAnimationFrame() {
     return activeAnimation.getFrame(frameNumber).getFrameImage();
   }
+
+    @Override
+    public AssetDescriptor getDescriptor() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void reset() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
   private class AnimationTimer extends TimerTask {
 

@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Enemy extends BasicType
+public class Enemy extends BasicType implements Asset
 {
     // Constants
     private final String FILE_HEADER = "RPGTLKIT ENEMY";
@@ -509,5 +509,15 @@ public class Enemy extends BasicType
     @Override
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public AssetDescriptor getDescriptor() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void reset() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
