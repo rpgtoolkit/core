@@ -27,6 +27,11 @@ public class LegacyBoardSerializer extends AbstractAssetSerializer {
   private static final int HEADER_VERSION_MINOR = 4;
 
   @Override
+  public int priority() {
+    return 1; // not our first choice
+  }
+
+  @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
     return ext.endsWith(".brd");

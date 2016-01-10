@@ -20,13 +20,18 @@ import net.rpgtoolkit.common.io.Paths;
 
 /**
  *
- * @author Joel Moore
+ * @author Joel Moore (based on existing binary open/save)
  */
 public class LegacyEnemySerializer extends AbstractAssetSerializer {
 
   private final String HEADER_MAGIC = "RPGTLKIT ENEMY";
   private final int HEADER_VERSION_MAJOR = 2;
   private final int HEADER_VERSION_MINOR = 1;
+
+  @Override
+  public int priority() {
+    return 1; // not our first choice
+  }
 
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
@@ -113,7 +118,6 @@ public class LegacyEnemySerializer extends AbstractAssetSerializer {
       enemy.setMaxMagicPoints(enemy.getMagicPoints());
 
       // Set enemy as handle asset
-
       handle.setAsset(enemy);
       
     }

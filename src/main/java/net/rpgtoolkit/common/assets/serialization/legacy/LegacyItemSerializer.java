@@ -35,7 +35,7 @@ public class LegacyItemSerializer
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI().getPath());
-    return (ext.contains("itm"));
+    return (ext.endsWith(".itm"));
   }
 
   @Override
