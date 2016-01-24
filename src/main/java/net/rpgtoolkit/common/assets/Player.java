@@ -23,10 +23,8 @@ import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 public class Player extends AbstractAsset
 {
     // Constants
-    private final String FILE_HEADER = "RPGTLKIT CHAR";
-    private final int MAJOR_VERSION = 2;
-    private final int MINOR_VERSION = 8;
 
+    //TODO: can these be changed to enums or something?
     public static final int DIRECTION_NORTH = 1;
     public static final int DIRECTION_EAST = 2;
     public static final int DIRECTION_SOUTH = 0;

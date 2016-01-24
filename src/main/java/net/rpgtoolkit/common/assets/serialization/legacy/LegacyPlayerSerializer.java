@@ -26,9 +26,9 @@ import net.rpgtoolkit.common.io.Paths;
  */
 public class LegacyPlayerSerializer extends AbstractAssetSerializer {
 
-  private final String HEADER_MAGIC = "RPGTLKIT CHAR";
-  private final int HEADER_VERSION_MAJOR = 2;
-  private final int HEADER_VERSION_MINOR = 8;
+  private static final String HEADER_MAGIC = "RPGTLKIT CHAR";
+  private static final int HEADER_VERSION_MAJOR = 2;
+  private static final int HEADER_VERSION_MINOR = 8;
 
   @Override
   public int priority() {
