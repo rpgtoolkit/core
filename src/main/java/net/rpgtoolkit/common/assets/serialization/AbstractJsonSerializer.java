@@ -12,11 +12,11 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.nio.charset.Charset;
 
 import net.rpgtoolkit.common.assets.AbstractAssetSerializer;
 import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
+import net.rpgtoolkit.common.io.ByteBufferHelper;
 
 import org.json.JSONObject;
 
@@ -30,7 +30,6 @@ import org.json.JSONObject;
 public abstract class AbstractJsonSerializer
   extends AbstractAssetSerializer {
 
-  public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
   @Override
   public void serialize(AssetHandle handle)
@@ -46,7 +45,7 @@ public abstract class AbstractJsonSerializer
       // Encode JSON representation with the specified character set encoding
 
       final String contents = obj.toString();
-      final ByteBuffer encodedContents = DEFAULT_CHARSET.encode(contents);
+      final ByteBuffer encodedContents = ByteBufferHelper.DEFAULT_CHARSET.encode(contents);
 
       // Write encoded buffer to the channel
 
@@ -71,7 +70,7 @@ public abstract class AbstractJsonSerializer
       // Decode and parse the contents as JSON using the specified
       // character set encoding
 
-      final CharBuffer source = DEFAULT_CHARSET.decode(buffer);
+      final CharBuffer source = ByteBufferHelper.DEFAULT_CHARSET.decode(buffer);
       final JSONObject obj = new JSONObject(source.toString());
 
       // Load asset from the decoded JSON
