@@ -6,7 +6,6 @@
  */
 package net.rpgtoolkit.common.assets.serialization.legacy;
 
-import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.assets.AbstractAssetSerializer;
 import net.rpgtoolkit.common.assets.AnimatedTile;
 import net.rpgtoolkit.common.assets.AssetDescriptor;
@@ -19,9 +18,12 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
+import java.util.List;
 
 /**
  * @author Chris Hutchinson <chris@cshutchinson.com>
+ * @author Joel Moore (based on existing binary save)
  */
 public class LegacyAnimatedTileSerializer extends AbstractAssetSerializer {
 
@@ -47,7 +49,34 @@ public class LegacyAnimatedTileSerializer extends AbstractAssetSerializer {
 
   @Override
   public void serialize(AssetHandle handle) throws IOException, AssetException {
-    throw new UnsupportedOperationException("Not supported yet.");
+
+    try (final WritableByteChannel channel = handle.write()) {
+      
+      final AnimatedTile tile = (AnimatedTile) handle.getAsset();
+      final ByteBuffer buffer = ByteBuffer.allocate(32);
+      buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+      channel.write(ByteBufferHelper.getBuffer(HEADER_MAGIC));
+      
+      buffer.putShort((short) HEADER_VERSION_MAJOR);
+      buffer.putShort((short) HEADER_VERSION_MINOR);
+      
+      List<AnimatedTile.Frame> frames = tile.getFrames();
+      int duration = 0;
+      if (frames.size() > 0) {
+        duration = frames.get(0).getDuration();
+      }
+      buffer.putInt(duration);
+      buffer.putInt(frames.size());
+      
+      buffer.flip();
+      channel.write(buffer);
+      buffer.compact();
+
+      for (AnimatedTile.Frame f : frames) {
+        channel.write(ByteBufferHelper.getBuffer(f.getFrameTarget()));
+      }
+    }
   }
 
   @Override
@@ -74,7 +103,7 @@ public class LegacyAnimatedTileSerializer extends AbstractAssetSerializer {
       final int fps = buffer.getInt();     // frame duration (ms)
       final int count = buffer.getInt();   // frame count
 
-      for (int i = 0; i < count; ++i) {
+      for (int i = 0; i < count; i++) {
         final String frameTarget = ByteBufferHelper.getTerminatedString(buffer);
         if (frameTarget != null && frameTarget.length() > 0) {
           final AnimatedTile.Frame frame = tile.new Frame(

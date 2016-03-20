@@ -32,12 +32,6 @@ public class LegacyBackgroundSerializer
   private static final int HEADER_VERSION_MAJOR = 2;
   private static final int HEADER_VERSION_MINOR = 3;
 
-  //TODO: these are for legacy serializing, handle there instead, make list lengths dyanmic
-  private static final int USER_CHAR_COUNT = 51;
-  private static final int EQUIP_COUNT = 8;
-  private static final int ANIMATION_STANDARD_COUNT = 10;
-  private static final int ANIMATION_STANDING_COUNT = 8;
-
   @Override
   public int priority() {
     return 1; // not our first choice
