@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
+import java.util.List;
 import net.rpgtoolkit.common.assets.AbstractAssetSerializer;
 import net.rpgtoolkit.common.assets.AssetDescriptor;
 import net.rpgtoolkit.common.assets.AssetException;
@@ -46,7 +48,90 @@ public class LegacyEnemySerializer extends AbstractAssetSerializer {
 
   @Override
   public void serialize(AssetHandle handle) throws IOException, AssetException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    try (final WritableByteChannel channel = handle.write()) {
+      
+      final Enemy enemy = (Enemy) handle.getAsset();
+      final ByteBuffer buffer = ByteBuffer.allocate(1024);
+      buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+      channel.write(ByteBufferHelper.getBuffer(HEADER_MAGIC));
+      
+      buffer.putShort((short) HEADER_VERSION_MAJOR);
+      buffer.putShort((short) HEADER_VERSION_MINOR);
+      buffer.flip();
+      channel.write(buffer);
+      buffer.compact();
+      channel.write(ByteBufferHelper.getBuffer(enemy.getName()));
+      
+      buffer.putInt((int) enemy.getHitPoints());
+      buffer.putInt((int) enemy.getMagicPoints());
+      buffer.putInt((int) enemy.getFightPower());
+      buffer.putInt((int) enemy.getDefencePower());
+      buffer.put((byte) (enemy.canRunAway() ? 1 : 0));
+      buffer.putShort((short) enemy.getSneakChance());
+      buffer.putShort((short) enemy.getSurpriseChance());
+      
+      //Probably breaks if more than max-short-value special moves are present,
+      //but tons of legacy save things will be bad when our ints are bigger than its shorts anyway.
+      buffer.putShort((short) enemy.getSpecialMoves().size());
+      buffer.flip();
+      channel.write(buffer);
+      buffer.compact();
+      for (String s : enemy.getSpecialMoves()) {
+        channel.write(ByteBufferHelper.getBuffer(s));
+      }
+      buffer.putShort((short) enemy.getWeaknesses().size());
+      buffer.flip();
+      channel.write(buffer);
+      buffer.compact();
+      for (String s : enemy.getWeaknesses()) {
+        channel.write(ByteBufferHelper.getBuffer(s));
+      }
+      buffer.putShort((short) enemy.getStrengths().size());
+      buffer.flip();
+      channel.write(buffer);
+      buffer.compact();
+      for (String s : enemy.getStrengths()) {
+        channel.write(ByteBufferHelper.getBuffer(s));
+      }
+      
+      buffer.put(enemy.getAiLevel());
+      buffer.put((byte) (enemy.useRPGCodeTatics() ? 1 : 0));
+      buffer.flip();
+      channel.write(buffer);
+      buffer.compact();
+      
+      channel.write(ByteBufferHelper.getBuffer(enemy.getTacticsFile()));
+      buffer.putInt((int) enemy.getExperienceAwarded());
+      buffer.putInt((int) enemy.getGoldAwarded());
+      buffer.flip();
+      channel.write(buffer);
+      buffer.compact();
+      
+      channel.write(ByteBufferHelper.getBuffer(enemy.getBeatEnemyProgram()));
+      channel.write(ByteBufferHelper.getBuffer(enemy.getRunAwayProgram()));
+      buffer.putShort((short) enemy.getStandardGraphics().size());
+      buffer.flip();
+      channel.write(buffer);
+      buffer.compact();
+      for (String s : enemy.getStandardGraphics()) {
+        channel.write(ByteBufferHelper.getBuffer(s.replace("/", "\\")));
+      }
+      //TODO: custom graphics size is short here, but int in deserialize; which is correct?
+      List<String> customGraphics = enemy.getCustomizedGraphics();
+      List<String> customNames = enemy.getCustomizedGraphicsNames();
+      short customGraphicsCount = (short) customGraphics.size();
+      buffer.putShort(customGraphicsCount);
+      buffer.flip();
+      channel.write(buffer);
+      buffer.compact();
+      for (short i = 0; i < customGraphicsCount; i++) {
+        channel.write(ByteBufferHelper.getBuffer(customGraphics.get(i)));
+        channel.write(ByteBufferHelper.getBuffer(customNames.get(i)));
+      }
+      
+    }
   }
 
   @Override

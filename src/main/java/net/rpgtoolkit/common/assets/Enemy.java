@@ -7,8 +7,6 @@
  */
 package net.rpgtoolkit.common.assets;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -51,72 +49,6 @@ public class Enemy extends AbstractAsset
       standardGraphics = new ArrayList<>();
       customizedGraphics = new ArrayList<>();
       customizedGraphicsNames = new ArrayList<>();
-    }
-
-    public boolean save()
-    {
-        try
-        {
-            binaryIO.writeBinaryString(FILE_HEADER);
-            binaryIO.writeBinaryInteger(MAJOR_VERSION);
-            binaryIO.writeBinaryInteger(MINOR_VERSION);
-            binaryIO.writeBinaryString(name);
-            binaryIO.writeBinaryLong(hitPoints);
-            binaryIO.writeBinaryLong(magicPoints);
-            binaryIO.writeBinaryLong(fightPower);
-            binaryIO.writeBinaryLong(defencePower);
-            outputStream.write((byte) (canRunAway ? 1 : 0));
-            binaryIO.writeBinaryInteger(sneakChance);
-            binaryIO.writeBinaryInteger(surpriseChance);
-            binaryIO.writeBinaryInteger(specialMoves.size());
-            for (String aSpecialMove : specialMoves)
-            {
-                binaryIO.writeBinaryString(aSpecialMove);
-            }
-            binaryIO.writeBinaryInteger(weaknesses.size());
-            for (String weaknes : weaknesses)
-            {
-                binaryIO.writeBinaryString(weaknes);
-            }
-            binaryIO.writeBinaryInteger(strengths.size());
-            for (String aStrength : strengths)
-            {
-                binaryIO.writeBinaryString(aStrength);
-            }
-            outputStream.write(aiLevel);
-            outputStream.write((byte) (useRPGCodeTatics ? 1 : 0));
-            binaryIO.writeBinaryString(tacticsFile);
-            binaryIO.writeBinaryLong(experienceAwarded);
-            binaryIO.writeBinaryLong(goldAwarded);
-            binaryIO.writeBinaryString(beatEnemyProgram);
-            binaryIO.writeBinaryString(runAwayProgram);
-            binaryIO.writeBinaryInteger(standardGraphics.size());
-            for (String standardGraphic : standardGraphics)
-            {
-                binaryIO.writeBinaryString(standardGraphic);
-            }
-            binaryIO.writeBinaryInteger(customizedGraphics.size());
-            for (int i = 0; i < customizedGraphics.size(); i++)
-            {
-                binaryIO.writeBinaryString(customizedGraphics.get(i));
-                binaryIO.writeBinaryString(customizedGraphicsNames.get(i));
-            }
-
-            outputStream.close();
-
-            return true;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean saveAs(File fileName)
-    {
-        this.file = fileName;
-        return this.save();
     }
 
     /**

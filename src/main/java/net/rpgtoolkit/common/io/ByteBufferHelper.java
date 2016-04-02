@@ -20,15 +20,16 @@ public final class ByteBufferHelper {
     }
     return builder.toString();
   }
-  
+
   /**
    * Converts a String to bytes using the legacy character set and returns a new buffer containing
-   * the String's bytes, with its position at 0, ready to write.
+   * the String's bytes, null-terminated, with its position at 0, ready to write.
    *
-   * @param s a String to create a buffer for
+   * @param s a String to create a null-terminated buffer for
    * @return a new buffer with the String's bytes
    */
   public static ByteBuffer getBuffer(String s) {
+    s += '\0';
     return ByteBuffer.wrap(s.getBytes(LEGACY_CHARSET));
   }
 
