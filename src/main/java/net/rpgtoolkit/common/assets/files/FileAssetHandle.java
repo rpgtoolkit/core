@@ -16,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -27,22 +29,27 @@ public class FileAssetHandle extends AssetHandle {
     super(descriptor);
   }
 
+  public File getFile() {
+    final Path path = Paths.get(descriptor.getURI());
+    final File file = path.toFile();
+    return file;
+  }
+
   @Override
   public ReadableByteChannel read() throws IOException {
-    final String path = descriptor.getURI().getPath();
-    return new FileInputStream(path).getChannel();
+    final File file = getFile();
+    return new FileInputStream(file).getChannel();
   }
 
   @Override
   public WritableByteChannel write() throws IOException {
-    final String path = descriptor.getURI().getPath();
-    return new FileOutputStream(path).getChannel();
+    final File file = getFile();
+    return new FileOutputStream(file).getChannel();
   }
 
   @Override
   public long size() throws IOException {
-    final String path = descriptor.getURI().getPath();
-    final File file = new File(path);
+    final File file = getFile();
     if (file.exists()) {
       return file.length();
     }
