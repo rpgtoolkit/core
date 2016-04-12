@@ -12,7 +12,6 @@ import net.rpgtoolkit.common.assets.SpecialMove;
 import net.rpgtoolkit.common.io.Paths;
 
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 /**
  *
@@ -39,15 +38,15 @@ public class JsonSpecialMoveSerializer extends AbstractJsonSerializer {
 
     smove.setName(json.optString("name"));
     smove.setDescription(json.optString("description"));
-    smove.setFightPower(json.optLong("fightPower"));
-    smove.setMpCost(json.optLong("mpCost"));
-    smove.setMpDrainedFromTarget(json.optLong("mpDrainedFromTarget"));
-    smove.setCanUseInBattle(json.optBoolean("canUseInBattle"));
-    smove.setCanUseInMenu(json.optBoolean("canUseInMenu"));
+    smove.setFightPower(json.optInt("fightPower"));
+    smove.setMovePowerCost(json.optInt("mpCost"));
+    smove.setMovePowerDrainedFromTarget(json.optInt("mpDrainedFromTarget"));
+    smove.isUsableInBattle(json.optBoolean("canUseInBattle"));
+    smove.isUsableInMenu(json.optBoolean("canUseInMenu"));
 
-    smove.setRpgcodeProgram(AssetDescriptor.parse(json.optString("script")));
-    smove.setAssociatedStatusEffect(AssetDescriptor.parse(json.optString("statusEffect")));
-    smove.setAssociatedAnimation(AssetDescriptor.parse(json.optString("animation")));
+    smove.setProgram(AssetDescriptor.parse(json.optString("script")));
+    smove.setStatusEffect(AssetDescriptor.parse(json.optString("statusEffect")));
+    smove.setAnimation(AssetDescriptor.parse(json.optString("animation")));
 
     handle.setAsset(smove);
 
@@ -61,14 +60,14 @@ public class JsonSpecialMoveSerializer extends AbstractJsonSerializer {
     json.put("name", smove.getName());
     json.put("description", smove.getDescription());
     json.put("fightPower", smove.getFightPower());
-    json.put("mpCost", smove.getMpCost());
-    json.put("mpDrainedFromTarget", smove.getMpDrainedFromTarget());
-    json.put("canUseInBattle", smove.getCanUseInBattle());
-    json.put("canUseInMenu", smove.getCanUseInMenu());
+    json.put("mpCost", smove.getMovePowerCost());
+    json.put("mpDrainedFromTarget", smove.getMovePowerDrainedFromTarget());
+    json.put("canUseInBattle", smove.isUsableInBattle());
+    json.put("canUseInMenu", smove.isUsableInMenu());
 
-    json.put("script", smove.getRpgcodeProgram());
-    json.put("statusEffect", smove.getAssociatedStatusEffect());
-    json.put("animation", smove.getAssociatedAnimation());
+    json.put("script", smove.getProgram());
+    json.put("statusEffect", smove.getStatusEffect());
+    json.put("animation", smove.getAnimation());
 
   }
 

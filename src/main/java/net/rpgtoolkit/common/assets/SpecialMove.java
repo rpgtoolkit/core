@@ -10,17 +10,18 @@ public class SpecialMove extends AbstractAsset {
 
   private String name;
   private String description;
-  private AssetDescriptor rpgcodeProgram;
-  private AssetDescriptor associatedStatusEffect;
-  private AssetDescriptor associatedAnimation;
-  private long fightPower;
-  private long mpCost;
-  private long mpDrainedFromTarget;
-  private boolean canUseInBattle;
-  private boolean canUseInMenu;
+  private AssetDescriptor program;
+  private AssetDescriptor statusEffect;
+  private AssetDescriptor animation;
+  private int fightPower;
+  private int movePowerCost;
+  private int movePowerDrainedFromTarget;
+  private boolean usableInBattle;
+  private boolean usableInMenu;
 
   public SpecialMove(AssetDescriptor descriptor) {
     super(descriptor);
+    reset();
   }
 
   public String getName() {
@@ -31,68 +32,68 @@ public class SpecialMove extends AbstractAsset {
     this.name = name;
   }
 
-  public long getFightPower() {
+  public int getFightPower() {
     return fightPower;
   }
 
-  public void setFightPower(long fightPower) {
+  public void setFightPower(int fightPower) {
     this.fightPower = fightPower;
   }
 
-  public long getMpCost() {
-    return mpCost;
+  public int getMovePowerCost() {
+    return movePowerCost;
   }
 
-  public void setMpCost(long mpCost) {
-    this.mpCost = mpCost;
+  public void setMovePowerCost(int cost) {
+    this.movePowerCost = cost;
   }
 
-  public AssetDescriptor getRpgcodeProgram() {
-    return rpgcodeProgram;
+  public AssetDescriptor getProgram() {
+    return program;
   }
 
-  public void setRpgcodeProgram(AssetDescriptor rpgcodeProgram) {
-    this.rpgcodeProgram = rpgcodeProgram;
+  public void setProgram(AssetDescriptor program) {
+    this.program = program;
   }
 
-  public long getMpDrainedFromTarget() {
-    return mpDrainedFromTarget;
+  public int getMovePowerDrainedFromTarget() {
+    return movePowerDrainedFromTarget;
   }
 
-  public void setMpDrainedFromTarget(long mpDrainedFromTarget) {
-    this.mpDrainedFromTarget = mpDrainedFromTarget;
+  public void setMovePowerDrainedFromTarget(int amount) {
+    this.movePowerDrainedFromTarget = amount;
   }
 
-  public boolean getCanUseInBattle() {
-    return canUseInBattle;
+  public boolean isUsableInBattle() {
+    return usableInBattle;
   }
 
-  public void setCanUseInBattle(boolean canUseInBattle) {
-    this.canUseInBattle = canUseInBattle;
+  public void isUsableInBattle(boolean value) {
+    this.usableInBattle = value;
   }
 
-  public boolean getCanUseInMenu() {
-    return canUseInMenu;
+  public boolean isUsableInMenu() {
+    return usableInMenu;
   }
 
-  public void setCanUseInMenu(boolean canUseInMenu) {
-    this.canUseInMenu = canUseInMenu;
+  public void isUsableInMenu(boolean value) {
+    this.usableInMenu = value;
   }
 
-  public AssetDescriptor getAssociatedStatusEffect() {
-    return associatedStatusEffect;
+  public AssetDescriptor getStatusEffect() {
+    return statusEffect;
   }
 
-  public void setAssociatedStatusEffect(AssetDescriptor associatedStatusEffect) {
-    this.associatedStatusEffect = associatedStatusEffect;
+  public void setStatusEffect(AssetDescriptor asset) {
+    this.statusEffect = asset;
   }
 
-  public AssetDescriptor getAssociatedAnimation() {
-    return associatedAnimation;
+  public AssetDescriptor getAnimation() {
+    return animation;
   }
 
-  public void setAssociatedAnimation(AssetDescriptor associatedAnimation) {
-    this.associatedAnimation = associatedAnimation;
+  public void setAnimation(AssetDescriptor asset) {
+    this.animation = asset;
   }
 
   public String getDescription() {
@@ -112,13 +113,13 @@ public class SpecialMove extends AbstractAsset {
   public void reset() {
     this.name = "";
     this.description = "";
-    this.mpCost = 0;
+    this.movePowerCost = 0;
     this.fightPower = 0;
-    this.rpgcodeProgram = null;
-    this.mpDrainedFromTarget = 0;
-    this.associatedStatusEffect = null;
-    this.associatedAnimation = null;
-    this.canUseInBattle = false;
-    this.canUseInMenu = false;
+    this.program = null;
+    this.movePowerDrainedFromTarget = 0;
+    this.statusEffect = null;
+    this.animation = null;
+    this.usableInBattle = false;
+    this.usableInMenu = false;
   }
 }
