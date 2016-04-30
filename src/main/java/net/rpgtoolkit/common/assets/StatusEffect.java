@@ -19,14 +19,16 @@ import java.util.List;
 public class StatusEffect extends AbstractAsset {
 
   private String name;
-  private AssetDescriptor program;
   private StatusEffectTarget target;
   private List<StatusEffectAttribute> attributes;
+  private boolean isProgramEnabled;
+  private AssetDescriptor program;
 
   public StatusEffect(AssetDescriptor descriptor) {
     super(descriptor);
     this.attributes = new ArrayList<>();
     this.target = StatusEffectTarget.ANY;
+    this.isProgramEnabled = false;
   }
 
   public String getName() {
@@ -43,6 +45,14 @@ public class StatusEffect extends AbstractAsset {
 
   public void setProgram(AssetDescriptor value) {
     this.program = value;
+  }
+
+  public boolean isProgramEnabled() {
+    return this.isProgramEnabled;
+  }
+
+  public void setProgramEnabled(boolean value) {
+    this.isProgramEnabled = value;
   }
 
   /**
