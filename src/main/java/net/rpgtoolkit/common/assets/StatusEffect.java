@@ -69,6 +69,37 @@ public class StatusEffect extends AbstractAsset {
   }
 
   /**
+   * Gets the first status effect attribute of the specified kind.
+   *
+   * @param kind attribute kind
+   * @return attribute if kind is present, otherwise null
+   */
+  public StatusEffectAttribute getAttributeByKind(StatusEffectAttributeKind kind) {
+    for (final StatusEffectAttribute attr : attributes) {
+      if (attr.getKind().equals(kind)) {
+        return attr;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Collects all status effect attributes of the specified kind.
+   *
+   * @param kind attribute kind
+   * @return list of attributes.
+   */
+  public List<StatusEffectAttribute> getAttributesByKind(StatusEffectAttributeKind kind) {
+    List<StatusEffectAttribute> attributes = new ArrayList<>();
+    for (final StatusEffectAttribute attr : attributes) {
+      if (attr.getKind().equals(kind)) {
+        attributes.add(attr);
+      }
+    }
+    return attributes;
+  }
+
+  /**
    * Returns a collection of attributes applied to a target when the
    * status effect is given to a target.
    *

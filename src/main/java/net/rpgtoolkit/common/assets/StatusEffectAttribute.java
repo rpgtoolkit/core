@@ -20,6 +20,12 @@ public class StatusEffectAttribute {
     this.magnitude = 0.0f;
   }
 
+  public StatusEffectAttribute(StatusEffectAttributeKind kind, int duration, float magnitude) {
+    this.kind = kind;
+    this.duration = duration;
+    this.magnitude = magnitude;
+  }
+
   /**
    * Returns the name of the status effect attribute. The name is determined by
    * the attribute's {@link StatusEffectAttributeKind}. Custom attributes have
