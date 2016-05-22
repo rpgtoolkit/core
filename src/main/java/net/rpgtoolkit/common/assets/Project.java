@@ -6,6 +6,7 @@
  */
 package net.rpgtoolkit.common.assets;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -16,10 +17,6 @@ import java.util.List;
  * @version 0.1
  */
 public class Project extends AbstractAsset {
-
-  private final String DEFAULT_MENU_PLUGIN = "tk3menu.dll";
-  private final String DEFAULT_FIGHT_PLUGIN = "tk3fight.dll";
-  private final String DEFAULT_MOUSE_CURSOR = "TK DEFAULT";
 
   // Project Variables
 
@@ -77,6 +74,10 @@ public class Project extends AbstractAsset {
 
   public Project(AssetDescriptor descriptor) {
     super(descriptor);
+    runTimeArray = new ArrayList<>();
+    enemyArray = new ArrayList<>();
+    pluginArray = new ArrayList<>();
+    movementKeys = new ArrayList<>();
     reset();
   }
 
