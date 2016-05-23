@@ -6,41 +6,22 @@
  */
 package net.rpgtoolkit.common.assets;
 
-import net.rpgtoolkit.common.CorruptAssetException;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import static java.lang.System.out;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-public class SpecialMove extends BasicType implements Asset {
-  // Constants
-  private final String FILE_HEADER = "RPGTLKIT SPLMOVE";
-  private final int MAJOR_VERSION = 2;
-  private final int MINOR_VERSION = 2;
+public class SpecialMove extends AbstractAsset {
 
   private String name;
-  private long fightPower;
-  private long mpCost;
-  private String rpgcodeProgram;
-  private long mpDrainedFromTarget;
-  private byte canUseInBattle; // Should be a bool
-  private byte canUseInMenu;   // Should be a bool :'(
-  private String associatedStatusEffect;
-  private String associatedAnimation;
   private String description;
+  private AssetDescriptor program;
+  private AssetDescriptor statusEffect;
+  private AssetDescriptor animation;
+  private int fightPower;
+  private int movePowerCost;
+  private int movePowerDrainedFromTarget;
+  private boolean usableInBattle;
+  private boolean usableInMenu;
 
-  public SpecialMove() {
-
-  }
-
-  public SpecialMove(File file) {
-    super(file);
-    this.open();
+  public SpecialMove(AssetDescriptor descriptor) {
+    super(descriptor);
+    reset();
   }
 
   public String getName() {
@@ -51,76 +32,68 @@ public class SpecialMove extends BasicType implements Asset {
     this.name = name;
   }
 
-  public long getFightPower() {
+  public int getFightPower() {
     return fightPower;
   }
 
-  public void setFightPower(long fightPower) {
+  public void setFightPower(int fightPower) {
     this.fightPower = fightPower;
   }
 
-  public long getMpCost() {
-    return mpCost;
+  public int getMovePowerCost() {
+    return movePowerCost;
   }
 
-  public void setMpCost(long mpCost) {
-    this.mpCost = mpCost;
+  public void setMovePowerCost(int cost) {
+    this.movePowerCost = cost;
   }
 
-  public String getRpgcodeProgram() {
-    return rpgcodeProgram;
+  public AssetDescriptor getProgram() {
+    return program;
   }
 
-  public void setRpgcodeProgram(String rpgcodeProgram) {
-    this.rpgcodeProgram = rpgcodeProgram;
+  public void setProgram(AssetDescriptor program) {
+    this.program = program;
   }
 
-  public long getMpDrainedFromTarget() {
-    return mpDrainedFromTarget;
+  public int getMovePowerDrainedFromTarget() {
+    return movePowerDrainedFromTarget;
   }
 
-  public void setMpDrainedFromTarget(long mpDrainedFromTarget) {
-    this.mpDrainedFromTarget = mpDrainedFromTarget;
+  public void setMovePowerDrainedFromTarget(int amount) {
+    this.movePowerDrainedFromTarget = amount;
   }
 
-  public boolean getCanUseInBattle() {
-    return canUseInBattle == 1;
+  public boolean isUsableInBattle() {
+    return usableInBattle;
   }
 
-  public void setCanUseInBattle(boolean canUseInBattle) {
-    if (canUseInBattle == true) {
-      this.canUseInBattle = 1;
-    } else {
-      this.canUseInBattle = 0;
-    }
+  public void isUsableInBattle(boolean value) {
+    this.usableInBattle = value;
   }
 
-  public boolean getCanUseInMenu() {
-    return canUseInMenu == 1;
+  public boolean isUsableInMenu() {
+    return usableInMenu;
   }
 
-  public void setCanUseInMenu(boolean canUseInMenu) {
-    if (canUseInMenu == true) {
-      this.canUseInMenu = 1;
-    } else {
-      this.canUseInMenu = 0;
-    }
+  public void isUsableInMenu(boolean value) {
+    this.usableInMenu = value;
   }
 
-  public String getAssociatedStatusEffect() {
-    return associatedStatusEffect;
+  public AssetDescriptor getStatusEffect() {
+    return statusEffect;
   }
 
-  public void setAssociatedStatusEffect(String associatedStatusEffect) {
-    this.associatedStatusEffect = associatedStatusEffect;
+  public void setStatusEffect(AssetDescriptor asset) {
+    this.statusEffect = asset;
   }
 
-  public String getAssociatedAnimation() {
-    return associatedAnimation;
+  public AssetDescriptor getAnimation() {
+    return animation;
   }
 
-  public void setAssociatedAnimation(String associatedAnimation) {
-    this.associatedAnimation = associatedAnimation;
+  public void setAnimation(AssetDescriptor asset) {
+    this.animation = asset;
   }
 
   public String getDescription() {
@@ -131,120 +104,22 @@ public class SpecialMove extends BasicType implements Asset {
     this.description = description;
   }
 
-  public boolean open() {
-    try {
-      this.inputStream.close(); //not using binary
-      return true;
-    } catch (IOException e)// | CorruptAssetException e)
-    {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      return false;
-    }
-  }
-
-  public boolean save() {
-    //convert to new format without overwriting old file
-    if (this.file.getName().endsWith(".spc")) {
-      this.file = new File(this.file.getPath() + ".json");
-    }
-    try {
-      AssetManager.getInstance().serialize(
-        AssetManager.getInstance().getHandle(this));
-      return true;
-    } catch (IOException | AssetException ex) {
-      Logger.getLogger(SpecialMove.class.getName()).log(Level.SEVERE, null, ex);
-      return false;
-    }
-  }
-
-  public boolean saveAs(File fileName) {
-    this.file = fileName;
-    return this.save();
-  }
-
-  public boolean openBinary() {
-    out.println("Attempting to open file as binary.");
-    try {
-      if (binaryIO.readBinaryString().equals(FILE_HEADER)) // Valid Status File
-      {
-        int majorVersion = binaryIO.readBinaryInteger();
-        int minorVersion = binaryIO.readBinaryInteger();
-
-        if (majorVersion == MAJOR_VERSION) {
-          name = binaryIO.readBinaryString();
-          fightPower = binaryIO.readBinaryLong();
-          mpCost = binaryIO.readBinaryLong();
-          rpgcodeProgram = binaryIO.readBinaryString();
-          mpDrainedFromTarget = binaryIO.readBinaryLong();
-          canUseInBattle = binaryIO.readBinaryByte();
-          canUseInMenu = binaryIO.readBinaryByte();
-          associatedStatusEffect = binaryIO.readBinaryString();
-          associatedAnimation = binaryIO.readBinaryString();
-          description = binaryIO.readBinaryString();
-        }
-      }
-
-      inputStream.close();
-
-      return true;
-    } catch (CorruptAssetException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      return false;
-    } catch (IOException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      return false;
-
-    }
-  }
-
-  public boolean saveBinary() {
-    try {
-      outputStream = new FileOutputStream(this.file);
-      binaryIO.setOutputStream(outputStream);
-
-      binaryIO.writeBinaryString(FILE_HEADER);
-      binaryIO.writeBinaryInteger(MAJOR_VERSION);
-      binaryIO.writeBinaryInteger(MINOR_VERSION);
-      binaryIO.writeBinaryString(name);
-      binaryIO.writeBinaryLong(fightPower);
-      binaryIO.writeBinaryLong(mpCost);
-      binaryIO.writeBinaryString(rpgcodeProgram);
-      binaryIO.writeBinaryLong(mpDrainedFromTarget);
-      binaryIO.writeBinaryByte(canUseInBattle);
-      binaryIO.writeBinaryByte(canUseInMenu);
-      binaryIO.writeBinaryString(associatedStatusEffect);
-      binaryIO.writeBinaryString(associatedAnimation);
-      binaryIO.writeBinaryString(description);
-
-      outputStream.close();
-      return true;
-    } catch (IOException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      return false;
-    }
-  }
-
   @Override
   public String toString() {
     return getName();
   }
 
   @Override
-  public AssetDescriptor getDescriptor() {
-    return new AssetDescriptor(this.getFile().toURI());
-  }
-
-  @Override
   public void reset() {
     this.name = "";
     this.description = "";
-    this.mpCost = 0;
+    this.movePowerCost = 0;
     this.fightPower = 0;
-    this.rpgcodeProgram = "";
-    this.mpDrainedFromTarget = 0;
-    this.associatedStatusEffect = "";
-    this.associatedAnimation = "";
-    this.setCanUseInBattle(false);
-    this.setCanUseInMenu(false);
+    this.program = null;
+    this.movePowerDrainedFromTarget = 0;
+    this.statusEffect = null;
+    this.animation = null;
+    this.usableInBattle = false;
+    this.usableInMenu = false;
   }
 }

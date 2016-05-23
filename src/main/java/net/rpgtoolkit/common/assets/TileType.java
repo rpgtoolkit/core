@@ -7,19 +7,16 @@
 package net.rpgtoolkit.common.assets;
 
 /**
- * Abstract base class for asset serializers; provides some default
- * functionality.
- *
  * @author Chris Hutchinson
  */
-public abstract class AbstractAssetSerializer
-  implements AssetSerializer {
+public enum TileType {
 
-  public static final int DEFAULT_PRIORITY = 0;
-
-  @Override
-  public int priority() {
-    return DEFAULT_PRIORITY;   // return standard priority
-  }
+  NULL,
+  NORMAL,
+  SOLID,
+  UNDER,
+  UNDIRECTIONAL,
+  STAIRS,
+  WAYPOINT;
 
 }

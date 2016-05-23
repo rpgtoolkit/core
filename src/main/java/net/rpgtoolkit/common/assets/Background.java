@@ -1,106 +1,70 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+ * the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package net.rpgtoolkit.common.assets;
 
-import java.io.File;
-import java.io.IOException;
+public class Background extends AbstractAsset {
 
-import net.rpgtoolkit.common.CorruptAssetException;
+  private AssetDescriptor backgroundImage;
+  private AssetDescriptor backgroundMusic;
+  private AssetDescriptor selectingSound;
+  private AssetDescriptor selectionSound;
+  private AssetDescriptor readySound;
+  private AssetDescriptor invalidSelectionSound;
 
-public class Background extends BasicType
-{
-    // Constants
-    private final String FILE_HEADER = "RPGTLKIT BKG";
-    private final int MAJOR_VERSION = 2;
-    private final int MINOR_VERSION = 3;
+  public Background(AssetDescriptor descriptor) {
+    super(descriptor);
+  }
 
-    // Background variables
-    private String backgroundImage;
-    private String backgroundMusic;
-    private String movingMusic;
-    private String selectionMusic;
-    private String readyMusic;
-    private String invalidMusic;
+  public AssetDescriptor getBackgroundImage() {
+    return this.backgroundImage;
+  }
 
-    public Background()
-    {
+  public void setBackgroundImage(AssetDescriptor descriptor) {
+    this.backgroundImage = descriptor;
+  }
 
-    }
+  public AssetDescriptor getBackgroundMusic() {
+    return this.backgroundMusic;
+  }
 
-    public Background(File fileName)
-    {
-        super(fileName);
-        this.open();
-    }
+  public void setBackgroundMusic(AssetDescriptor descriptor) {
+    this.backgroundMusic = descriptor;
+  }
 
-    public boolean open()
-    {
-        try
-        {
-            if (binaryIO.readBinaryString().equals(FILE_HEADER))
-            {
-                int majorVersion = binaryIO.readBinaryInteger();
-                int minorVersion = binaryIO.readBinaryInteger();
-                backgroundImage = binaryIO.readBinaryString();
-                backgroundMusic = binaryIO.readBinaryString();
-                movingMusic = binaryIO.readBinaryString();
-                selectionMusic = binaryIO.readBinaryString();
-                readyMusic = binaryIO.readBinaryString();
-                invalidMusic = binaryIO.readBinaryString();
-            }
+  public AssetDescriptor getSelectingSound() {
+    return this.selectingSound;
+  }
 
-            inputStream.close();
+  public void setSelectingSound(AssetDescriptor descriptor) {
+    this.selectingSound = descriptor;
+  }
 
-            return true;
-        }
-        catch (CorruptAssetException e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return false;
-        }
+  public AssetDescriptor getSelectionSound() {
+    return this.selectionSound;
+  }
 
-    }
+  public void setSelectionSound(AssetDescriptor descriptor) {
+    this.selectionSound = descriptor;
+  }
 
-    public boolean save()
-    {
-        try
-        {
-            binaryIO.setOutputStream(this.outputStream);
+  public AssetDescriptor getReadySound() {
+    return this.readySound;
+  }
 
-            binaryIO.writeBinaryString(FILE_HEADER);
-            binaryIO.writeBinaryInteger(MAJOR_VERSION);
-            binaryIO.writeBinaryInteger(MINOR_VERSION);
-            binaryIO.writeBinaryString(backgroundImage);
-            binaryIO.writeBinaryString(backgroundMusic);
-            binaryIO.writeBinaryString(movingMusic);
-            binaryIO.writeBinaryString(selectionMusic);
-            binaryIO.writeBinaryString(readyMusic);
-            binaryIO.writeBinaryString(invalidMusic);
+  public void setReadySound(AssetDescriptor descriptor) {
+    this.readySound = descriptor;
+  }
 
-            outputStream.close();
+  public AssetDescriptor getInvalidSelectionSound() {
+    return this.invalidSelectionSound;
+  }
 
-            return true;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-    }
+  public void setInvalidSelectionSound(AssetDescriptor descriptor) {
+    this.invalidSelectionSound = descriptor;
+  }
 
-    public boolean saveAs(File fileName)
-    {
-        this.file = fileName;
-        return this.save();
-    }
 }

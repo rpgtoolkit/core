@@ -127,6 +127,7 @@ public class BoardLight implements Cloneable {
    * @param point new point
    */
   public void addPoint(Point point) {
+    // TODO: Take (x, y) as parameters instead of java.awt.Point. Consistency with BoardVector#addPoint
     points.add(point);
   }
 
