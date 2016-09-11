@@ -7,8 +7,6 @@
 package net.rpgtoolkit.common.assets.serialization;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import net.rpgtoolkit.common.assets.Animation;
 import net.rpgtoolkit.common.assets.AnimationFrame;
 import net.rpgtoolkit.common.assets.AssetDescriptor;
@@ -17,7 +15,6 @@ import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.io.Paths;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 /**
  *
@@ -26,26 +23,9 @@ import org.json.JSONStringer;
 public class JsonAnimationSerializer extends AbstractJsonSerializer {
 
   @Override
-  public void populate(JSONStringer json, AssetHandle handle) {
-    Animation animation = (Animation) handle.getAsset();
-
-    json.key("animationWidth").value(animation.getAnimationWidth());
-    json.key("animationHeight").value(animation.getAnimationHeight());
-    json.key("soundEffect").value(animation.getSoundEffect());
-    json.key("frameRate").value(animation.getFrameRate());
-
-    json.key("frames").array();
-    ArrayList<AnimationFrame> frames = animation.getFrames();
-    for (AnimationFrame frame : frames) {
-      json.value(frame.getFrameName());
-    }
-    json.endArray();
-  }
-
-  @Override
   public boolean serializable(AssetDescriptor descriptor) {
-    final String ext = Paths.extension(descriptor.getURI().getPath());
-    return (ext.contains(".anm.json"));
+    final String ext = Paths.extension(descriptor.getURI());
+    return (ext.endsWith(".anm.json"));
   }
 
   @Override
@@ -54,14 +34,9 @@ public class JsonAnimationSerializer extends AbstractJsonSerializer {
   }
 
   @Override
-  public void deserialize(AssetHandle handle) throws IOException, AssetException {
-    JSONObject json = load(handle);
-    final Animation asset = new Animation(new File(handle.getDescriptor().getURI()));
-    harvest(json, asset);
-    handle.setAsset(asset);
-  }
-
-  private void harvest(JSONObject json, Animation animation) {
+  protected void load(AssetHandle handle, JSONObject json) throws AssetException {
+    final Animation animation = new Animation(new File(handle.getDescriptor().getURI()));
+    
     animation.setAnimationWidth(json.optLong("animationWidth"));
     animation.setAnimationHeight(json.optLong("animationHeight"));
     animation.setSoundEffect(json.getString("soundEffect"));
@@ -72,6 +47,24 @@ public class JsonAnimationSerializer extends AbstractJsonSerializer {
     for (int i = 0; i < length; i++) {
       animation.addFrame(new AnimationFrame(frames.getString(i), 0, ""));
     }
+    
+    handle.setAsset(animation);
+  }
+
+  @Override
+  public void store(AssetHandle handle, JSONObject json) {
+    Animation animation = (Animation) handle.getAsset();
+
+    json.put("animationWidth", animation.getAnimationWidth());
+    json.put("animationHeight", animation.getAnimationHeight());
+    json.put("soundEffect", animation.getSoundEffect());
+    json.put("frameRate", animation.getFrameRate());
+
+    final JSONArray frames = new JSONArray();
+    for (AnimationFrame frame : animation.getFrames()) {
+      frames.put(frame.getFrameName());
+    }
+    json.put("frames", frames);
   }
 
 }
