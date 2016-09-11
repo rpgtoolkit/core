@@ -10,7 +10,7 @@ package net.rpgtoolkit.common.assets;
  * Abstract base class for asset serializers; provides some default
  * functionality.
  *
- * @author Chris Hutchinson <chris@cshutchinson.com>
+ * @author Chris Hutchinson
  */
 public abstract class AbstractAssetSerializer
   implements AssetSerializer {

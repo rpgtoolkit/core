@@ -6,13 +6,8 @@
  */
 package net.rpgtoolkit.common.assets.resources;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
@@ -21,20 +16,28 @@ import net.rpgtoolkit.common.assets.AssetDescriptor;
 import net.rpgtoolkit.common.assets.AssetHandle;
 
 /**
- *
  * @author Chris Hutchinson <chris@cshutchinson.com>
  */
 public class ResourceAssetHandle extends AssetHandle {
 
+  private final ClassLoader loader;
+
   public ResourceAssetHandle(AssetDescriptor descriptor) {
+    this(descriptor, ResourceAssetHandle.class.getClassLoader());
+  }
+
+  public ResourceAssetHandle(AssetDescriptor descriptor, ClassLoader loader) {
     super(descriptor);
+    if (loader == null)
+      throw new NullPointerException();
+    this.loader = loader;
   }
 
   @Override
   public ReadableByteChannel read() throws IOException {
-    final String path = descriptor.getURI().getPath();
-    final InputStream in =
-      ResourceAssetHandle.class.getResourceAsStream(path);
+    final String part = this.descriptor.getURI().getSchemeSpecificPart();
+    final String path = part.substring(1);
+    final InputStream in = this.loader.getResourceAsStream(path);
     return Channels.newChannel(in);
   }
 

@@ -8,8 +8,6 @@ package net.rpgtoolkit.common.assets.serialization;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import net.rpgtoolkit.common.assets.AssetDescriptor;
@@ -19,141 +17,17 @@ import net.rpgtoolkit.common.assets.Board;
 import net.rpgtoolkit.common.assets.BoardProgram;
 import net.rpgtoolkit.common.assets.BoardSprite;
 import net.rpgtoolkit.common.assets.BoardVector;
+import net.rpgtoolkit.common.assets.TileType;
 import net.rpgtoolkit.common.io.Paths;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 /**
  * @author Joshua Michael Daly
+ * @author Chris Hutchinson
  */
 public class JsonBoardSerializer extends AbstractJsonSerializer {
-
-  @Override
-  public void populate(JSONStringer json, AssetHandle handle) {
-    Board board = (Board) handle.getAsset();
-    board.updateBoardIO();
-
-    json.key("width").value(board.getWidth());
-    json.key("height").value(board.getHeight());
-    json.key("layerCount").value(board.getLayerCount());
-
-    // Tile names e.g. default.tst1 etc.
-    json.key("tileNames").array();
-    for (String tile : board.getTileNameIndex()) {
-      json.value(tile);
-    }
-    json.endArray();
-
-    // Tile indexs in the look up table, compression is used to save space.
-    json.key("tileIndex").array();
-    for (Integer index : board.getCompressedTileIndex()) {
-      json.value(index);
-    }
-    json.endArray();
-
-    // Vectors.
-    json.key("vectors").array();
-    for (BoardVector vector : board.getVectors()) {
-      json.object();
-      json.key("points").array();
-      for (Point point : vector.getPoints()) {
-        json.object();
-        json.key("x").value(point.x);
-        json.key("y").value(point.y);
-        json.endObject();
-      }
-      json.endArray();
-      json.key("attributes").value(vector.getAttributes());
-      json.key("isClosed").value(vector.isClosed());
-      json.key("layer").value(vector.getLayer());
-      json.key("tileType").value(vector.getTileType());
-      json.key("handle").value(vector.getHandle());
-      json.endObject();
-    }
-    json.endArray();
-
-    // Programs.
-    json.key("programs").array();
-    for (BoardProgram program : board.getPrograms()) {
-      json.object();
-      json.key("fileName").value(program.getFileName());
-      json.key("graphic").value(program.getGraphic());
-      json.key("initialVariable").value(program.getInitialVariable());
-      json.key("initialValue").value(program.getInitialValue());
-      json.key("finalVariable").value(program.getFinalVariable());
-      json.key("finalValue").value(program.getFinalValue());
-      json.key("activate").value(program.getActivate());
-      json.key("activationType").value(program.getActivationType());
-      json.key("distanceRepeat").value(program.getDistanceRepeat());
-      json.key("layer").value(program.getLayer());
-
-      json.key("points").array();
-      for (Point point : program.getVector().getPoints()) {
-        json.object();
-        json.key("x").value(point.x);
-        json.key("y").value(point.y);
-        json.endObject();
-      }
-      json.endArray();
-
-      json.key("isClosed").value(program.getVector().isClosed());
-      json.key("handle").value(program.getVector().getHandle());
-      json.endObject();
-    }
-    json.endArray();
-
-    // Sprites.
-    json.key("sprites").array();
-    for (BoardSprite sprite : board.getSprites()) {
-      json.object();
-      json.key("fileName").value(sprite.getFile());
-      json.key("activationProgram").value(sprite.getActivationProgram());
-      json.key("multitaskingProgram").value(sprite.getMultitaskingProgram());
-      json.key("initialVariable").value(sprite.getInitialVariable());
-      json.key("initialValue").value(sprite.getInitialValue());
-      json.key("finalVariable").value(sprite.getFinalVariable());
-      json.key("finalValue").value(sprite.getFinalValue());
-      json.key("loadingVariable").value(sprite.getLoadingVariable());
-      json.key("loadingValue").value(sprite.getLoadingValue());
-      json.key("activate").value(sprite.getActivate());
-      json.key("activationType").value(sprite.getActivationType());
-      json.key("x").value(sprite.getX());
-      json.key("y").value(sprite.getY());
-      json.key("layer").value(sprite.getLayer());
-      json.endObject();
-    }
-    json.endArray();
-
-    // Layer Titles.
-    json.key("layerTitles").array();
-    for (String title : board.getLayerTitles()) {
-      json.value(title);
-    }
-    json.endArray();
-
-    // Directional Links.
-    json.key("directionalLinks").array();
-    for (String link : board.getDirectionalLinks()) {
-      json.value(link);
-    }
-    json.endArray();
-
-    json.key("backgroundMusic").value(board.getBackgroundMusic());
-    json.key("firstRunProgram").value(board.getFirstRunProgram());
-
-    // Ambient Effect.
-    json.key("ambientEffect").object();
-    json.key("red").value(board.getAmbientEffect().getRed());
-    json.key("green").value(board.getAmbientEffect().getGreen());
-    json.key("blue").value(board.getAmbientEffect().getBlue());
-    json.endObject();
-
-    json.key("startingPositionX").value(board.getStartingPositionX());
-    json.key("startingPositionY").value(board.getStartingPositionY());
-    json.key("startingLayer").value(board.getStartingLayer());
-  }
 
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
@@ -167,15 +41,10 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
   }
 
   @Override
-  public void deserialize(AssetHandle handle) throws IOException, AssetException {
-    JSONObject json = load(handle);
-    final Board asset = new Board(new File(handle.getDescriptor().getURI()));
-    harvest(json, asset);
- 
-    handle.setAsset(asset);
-  }
+  protected void load(AssetHandle handle, JSONObject json) throws AssetException {
 
-  private void harvest(JSONObject json, Board board) {
+    final Board board = new Board(handle.getDescriptor());
+
     board.setWidth(json.optInt("width"));
     board.setHeight(json.optInt("height"));
     board.setLayerCount(json.optInt("layerCount"));
@@ -195,6 +64,128 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     board.setStartingLayer(json.getInt("startingLayer"));
     board.updateTileSetCache();
     board.createLayers();
+
+  }
+
+  @Override
+  protected void store(AssetHandle handle, JSONObject json) throws AssetException {
+
+    final Board board = (Board) handle.getAsset();
+
+    board.updateBoardIO();
+
+    json.put("width", board.getWidth());
+    json.put("height", board.getHeight());
+    json.put("layerCount", board.getLayerCount());
+
+    // Tile names e.g. default.tst1 etc.
+
+    json.put("tileNames", board.getTileNameIndex());
+    json.put("tileIndex", board.getCompressedTileIndex());
+
+    final JSONArray vectors = new JSONArray();
+    final JSONArray programs = new JSONArray();
+    final JSONArray sprites = new JSONArray();
+
+    // Serialize board vectors
+
+    for (final BoardVector vector : board.getVectors()) {
+
+      final JSONObject v = new JSONObject();
+      final JSONArray points = new JSONArray();
+
+      for (final Point point : vector.getPoints()) {
+        final JSONObject pt = new JSONObject();
+        pt.put("x", point.x);
+        pt.put("y", point.y);
+        points.put(pt);
+      }
+
+      v.put("points", points);
+      v.put("attributes", vector.getAttributes());
+      v.put("isClosed", vector.isClosed());
+      v.put("layer", vector.getLayer());
+      v.put("tileType", vector.getTileType());
+      v.put("handle", vector.getHandle());
+
+    }
+
+    // Serialize board programs
+
+    for (final BoardProgram program : board.getPrograms()) {
+
+      final JSONObject p = new JSONObject();
+
+      p.put("fileName", program.getFileName());
+      p.put("graphic", program.getGraphic());
+      p.put("initialVariable", program.getInitialVariable());
+      p.put("initialValue", program.getInitialValue());
+      p.put("finalVariable", program.getFinalVariable());
+      p.put("finalValue", program.getFinalValue());
+      p.put("activate", program.getActivate());
+      p.put("activationType", program.getActivationType());
+      p.put("distanceRepeat", program.getDistanceRepeat());
+      p.put("layer", program.getLayer());
+
+      final JSONArray points = new JSONArray();
+
+      for (final Point point : program.getVector().getPoints()) {
+        final JSONObject pt = new JSONObject();
+        pt.put("x", point.x);
+        pt.put("y", point.y);
+        points.put(pt);
+      }
+
+      p.put("points", points);
+      p.put("isClosed", program.getVector().isClosed());
+      p.put("handle", program.getVector().getHandle());
+
+      programs.put(p);
+
+    }
+
+    // Serialize sprites
+
+    for (final BoardSprite sprite : board.getSprites()) {
+      final JSONObject s = new JSONObject();
+      s.put("fileName", sprite.getFileName());
+      s.put("activationProgram", sprite.getActivationProgram());
+      s.put("multitaskingProgram", sprite.getMultitaskingProgram());
+      s.put("initialVariable", sprite.getInitialVariable());
+      s.put("initialValue", sprite.getInitialValue());
+      s.put("finalVariable", sprite.getFinalVariable());
+      s.put("finalValue", sprite.getFinalValue());
+      s.put("loadingVariable", sprite.getLoadingVariable());
+      s.put("loadingValue", sprite.getLoadingValue());
+      s.put("activate", sprite.getActivate());
+      s.put("activationType", sprite.getActivationType());
+      s.put("x", sprite.getX());
+      s.put("y", sprite.getY());
+      s.put("layer", sprite.getLayer());
+      sprites.put(s);
+    }
+
+    json.put("vectors", vectors);
+    json.put("programs", programs);
+    json.put("sprites", sprites);
+    json.put("layerTitles", board.getLayerTitles());
+    json.put("directionalLinks", board.getDirectionalLinks());
+
+    json.put("backgroundMusic", board.getBackgroundMusic());
+    json.put("firstRunProgram", board.getFirstRunProgram());
+
+    final JSONObject ambientEffect = new JSONObject();
+    ambientEffect.put("red", board.getAmbientEffect().getRed());
+    ambientEffect.put("green", board.getAmbientEffect().getGreen());
+    ambientEffect.put("blue", board.getAmbientEffect().getBlue());
+
+    json.put("ambientEffect", ambientEffect);
+    json.put("startingPositionX", board.getStartingPositionX());
+    json.put("startingPositionY", board.getStartingPositionY());
+    json.put("startingLayer", board.getStartingLayer());
+
+    handle.setAsset(board);
+
   }
 
   private ArrayList<String> getStringArrayList(JSONArray array) {
@@ -231,7 +222,7 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
       vector.setAttributes(object.getInt("attributes"));
       vector.setClosed(object.getBoolean("isClosed"));
       vector.setLayer(object.getInt("layer"));
-      vector.setTileType(object.getInt("tileType"));
+      vector.setTileType(TileType.valueOf(object.getString("tileType")));
       vector.setHandle(object.getString("handle"));
 
       vectors.add(vector);

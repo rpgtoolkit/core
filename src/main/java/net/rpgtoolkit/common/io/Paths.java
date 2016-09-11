@@ -43,4 +43,16 @@ public final class Paths {
     return "";
   }
 
+  /***
+   * Extracts the filename from a URI, the name of the file with no path information.
+   *
+   * @param uri file URI
+   * @return filename (with type extension)
+   */
+  public static String filename(final URI uri) {
+    final java.nio.file.Path path = java.nio.file.Paths.get(uri);
+    final String filename = path.getFileName().toString();
+    return filename;
+  }
+
 }

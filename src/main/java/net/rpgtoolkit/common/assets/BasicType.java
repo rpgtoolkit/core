@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import net.rpgtoolkit.common.utilities.BinaryIO;
 
+@Deprecated
 public class BasicType {
 
   protected File file;

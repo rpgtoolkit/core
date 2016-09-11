@@ -12,7 +12,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
 /**
- * @author Chris Hutchinson <chris@cshutchinson.com>
+ * @author Chris Hutchinson
  */
 public abstract class AssetHandle {
 

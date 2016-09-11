@@ -14,93 +14,78 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 
-import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.assets.AbstractAssetSerializer;
 import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
-import net.rpgtoolkit.common.utilities.JSON;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 /**
+ * Abstract base class for implementing asset serializers that load or store
+ * their contents using JSON encoding.
+ *
  * @author Joel Moore
+ * @author Chris Hutchinson
  */
 public abstract class AbstractJsonSerializer
   extends AbstractAssetSerializer {
 
-  public static final String DEFAULT_CHARSET = "UTF-8";
+  public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
   @Override
   public void serialize(AssetHandle handle)
     throws IOException, AssetException {
 
     try (final WritableByteChannel channel = handle.write()) {
-      final String source = this.toJSONString(handle);
-      final ByteBuffer buffer = ByteBuffer.wrap(
-        source.getBytes(DEFAULT_CHARSET));
-      channel.write(buffer);
+
+      // Store the asset contents into a JSON representation
+
+      final JSONObject obj = new JSONObject();
+      store(handle, obj);
+
+      // Encode JSON representation with the specified character set encoding
+
+      final String contents = obj.toString();
+      final ByteBuffer encodedContents = DEFAULT_CHARSET.encode(contents);
+
+      // Write encoded buffer to the channel
+
+      channel.write(encodedContents);
+
     }
 
   }
 
-  /**
-   * Loads a JSON object from disk using the handle provided.
-   *
-   * @param handle
-   * @return the JSONObject that was loaded, or null if load failed
-   * @throws java.io.IOException
-   * @throws net.rpgtoolkit.common.assets.AssetException
-   */
-  public static JSONObject load(AssetHandle handle)
+  @Override
+  public void deserialize(AssetHandle handle)
     throws IOException, AssetException {
 
     try (final ReadableByteChannel channel = handle.read()) {
 
-      final ByteBuffer buffer = ByteBuffer.allocateDirect((int) handle.size());
+      // Read the asset contents into a buffer
 
+      final ByteBuffer buffer = ByteBuffer.allocateDirect((int) handle.size());
       channel.read(buffer);
       buffer.position(0);
 
-      final CharBuffer source =
-        Charset.forName(DEFAULT_CHARSET).decode(buffer);
+      // Decode and parse the contents as JSON using the specified
+      // character set encoding
 
-      return new JSONObject(source.toString());
+      final CharBuffer source = DEFAULT_CHARSET.decode(buffer);
+      final JSONObject obj = new JSONObject(source.toString());
 
-    }
-    catch (JSONException ex) {
+      // Load asset from the decoded JSON
 
-      throw new CorruptAssetException(ex.getMessage());
+      load(handle, obj);
 
     }
 
   }
 
-  /**
-   * Creates and populates a JSON object using the asset handle provided.
-   * @param handle
-   * @return 
-   */
-  public String toJSONString(AssetHandle handle) {
-    final JSONStringer builder = new JSONStringer();
-    builder.object();
-    this.populate(builder, handle);
-    builder.endObject();
-    return JSON.toPrettyJSON(builder);
-  }
+  protected abstract void load(AssetHandle handle, JSONObject json)
+    throws AssetException;
 
-
-  /**
-   * Given a JSONStringer that has started making a JSON object and an AssetHandle for an asset this
-   * serializer can handle, add the asset's data to that object without ending the object.
-   * Subclasses designed to handle a subclass of the asset type should override toJSONString() and
-   * populateJSON(), calling both super.populateJSON() and populateJSON() from toJSONString() to add
-   * the asset's parent class's info to the JSON object alongside the asset subclass's info.
-   * 
-   * @param json
-   * @param handle
-   */
-  public abstract void populate(JSONStringer json, AssetHandle handle);
+  protected abstract void store(AssetHandle handle, JSONObject json)
+    throws AssetException;
 
 }

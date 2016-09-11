@@ -7,207 +7,48 @@
  */
 package net.rpgtoolkit.common.assets;
 
-import net.rpgtoolkit.common.CorruptAssetException;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Enemy extends BasicType implements Asset
+public class Enemy extends AbstractAsset
 {
-    // Constants
-    private final String FILE_HEADER = "RPGTLKIT ENEMY";
-    private final int MAJOR_VERSION = 2;
-    private final int MINOR_VERSION = 1;
-
     // Enemry Variables
     private String name;
     private long hitPoints;
     private long magicPoints;
     private long fightPower;
     private long defencePower;
-    private byte canRunAway;
+    private boolean canRunAway;
     private int sneakChance;
     private int surpriseChance;
     private ArrayList<String> specialMoves;
     private ArrayList<String> weaknesses;
     private ArrayList<String> strengths;
-    private byte aiLevel;
-    private byte useRPGCodeTatics;
+    //TODO: replace aiLevel with something more semantically appropriate than a byte
+    private byte aiLevel;  //0-3, inclusive
+    private boolean useRPGCodeTatics;
     private String tacticsFile;
     private long experienceAwarded;
     private long goldAwarded;
     private String beatEnemyProgram;
     private String runAwayProgram;
     private ArrayList<String> standardGraphics;
-    private final ArrayList<String> standardGraphicsNames = new ArrayList<String>(
+    private final ArrayList<String> standardGraphicsNames = new ArrayList<>(
             Arrays.asList("Rest", "Attack", "Defend", "Special Move", "Die"));
     private ArrayList<String> customizedGraphics;
     private ArrayList<String> customizedGraphicsNames;
     private long maxHitPoints;
     private long maxMagicPoints;
     private ArrayList<String> statusEffects;
-
-    public Enemy()
-    {
-
-    }
-
-    public Enemy(File fileName)
-    {
-        super(fileName);
-        System.out.println("Loading Enemy " + fileName);
-        this.open();
-    }
-
-    public boolean open()
-    {
-        try
-        {
-            specialMoves = new ArrayList<String>();
-            weaknesses = new ArrayList<String>();
-            strengths = new ArrayList<String>();
-            standardGraphics = new ArrayList<String>();
-            customizedGraphics = new ArrayList<String>();
-            customizedGraphicsNames = new ArrayList<String>();
-
-            if (binaryIO.readBinaryString().equals(FILE_HEADER))
-            {
-                int majorVersion = binaryIO.readBinaryInteger();
-                int minorVersion = binaryIO.readBinaryInteger();
-
-                name = binaryIO.readBinaryString();
-                hitPoints = binaryIO.readBinaryLong();
-                magicPoints = binaryIO.readBinaryLong();
-                fightPower = binaryIO.readBinaryLong();
-                defencePower = binaryIO.readBinaryLong();
-                canRunAway = (byte) inputStream.read();
-                sneakChance = binaryIO.readBinaryInteger();
-                surpriseChance = binaryIO.readBinaryInteger();
-                int specialMoveCount = binaryIO.readBinaryInteger();
-                for (int i = 0; i < specialMoveCount + 1; i++)
-                {
-                    specialMoves.add(binaryIO.readBinaryString());
-                }
-                int weaknessCount = binaryIO.readBinaryInteger();
-                for (int i = 0; i < weaknessCount + 1; i++)
-                {
-                    weaknesses.add(binaryIO.readBinaryString());
-                }
-                int strengthCount = binaryIO.readBinaryInteger();
-                for (int i = 0; i < strengthCount + 1; i++)
-                {
-                    strengths.add(binaryIO.readBinaryString());
-                }
-                aiLevel = (byte) inputStream.read();
-                useRPGCodeTatics = (byte) inputStream.read();
-                tacticsFile = binaryIO.readBinaryString();
-                experienceAwarded = binaryIO.readBinaryLong();
-                goldAwarded = binaryIO.readBinaryLong();
-                beatEnemyProgram = binaryIO.readBinaryString();
-                runAwayProgram = binaryIO.readBinaryString();
-                int graphicsCount = binaryIO.readBinaryInteger();
-                for (int i = 0; i < graphicsCount; i++)
-                {
-                    standardGraphics.add(binaryIO.readBinaryString().replace("\\", "/"));
-                }
-
-                binaryIO.readBinaryString(); // skip one extra string in the file
-                long customGraphicsCount = binaryIO.readBinaryLong(); // TK saves as a long, not a int, so need to read the correct value.
-                //TODO: This appears to read 5 custom graphics even when there are fewer than 5, and occasionally read extra blank ones when there are more than 5
-//                out.println(customGraphicsCount);
-
-                for (int i = 0; i < customGraphicsCount; i++)
-                {
-                    customizedGraphics.add(binaryIO.readBinaryString());
-                    customizedGraphicsNames.add(binaryIO.readBinaryString());
-                }
-            }
-
-            maxHitPoints = hitPoints;
-            maxMagicPoints = magicPoints;
-
-            inputStream.close();
-
-            return true;
-        }
-        catch (CorruptAssetException e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean save()
-    {
-        try
-        {
-            binaryIO.writeBinaryString(FILE_HEADER);
-            binaryIO.writeBinaryInteger(MAJOR_VERSION);
-            binaryIO.writeBinaryInteger(MINOR_VERSION);
-            binaryIO.writeBinaryString(name);
-            binaryIO.writeBinaryLong(hitPoints);
-            binaryIO.writeBinaryLong(magicPoints);
-            binaryIO.writeBinaryLong(fightPower);
-            binaryIO.writeBinaryLong(defencePower);
-            outputStream.write(canRunAway);
-            binaryIO.writeBinaryInteger(sneakChance);
-            binaryIO.writeBinaryInteger(surpriseChance);
-            binaryIO.writeBinaryInteger(specialMoves.size());
-            for (String aSpecialMove : specialMoves)
-            {
-                binaryIO.writeBinaryString(aSpecialMove);
-            }
-            binaryIO.writeBinaryInteger(weaknesses.size());
-            for (String weaknes : weaknesses)
-            {
-                binaryIO.writeBinaryString(weaknes);
-            }
-            binaryIO.writeBinaryInteger(strengths.size());
-            for (String aStrength : strengths)
-            {
-                binaryIO.writeBinaryString(aStrength);
-            }
-            outputStream.write(aiLevel);
-            outputStream.write(useRPGCodeTatics);
-            binaryIO.writeBinaryString(tacticsFile);
-            binaryIO.writeBinaryLong(experienceAwarded);
-            binaryIO.writeBinaryLong(goldAwarded);
-            binaryIO.writeBinaryString(beatEnemyProgram);
-            binaryIO.writeBinaryString(runAwayProgram);
-            binaryIO.writeBinaryInteger(standardGraphics.size());
-            for (String standardGraphic : standardGraphics)
-            {
-                binaryIO.writeBinaryString(standardGraphic);
-            }
-            binaryIO.writeBinaryInteger(customizedGraphics.size());
-            for (int i = 0; i < customizedGraphics.size(); i++)
-            {
-                binaryIO.writeBinaryString(customizedGraphics.get(i));
-                binaryIO.writeBinaryString(customizedGraphicsNames.get(i));
-            }
-
-            outputStream.close();
-
-            return true;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean saveAs(File fileName)
-    {
-        this.file = fileName;
-        return this.save();
+    
+    public Enemy(AssetDescriptor descriptor) {
+      super(descriptor);
+      specialMoves = new ArrayList<>();
+      weaknesses = new ArrayList<>();
+      strengths = new ArrayList<>();
+      standardGraphics = new ArrayList<>();
+      customizedGraphics = new ArrayList<>();
+      customizedGraphicsNames = new ArrayList<>();
     }
 
     /**
@@ -284,15 +125,14 @@ public class Enemy extends BasicType implements Asset
      * @return the canRunAway
      */
     public boolean canRunAway() {
-        return canRunAway == 1;
+        return canRunAway;
     }
 
     /**
      * @param canRunAway the canRunAway to set
      */
     public void canRunAway(boolean canRunAway) {
-        if(canRunAway == true) { this.canRunAway = 1; }
-        else { this.canRunAway = 0; }
+        this.canRunAway = canRunAway;
     }
 
     /**
@@ -355,6 +195,9 @@ public class Enemy extends BasicType implements Asset
      * @param aiLevel the aiLevel to set
      */
     public void setAiLevel(byte aiLevel) {
+        if(aiLevel > 3) {
+            throw new IllegalArgumentException("AI level must be < 4.");
+        }
         this.aiLevel = aiLevel;
     }
 
@@ -362,15 +205,14 @@ public class Enemy extends BasicType implements Asset
      * @return the useRPGCodeTatics
      */
     public boolean useRPGCodeTatics() {
-        return useRPGCodeTatics == 1;
+        return useRPGCodeTatics;
     }
 
     /**
      * @param useRPGCodeTatics the useRPGCodeTatics to set
      */
     public void useRPGCodeTatics(boolean useRPGCodeTatics) {
-        if(useRPGCodeTatics == true) { this.useRPGCodeTatics = 1; }
-        else { this.useRPGCodeTatics = 0; }
+        this.useRPGCodeTatics = useRPGCodeTatics;
     }
 
     /**
@@ -509,15 +351,5 @@ public class Enemy extends BasicType implements Asset
     @Override
     public String toString() {
         return getName();
-    }
-
-    @Override
-    public AssetDescriptor getDescriptor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void reset() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
