@@ -141,7 +141,7 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
     json.put("gameOverProgram", project.getGameOverProgram());
     json.put("buttonGraphic", project.getButtonGraphic());
     json.put("windowGraphic", project.getWindowGraphic());
-    json.put("plugins", project.getPluginArray());
+    json.put("pluginArray", project.getPluginArray());
 
     json.put("useDayNight", project.getUseDayNight());
     json.put("dayNightType", project.getDayNightType());

@@ -710,10 +710,11 @@ public class Player extends AbstractAsset {
     standardGraphicsAnimations = new ArrayList<>();
     for (String anmFile : standardGraphics) {
       if (!anmFile.equals("")) {
-        Animation a = new Animation(new File(System.getProperty("project.path")
+        File animationFile = new File(System.getProperty("project.path")
                 + "/"
                 + PropertiesSingleton.getProperty("toolkit.directory.misc")
-                + "/" + anmFile));
+                + "/" + anmFile);
+        Animation a = new Animation(new AssetDescriptor(animationFile.toURI()));
         standardGraphicsAnimations.add(a);
       }
     }

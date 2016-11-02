@@ -35,7 +35,7 @@ public class JsonAnimationSerializer extends AbstractJsonSerializer {
 
   @Override
   protected void load(AssetHandle handle, JSONObject json) throws AssetException {
-    final Animation animation = new Animation(new File(handle.getDescriptor().getURI()));
+    final Animation animation = new Animation(handle.getDescriptor());
     
     animation.setAnimationWidth(json.optLong("animationWidth"));
     animation.setAnimationHeight(json.optLong("animationHeight"));

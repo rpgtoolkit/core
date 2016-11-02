@@ -6,19 +6,9 @@
  */
 package net.rpgtoolkit.common.assets;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import net.rpgtoolkit.common.utilities.BinaryIO;
-import net.rpgtoolkit.common.CorruptAssetException;
 import net.rpgtoolkit.common.assets.events.AnimationChangedEvent;
 import net.rpgtoolkit.common.assets.listeners.AnimationChangeListener;
 
@@ -28,7 +18,7 @@ import net.rpgtoolkit.common.assets.listeners.AnimationChangeListener;
  * @author geoff wilson
  * @version svn
  */
-public class Animation extends BasicType implements Asset {
+public class Animation extends AbstractAsset {
 
   private final LinkedList<AnimationChangeListener> animationChangeListeners = new LinkedList<>();
 
@@ -47,19 +37,9 @@ public class Animation extends BasicType implements Asset {
   private ArrayList<AnimationFrame> frames;
   private double frameRate;
 
-  public Animation() {
+  public Animation(AssetDescriptor descriptor) {
+    super(descriptor);
     init();
-  }
-  
-  /**
-   * Opens an exsiting Aniamtion based on given input file
-   *
-   * @param fileName File object of the animation to open
-   */
-  public Animation(File fileName) {
-    super(fileName);
-    init();
-    System.out.println("\tLoading Animation: " + fileName);
   }
   
   /**
@@ -254,150 +234,6 @@ public class Animation extends BasicType implements Asset {
   }
 
   /**
-   * Opens the Animation, this method is only called from the constructor and should not be made
-   * public
-   *
-   * @return
-   * @deprecated 
-   */
-  public boolean openBinary() {
-    try {
-      // Configure the IO
-      inputStream = new FileInputStream(this.file);
-      binaryIO = new BinaryIO(inputStream);
-
-      // Initialize the Array List of frames.
-      frames = new ArrayList<>();
-
-      // Check the header
-      if (binaryIO.readBinaryString().equals(FILE_HEADER)) {
-        int majorVersion = binaryIO.readBinaryInteger(); // not used
-        int minorVersion = binaryIO.readBinaryInteger();
-        if (minorVersion == 3) {
-          animationWidth = binaryIO.readBinaryLong();
-          animationHeight = binaryIO.readBinaryLong();
-
-          // How many frames in this animation?
-          frameCount = binaryIO.readBinaryLong();
-          for (int i = 0; i < frameCount + 1; i++) // get each frame
-          {
-            String frameName = binaryIO.readBinaryString();
-            long transparentColour = binaryIO.readBinaryLong(); // not used currently
-            String frameSound = binaryIO.readBinaryString();
-
-            // Do not add blank frames to the animation
-            if (!frameName.equals("")) {
-              AnimationFrame frame = new AnimationFrame(frameName, transparentColour, frameSound);
-              frames.add(frame);
-            }
-          }
-
-          frameRate = binaryIO.readBinaryDouble(); // Seconds per Frame
-        } else {
-          throw new CorruptAssetException("Animation data is corrupt");
-        }
-      } else {
-        throw new CorruptAssetException(this.file.getName() + " is not an animation file");
-      }
-
-      inputStream.close(); // Close IO
-
-      return true;
-    } // Need to implement better error handling
-    catch (FileNotFoundException e) {
-      e.printStackTrace();
-      return false;
-    } catch (CorruptAssetException e) {
-      e.printStackTrace();
-      return false;
-    } catch (IOException e) {
-      e.printStackTrace();
-      return false;
-    }
-  }
-
-  /**
-   * Saves the animation to its existing file.
-   *
-   * @return true for successful save, false if save failed.
-   * @deprecated 
-   */
-  public boolean saveBinary() {
-    try {
-      // Configure IO
-      outputStream = new FileOutputStream(this.file);
-      
-      if (binaryIO == null) {
-        inputStream = new FileInputStream(this.file);
-        binaryIO = new BinaryIO(inputStream);
-      }
-      
-      binaryIO.setOutputStream(outputStream);
-
-      // For TK3.1 compatibility we do not change versions or headers.
-      binaryIO.writeBinaryString(FILE_HEADER);
-      binaryIO.writeBinaryInteger(MAJOR_VERSION);
-      binaryIO.writeBinaryInteger(MINOR_VERSION);
-
-      binaryIO.writeBinaryLong(animationWidth);
-      binaryIO.writeBinaryLong(animationHeight);
-
-      binaryIO.writeBinaryLong(frames.size() - 1); // store the correct frame count
-      for (AnimationFrame frame : frames) {
-        binaryIO.writeBinaryString(frame.getFrameName());
-        binaryIO.writeBinaryLong(frame.getTransparentColour());
-        binaryIO.writeBinaryString(frame.getFrameSound());
-      }
-
-      binaryIO.writeBinaryDouble(frameRate);
-
-      outputStream.close();
-
-      return true;
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-      return false;
-    } catch (IOException e) {
-      e.printStackTrace();
-      return false;
-    }
-  }
-  
-  /**
-   * Saves the animation file, if the existing file ends with the 3.x extension it writes the new JSON
-   * format with the same file name but with an append ".json" extension.
-   *
-   * @return true = success, false = failure
-   */
-  public boolean save() {
-    if (file.getName().endsWith(".anm")) {
-      if (binaryIO == null) {
-        binaryIO = new BinaryIO();
-      }
-      saveBinary();
-    }
-
-    try {
-      AssetManager.getInstance().serialize(AssetManager.getInstance().getHandle(this));
-      return true;
-    } catch (IOException | AssetException ex) {
-      Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
-      return false;
-    }
-  }
-
-  /**
-   * Saves the Animation to a new file
-   *
-   * @param fileName File object of the new Animation file
-   * @return true for successful save, false if save failed
-   */
-  public boolean saveAs(File fileName) {
-    this.file = fileName;
-    return save();
-  }
-
-  /**
    * Adds a new frame to the animation at the end of the current timeline
    *
    * @param newFrame AnimationFrame object to be added to the Animation
@@ -417,16 +253,6 @@ public class Animation extends BasicType implements Asset {
     frames.remove(frameIndex);
     frameCount = frames.size();
     fireAnimationFrameRemoved();
-  }
-
-  @Override
-  public AssetDescriptor getDescriptor() {
-    return new AssetDescriptor(this.getFile().toURI());
-  }
-
-  @Override
-  public void reset() {
-    init();
   }
 
 }

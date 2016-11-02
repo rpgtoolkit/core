@@ -64,6 +64,8 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     board.setStartingLayer(json.getInt("startingLayer"));
     board.updateTileSetCache();
     board.createLayers();
+    
+    handle.setAsset(board);
 
   }
 
@@ -271,7 +273,7 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
       sprite.setActivationProgram(object.getString("activationProgram"));
       sprite.setMultitaskingProgram(object.getString("multitaskingProgram"));
       sprite.setInitialVariable(object.getString("initialVariable"));
-      sprite.setInitialValue(object.getString("initalValue"));
+      sprite.setInitialValue(object.getString("initialValue"));
       sprite.setFinalVariable(object.getString("finalVariable"));
       sprite.setFinalValue(object.getString("finalValue"));
       sprite.setLoadingVariable(object.getString("loadingVariable"));

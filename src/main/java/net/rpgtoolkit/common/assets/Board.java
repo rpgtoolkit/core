@@ -106,6 +106,7 @@ public final class Board extends AbstractAsset implements Selectable {
   /**
    * Creates a new board with the specified width and height.
    *
+   * @param descriptor
    * @param width  board width
    * @param height board height
    */

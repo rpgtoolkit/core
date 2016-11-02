@@ -6,34 +6,16 @@
  */
 package net.rpgtoolkit.common.assets;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+public class Program extends AbstractAsset {
 
-public class Program extends BasicType {
-
-  private String fileName;
   private StringBuffer programBuffer;
 
-  public Program(String fileName) {
-    try {
-      file = new File(fileName);
-      FileReader fr = new FileReader(file);
-      programBuffer = new StringBuffer();
-
-      char[] chr = new char[(int) file.length()];
-      fr.read(chr);
-      programBuffer.append(chr);
-    } catch (FileNotFoundException e1) {
-      e1.printStackTrace();
-    } catch (IOException e1) {
-      e1.printStackTrace();
-    }
+  public Program(AssetDescriptor assetDescriptor) {
+    super(assetDescriptor);
   }
 
   public String getFileName() {
-    return fileName;
+    return descriptor.getURI().toString();
   }
 
   public StringBuffer getProgramBuffer() {

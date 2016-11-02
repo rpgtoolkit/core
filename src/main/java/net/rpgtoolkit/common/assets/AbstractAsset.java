@@ -2,12 +2,9 @@ package net.rpgtoolkit.common.assets;
 
 public abstract class AbstractAsset implements Asset {
 
-    protected final AssetDescriptor descriptor;
+    protected AssetDescriptor descriptor;
 
     public AbstractAsset(AssetDescriptor descriptor) {
-        if (descriptor == null) {
-            throw new IllegalArgumentException();
-        }
         this.descriptor = descriptor;
     }
 
@@ -17,6 +14,11 @@ public abstract class AbstractAsset implements Asset {
     @Override
     public AssetDescriptor getDescriptor() {
         return this.descriptor;
+    }
+    
+    @Override
+    public void setDescriptor(AssetDescriptor assetDescriptor) {
+      descriptor = assetDescriptor;
     }
 
 }
