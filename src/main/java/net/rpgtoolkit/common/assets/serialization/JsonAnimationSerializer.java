@@ -6,7 +6,6 @@
  */
 package net.rpgtoolkit.common.assets.serialization;
 
-import java.io.File;
 import net.rpgtoolkit.common.assets.Animation;
 import net.rpgtoolkit.common.assets.AnimationFrame;
 import net.rpgtoolkit.common.assets.AssetDescriptor;

@@ -51,7 +51,7 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     board.setBoardDimensions(new int[board.getWidth()][board.getHeight()][board.getLayerCount()]);
     board.getTileNameIndex(getStringArrayList(json.optJSONArray("tileNames")));
     board.setCompressedTileIndex(getTileIndices(json.optJSONArray("tileIndex")));
-    board.setVectors(getVectors(json.optJSONArray("vectors")));
+    board.setVectors(deserializeBoardVectors(json.optJSONArray("vectors")));
     board.setPrograms(getPrograms(json.optJSONArray("programs")));
     board.setSprites(getSprites(json.optJSONArray("sprites")));
     board.setLayerTitles(getStringArrayList(json.optJSONArray("layerTitles")));
@@ -90,27 +90,8 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     final JSONArray sprites = new JSONArray();
 
     // Serialize board vectors
+    vectors.put(serializeBoardVectors(board.getVectors()));
 
-    for (final BoardVector vector : board.getVectors()) {
-
-      final JSONObject v = new JSONObject();
-      final JSONArray points = new JSONArray();
-
-      for (final Point point : vector.getPoints()) {
-        final JSONObject pt = new JSONObject();
-        pt.put("x", point.x);
-        pt.put("y", point.y);
-        points.put(pt);
-      }
-
-      v.put("points", points);
-      v.put("attributes", vector.getAttributes());
-      v.put("isClosed", vector.isClosed());
-      v.put("layer", vector.getLayer());
-      v.put("tileType", vector.getTileType());
-      v.put("handle", vector.getHandle());
-
-    }
 
     // Serialize board programs
 
@@ -190,17 +171,6 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
 
   }
 
-  private ArrayList<String> getStringArrayList(JSONArray array) {
-    ArrayList<String> strings = new ArrayList<>();
-
-    int length = array.length();
-    for (int i = 0; i < length; i++) {
-      strings.add(array.getString(i));
-    }
-
-    return strings;
-  }
-
   private ArrayList<Integer> getTileIndices(JSONArray array) {
     ArrayList<Integer> tileIndices = new ArrayList<>();
 
@@ -210,27 +180,6 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     }
 
     return tileIndices;
-  }
-
-  private ArrayList<BoardVector> getVectors(JSONArray array) {
-    ArrayList<BoardVector> vectors = new ArrayList<>();
-
-    BoardVector vector;
-    int length = array.length();
-    for (int i = 0; i < length; i++) {
-      JSONObject object = array.getJSONObject(i);
-      vector = new BoardVector();
-      vector.setPoints(getPoints(object.getJSONArray("points")));
-      vector.setAttributes(object.getInt("attributes"));
-      vector.setClosed(object.getBoolean("isClosed"));
-      vector.setLayer(object.getInt("layer"));
-      vector.setTileType(TileType.valueOf(object.getString("tileType")));
-      vector.setHandle(object.getString("handle"));
-
-      vectors.add(vector);
-    }
-
-    return vectors;
   }
 
   private ArrayList<BoardProgram> getPrograms(JSONArray array) {

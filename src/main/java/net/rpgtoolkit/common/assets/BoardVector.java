@@ -112,6 +112,18 @@ public class BoardVector implements Cloneable, Selectable {
   public String getHandle() {
     return (handle);
   }
+  
+  /**
+   * 
+   * @return 
+   */
+  public double getWidth() {
+    return polygon.getBounds().getWidth();
+  }
+  
+  public double getHeight() {
+    return polygon.getBounds().getHeight();
+  }
 
   /**
    *

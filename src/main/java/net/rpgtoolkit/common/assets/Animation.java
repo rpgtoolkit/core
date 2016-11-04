@@ -16,6 +16,7 @@ import net.rpgtoolkit.common.assets.listeners.AnimationChangeListener;
  * This class is responsible for reading and writing RPG Toolkit 3.1 compatible Animation files.
  *
  * @author geoff wilson
+ * @author Joshua Michael Daly
  * @version svn
  */
 public class Animation extends AbstractAsset {

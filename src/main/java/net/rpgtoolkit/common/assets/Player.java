@@ -11,11 +11,14 @@ import java.awt.Polygon;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.rpgtoolkit.common.assets.events.PlayerChangedEvent;
 import net.rpgtoolkit.common.assets.listeners.PlayerChangeListener;
@@ -43,23 +46,23 @@ public class Player extends AbstractAsset {
   private String mpVariableName;
   private String maxMPVariableName;
   private String lvlVariableName;
-  private long initialExperience;
-  private long initialHP;
-  private long initialMaxHP;
-  private long initialDP;
-  private long initialFP;
-  private long initialMP;
-  private long initialMaxMP;
-  private long initialLevel;
+  private int initialExperience;
+  private int initialHP;
+  private int initialMaxHP;
+  private int initialDP;
+  private int initialFP;
+  private int initialMP;
+  private int initialMaxMP;
+  private int initialLevel;
   private String profilePicture;
   private ArrayList<PlayerSpecialMove> specialMoveList;
   private String specialMovesName;
   private boolean hasSpecialMoves;
   private ArrayList<String> accessoryNames;
   private boolean armourTypes[] = new boolean[7];
-  private long levelType;
+  private int levelType;
   private int expIncreaseFactor;
-  private long maxLevel;
+  private int maxLevel;
   private int percentHPIncrease;
   private int percentMPIncrease;
   private int percentDPIncrease;
@@ -81,21 +84,24 @@ public class Player extends AbstractAsset {
   private ArrayList<String> customGraphics;
   private ArrayList<String> customGraphicNames;
   private ArrayList<String> standingGraphics;
-  
+
   private double idleTimeBeforeStanding;
   private double frameRate; //Seconds between each step
-  private long loopSpeed;
-  
+  private int loopSpeed;
+
   private BoardVector baseVector;
   private BoardVector activationVector;
-  private Area baseArea;
+  
+  private Point baseVectorOffset;
+  private Point activationVectorOffset;
 
   // Engine Variables
   private int currentXLocation;
   private int currentYLocation;
   private int vectorCorrectionX;
   private int vectorCorrectionY;
-  
+  private Area baseArea;
+
   /**
    * Opens a player from an existing file
    *
@@ -103,34 +109,7 @@ public class Player extends AbstractAsset {
    */
   public Player(AssetDescriptor descriptor) {
     super(descriptor);
-    // Prepare the ArrayLists
-    specialMoveList = new ArrayList<>();
-    accessoryNames = new ArrayList<>();
-    standardGraphics = new ArrayList<>();
-    customGraphics = new ArrayList<>();
-    customGraphicNames = new ArrayList<>();
-    standingGraphics = new ArrayList<>();
-    baseVector = new BoardVector();
-    activationVector = new BoardVector();
   }
-
-  /**
-   * Opens a project from an existing file
-   *
-   * @param file Character (.tem) file to open
-   */
-//  public Player(File file) {
-//    super(file);
-//    System.out.println("Loading Player: " + this.file);
-//    this.open();
-//  }
-
-  /**
-   * Creates a new player (for editor use)
-   */
-//  public Player() {
-//
-//  }
 
   /**
    * @return the name
@@ -275,112 +254,112 @@ public class Player extends AbstractAsset {
   /**
    * @return the initialExperience
    */
-  public long getInitialExperience() {
+  public int getInitialExperience() {
     return initialExperience;
   }
 
   /**
    * @param initialExperience the initialExperience to set
    */
-  public void setInitialExperience(long initialExperience) {
+  public void setInitialExperience(int initialExperience) {
     this.initialExperience = initialExperience;
   }
 
   /**
    * @return the initialHP
    */
-  public long getInitialHP() {
+  public int getInitialHP() {
     return initialHP;
   }
 
   /**
    * @param initialHP the initialHP to set
    */
-  public void setInitialHP(long initialHP) {
+  public void setInitialHP(int initialHP) {
     this.initialHP = initialHP;
   }
 
   /**
    * @return the initialMaxHP
    */
-  public long getInitialMaxHP() {
+  public int getInitialMaxHP() {
     return initialMaxHP;
   }
 
   /**
    * @param initialMaxHP the initialMaxHP to set
    */
-  public void setInitialMaxHP(long initialMaxHP) {
+  public void setInitialMaxHP(int initialMaxHP) {
     this.initialMaxHP = initialMaxHP;
   }
 
   /**
    * @return the initialDP
    */
-  public long getInitialDP() {
+  public int getInitialDP() {
     return initialDP;
   }
 
   /**
    * @param initialDP the initialDP to set
    */
-  public void setInitialDP(long initialDP) {
+  public void setInitialDP(int initialDP) {
     this.initialDP = initialDP;
   }
 
   /**
    * @return the initialFP
    */
-  public long getInitialFP() {
+  public int getInitialFP() {
     return initialFP;
   }
 
   /**
    * @param initialFP the initialFP to set
    */
-  public void setInitialFP(long initialFP) {
+  public void setInitialFP(int initialFP) {
     this.initialFP = initialFP;
   }
 
   /**
    * @return the initialMP
    */
-  public long getInitialMP() {
+  public int getInitialMP() {
     return initialMP;
   }
 
   /**
    * @param initialMP the initialMP to set
    */
-  public void setInitialMP(long initialMP) {
+  public void setInitialMP(int initialMP) {
     this.initialMP = initialMP;
   }
 
   /**
    * @return the initialMaxMP
    */
-  public long getInitialMaxMP() {
+  public int getInitialMaxMP() {
     return initialMaxMP;
   }
 
   /**
    * @param initialMaxMP the initialMaxMP to set
    */
-  public void setInitialMaxMP(long initialMaxMP) {
+  public void setInitialMaxMP(int initialMaxMP) {
     this.initialMaxMP = initialMaxMP;
   }
 
   /**
    * @return the initialLevel
    */
-  public long getInitialLevel() {
+  public int getInitialLevel() {
     return initialLevel;
   }
 
   /**
    * @param initialLevel the initialLevel to set
    */
-  public void setInitialLevel(long initialLevel) {
+  public void setInitialLevel(int initialLevel) {
     this.initialLevel = initialLevel;
   }
 
@@ -403,6 +382,14 @@ public class Player extends AbstractAsset {
    */
   public ArrayList<PlayerSpecialMove> getSpecialMoveList() {
     return specialMoveList;
+  }
+
+  /**
+   * 
+   * @param specialMoveList 
+   */
+  public void setSpecialMoveList(ArrayList<PlayerSpecialMove> specialMoveList) {
+    this.specialMoveList = specialMoveList;
   }
 
   /**
@@ -441,6 +428,14 @@ public class Player extends AbstractAsset {
   }
 
   /**
+   * 
+   * @param accessoryNames 
+   */
+  public void setAccessoryNames(ArrayList<String> accessoryNames) {
+    this.accessoryNames = accessoryNames;
+  }
+
+  /**
    * @return an array of booleans indicating whether the Player can equip the type of armor for that
    * slot
    */
@@ -449,16 +444,24 @@ public class Player extends AbstractAsset {
   }
 
   /**
+   *
+   * @param armourTypes
+   */
+  public void setArmourTypes(boolean[] armourTypes) {
+    this.armourTypes = armourTypes;
+  }
+
+  /**
    * @return the levelType
    */
-  public long getLevelType() {
+  public int getLevelType() {
     return levelType;
   }
 
   /**
    * @param levelType the levelType to set
    */
-  public void setLevelType(long levelType) {
+  public void setLevelType(int levelType) {
     this.levelType = levelType;
   }
 
@@ -479,14 +482,14 @@ public class Player extends AbstractAsset {
   /**
    * @return the maxLevel
    */
-  public long getMaxLevel() {
+  public int getMaxLevel() {
     return maxLevel;
   }
 
   /**
    * @param maxLevel the maxLevel to set
    */
-  public void setMaxLevel(long maxLevel) {
+  public void setMaxLevel(int maxLevel) {
     this.maxLevel = maxLevel;
   }
 
@@ -596,6 +599,14 @@ public class Player extends AbstractAsset {
   }
 
   /**
+   * 
+   * @param standardGraphics 
+   */
+  public void setStandardGraphics(ArrayList<String> standardGraphics) {
+    this.standardGraphics = standardGraphics;
+  }
+
+  /**
    * @return the standardGraphicsAnimations
    */
   public ArrayList<Animation> getStandardGraphicsAnimations() {
@@ -610,10 +621,26 @@ public class Player extends AbstractAsset {
   }
 
   /**
+   * 
+   * @param customGraphics 
+   */
+  public void setCustomGraphics(ArrayList<String> customGraphics) {
+    this.customGraphics = customGraphics;
+  }
+  
+  /**
    * @return the customGraphicNames
    */
   public ArrayList<String> getCustomGraphicNames() {
     return customGraphicNames;
+  }
+
+  /**
+   * 
+   * @param customGraphicNames 
+   */
+  public void setCustomGraphicNames(ArrayList<String> customGraphicNames) {
+    this.customGraphicNames = customGraphicNames;
   }
 
   /**
@@ -623,6 +650,14 @@ public class Player extends AbstractAsset {
     return standingGraphics;
   }
 
+  /**
+   * 
+   * @param standingGraphics 
+   */
+  public void setStandingGraphics(ArrayList<String> standingGraphics) {
+    this.standingGraphics = standingGraphics;
+  }
+  
   /**
    * @return the idleTimeBeforeStanding
    */
@@ -660,6 +695,7 @@ public class Player extends AbstractAsset {
    */
   public void setBaseVector(BoardVector baseVector) {
     this.baseVector = baseVector;
+    firePlayerChanged();
   }
 
   public BoardVector getActivationVector() {
@@ -671,28 +707,47 @@ public class Player extends AbstractAsset {
    */
   public void setActivationVector(BoardVector activationVector) {
     this.activationVector = activationVector;
+    firePlayerChanged();
   }
-  
+
+  public Point getBaseVectorOffset() {
+    return baseVectorOffset;
+  }
+
+  public void setBaseVectorOffset(Point baseVectorOffset) {
+    this.baseVectorOffset = baseVectorOffset;
+    firePlayerChanged();
+  }
+
+  public Point getActivationVectorOffset() {
+    return activationVectorOffset;
+  }
+
+  public void setActivationVectorOffset(Point activationVectorOffset) {
+    this.activationVectorOffset = activationVectorOffset;
+    firePlayerChanged();
+  }
+
   public void updateStandardGraphics(int index, String path) {
     standardGraphics.set(index, path);
     firePlayerAnimationUpdated();
   }
-  
+
   public void updateStandingGraphics(int index, String path) {
-      standingGraphics.set(index, path);
-      firePlayerAnimationUpdated();
+    standingGraphics.set(index, path);
+    firePlayerAnimationUpdated();
   }
-  
+
   public void addCustomGraphics(String path) {
     customGraphics.add("");
     firePlayerAnimationAdded();
   }
-  
+
   public void updateCustomGraphics(int index, String path) {
     customGraphics.set(index, path);
     firePlayerAnimationUpdated();
   }
-  
+
   public void removeCustomGraphics(int index) {
     customGraphics.remove(index);
     firePlayerAnimationRemoved();
@@ -707,17 +762,27 @@ public class Player extends AbstractAsset {
    */
   public void loadAnimations() {
     System.out.println("Loading Animations for " + this.name);
+
     standardGraphicsAnimations = new ArrayList<>();
     for (String anmFile : standardGraphics) {
       if (!anmFile.equals("")) {
-        File animationFile = new File(System.getProperty("project.path")
-                + "/"
-                + PropertiesSingleton.getProperty("toolkit.directory.misc")
-                + "/" + anmFile);
-        Animation a = new Animation(new AssetDescriptor(animationFile.toURI()));
-        standardGraphicsAnimations.add(a);
+        try {
+          File animationFile = new File(System.getProperty("project.path")
+                  + File.pathSeparator
+                  + PropertiesSingleton.getProperty("toolkit.directory.misc")
+                  + File.pathSeparator
+                  + anmFile);
+
+          AssetHandle handle = AssetManager.getInstance().deserialize(
+                  new AssetDescriptor(animationFile.toURI()));
+          Animation a = (Animation) handle.getAsset();
+          standardGraphicsAnimations.add(a);
+        } catch (AssetException | IOException ex) {
+          Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+        }
       }
     }
+
     animationTimer = new Timer();
     animationTimer.schedule(new AnimationTimer(), 0, 1000 / 6);
   }
@@ -734,7 +799,7 @@ public class Player extends AbstractAsset {
 
   @Override
   public void reset() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet.");
   }
 
   private class AnimationTimer extends TimerTask {
@@ -751,6 +816,7 @@ public class Player extends AbstractAsset {
         frameNumber++;
       }
     }
+
   }
 
   public void preparePhysics(int width, int height) {
@@ -774,7 +840,7 @@ public class Player extends AbstractAsset {
 
     for (Point point : baseVector.getPoints()) {
       collisionPoly.addPoint(point.x + correctX + (currentXLocation + shiftX),
-          point.y + correctY + (currentYLocation + shiftY));
+              point.y + correctY + (currentYLocation + shiftY));
     }
     baseArea = new Area(collisionPoly);
     return baseArea;
@@ -889,4 +955,5 @@ public class Player extends AbstractAsset {
       ((PlayerChangeListener) iterator.next()).playerAnimationRemoved(event);
     }
   }
+
 }
