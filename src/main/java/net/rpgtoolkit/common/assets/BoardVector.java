@@ -205,6 +205,11 @@ public class BoardVector implements Cloneable, Selectable {
    */
   public void setPoints(ArrayList<Point> points) {
     this.points = points;
+    
+    this.polygon = new Polygon();
+    for (Point point : this.points) {
+      this.polygon.addPoint((int) point.getX(), (int) point.getY());
+    }
   }
 
   /**
