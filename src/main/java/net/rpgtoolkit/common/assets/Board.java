@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.*;
 
 import net.rpgtoolkit.common.Selectable;
+import net.rpgtoolkit.common.assets.events.BoardChangedEvent;
+import net.rpgtoolkit.common.assets.listeners.BoardChangeListener;
 import net.rpgtoolkit.common.utilities.TileSetCache;
 import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
@@ -104,6 +106,7 @@ public final class Board extends AbstractAsset implements Selectable {
   /**
    * Creates a new board with the specified width and height.
    *
+   * @param descriptor
    * @param width  board width
    * @param height board height
    */

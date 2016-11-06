@@ -38,7 +38,7 @@ public class LegacyPlayerSerializer extends AbstractAssetSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
-    return ext.endsWith(".ene");
+    return ext.endsWith(".tem");
   }
 
   @Override
@@ -172,6 +172,8 @@ public class LegacyPlayerSerializer extends AbstractAssetSerializer {
           }
         }
       }
+      
+      player.loadAnimations();
 
       // Set player as handle asset
       handle.setAsset(player);
@@ -187,6 +189,5 @@ public class LegacyPlayerSerializer extends AbstractAssetSerializer {
       throw new AssetException("unsupported file version");
     }
   }
-  
   
 }

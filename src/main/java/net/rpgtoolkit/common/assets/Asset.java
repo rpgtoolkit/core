@@ -14,6 +14,8 @@ public interface Asset {
         
     AssetDescriptor getDescriptor();
     
+    void setDescriptor(AssetDescriptor assetDescriptor);
+    
     void reset();
     
 }
