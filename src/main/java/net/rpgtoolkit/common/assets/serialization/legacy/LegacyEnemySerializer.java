@@ -119,8 +119,8 @@ public class LegacyEnemySerializer extends AbstractAssetSerializer {
         channel.write(ByteBufferHelper.getBuffer(s.replace("/", "\\")));
       }
       //TODO: custom graphics size is short here, but int in deserialize; which is correct?
-      List<String> customGraphics = enemy.getCustomizedGraphics();
-      List<String> customNames = enemy.getCustomizedGraphicsNames();
+      List<String> customGraphics = enemy.getCustomGraphics();
+      List<String> customNames = enemy.getCustomGraphicsNames();
       short customGraphicsCount = (short) customGraphics.size();
       buffer.putShort(customGraphicsCount);
       buffer.flip();
@@ -177,7 +177,7 @@ public class LegacyEnemySerializer extends AbstractAssetSerializer {
         enemy.getStrengths().add(ByteBufferHelper.getTerminatedString(buffer));
       }
       enemy.setAiLevel(buffer.get());
-      enemy.useRPGCodeTatics(buffer.get() == 1);
+      enemy.useRPGCodeTactics(buffer.get() == 1);
       enemy.setTacticsFile(ByteBufferHelper.getTerminatedString(buffer));
       enemy.setExperienceAwarded(buffer.getInt());
       enemy.setGoldAwarded(buffer.getInt());
@@ -195,8 +195,8 @@ public class LegacyEnemySerializer extends AbstractAssetSerializer {
 //                out.println(customGraphicsCount);
 
       for (int i = 0; i < customGraphicsCount; i++) {
-        enemy.getCustomizedGraphics().add(ByteBufferHelper.getTerminatedString(buffer));
-        enemy.getCustomizedGraphicsNames().add(ByteBufferHelper.getTerminatedString(buffer));
+        enemy.getCustomGraphics().add(ByteBufferHelper.getTerminatedString(buffer));
+        enemy.getCustomGraphicsNames().add(ByteBufferHelper.getTerminatedString(buffer));
       }
 
       enemy.setMaxHitPoints(enemy.getHitPoints());

@@ -123,7 +123,7 @@ public class JsonPlayerSerializer extends AbstractJsonSerializer {
     json.put("idleTimeBeforeStanding", player.getIdleTimeBeforeStanding());
     json.put("frameRate", player.getFrameRate());
     json.put("customGraphics", player.getCustomGraphics());
-    json.put("customGraphicsNames", player.getCustomGraphicNames());
+    json.put("customGraphicsNames", player.getCustomGraphicsNames());
     json.put("baseVector", serializeBoardVector(player.getBaseVector()));
     json.put("activationVector", serializeBoardVector(player.getActivationVector()));
     json.put("baseVectorOffset", serializePoint(player.getBaseVectorOffset()));

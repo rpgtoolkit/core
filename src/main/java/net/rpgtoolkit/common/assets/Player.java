@@ -13,21 +13,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.rpgtoolkit.common.assets.events.PlayerChangedEvent;
-import net.rpgtoolkit.common.assets.listeners.PlayerChangeListener;
 import net.rpgtoolkit.common.utilities.PropertiesSingleton;
 
-public class Player extends AbstractAsset {
-
-  // Non-IO
-  private final LinkedList<PlayerChangeListener> playerChangeListeners = new LinkedList<>();
+public class Player extends AbstractSprite {
 
   // Constants
   //TODO: can these be changed to enums or something?
@@ -71,29 +64,11 @@ public class Player extends AbstractAsset {
   private byte levelUpType;
   private byte characterSize;
 
-  // Graphics Variables
-  private ArrayList<String> standardGraphics; // 13 Values, S,N,E,W,NW,NE,SW,SE,Att,Def,Spec,Die,Rst
-  private ArrayList<Animation> standardGraphicsAnimations;
-
   // Active animation for the engine
   private Animation activeAnimation;
   private int frameNumber;
   private int frameCount;
   private Timer animationTimer;
-
-  private ArrayList<String> customGraphics;
-  private ArrayList<String> customGraphicNames;
-  private ArrayList<String> standingGraphics;
-
-  private double idleTimeBeforeStanding;
-  private double frameRate; //Seconds between each step
-  private int loopSpeed;
-
-  private BoardVector baseVector;
-  private BoardVector activationVector;
-  
-  private Point baseVectorOffset;
-  private Point activationVectorOffset;
 
   // Engine Variables
   private int currentXLocation;
@@ -592,168 +567,6 @@ public class Player extends AbstractAsset {
   }
 
   /**
-   * @return the standardGraphics
-   */
-  public ArrayList<String> getStandardGraphics() {
-    return standardGraphics;
-  }
-
-  /**
-   * 
-   * @param standardGraphics 
-   */
-  public void setStandardGraphics(ArrayList<String> standardGraphics) {
-    this.standardGraphics = standardGraphics;
-  }
-
-  /**
-   * @return the standardGraphicsAnimations
-   */
-  public ArrayList<Animation> getStandardGraphicsAnimations() {
-    return standardGraphicsAnimations;
-  }
-
-  /**
-   * @return the customGraphics
-   */
-  public ArrayList<String> getCustomGraphics() {
-    return customGraphics;
-  }
-
-  /**
-   * 
-   * @param customGraphics 
-   */
-  public void setCustomGraphics(ArrayList<String> customGraphics) {
-    this.customGraphics = customGraphics;
-  }
-  
-  /**
-   * @return the customGraphicNames
-   */
-  public ArrayList<String> getCustomGraphicNames() {
-    return customGraphicNames;
-  }
-
-  /**
-   * 
-   * @param customGraphicNames 
-   */
-  public void setCustomGraphicNames(ArrayList<String> customGraphicNames) {
-    this.customGraphicNames = customGraphicNames;
-  }
-
-  /**
-   * @return the standingGraphics
-   */
-  public ArrayList<String> getStandingGraphics() {
-    return standingGraphics;
-  }
-
-  /**
-   * 
-   * @param standingGraphics 
-   */
-  public void setStandingGraphics(ArrayList<String> standingGraphics) {
-    this.standingGraphics = standingGraphics;
-  }
-  
-  /**
-   * @return the idleTimeBeforeStanding
-   */
-  public double getIdleTimeBeforeStanding() {
-    return idleTimeBeforeStanding;
-  }
-
-  /**
-   * @param idleTimeBeforeStanding the idleTimeBeforeStanding to set
-   */
-  public void setIdleTimeBeforeStanding(double idleTimeBeforeStanding) {
-    this.idleTimeBeforeStanding = idleTimeBeforeStanding;
-  }
-
-  /**
-   * @return the frameRate (seconds between each step)
-   */
-  public double getFrameRate() {
-    return frameRate;
-  }
-
-  /**
-   * @param frameRate the frameRate to set (seconds between each step)
-   */
-  public void setFrameRate(double frameRate) {
-    this.frameRate = frameRate;
-  }
-
-  public BoardVector getBaseVector() {
-    return baseVector;
-  }
-
-  /**
-   * @param baseVector the baseVector to set
-   */
-  public void setBaseVector(BoardVector baseVector) {
-    this.baseVector = baseVector;
-    firePlayerChanged();
-  }
-
-  public BoardVector getActivationVector() {
-    return activationVector;
-  }
-
-  /**
-   * @param activationVector the activationVector to set
-   */
-  public void setActivationVector(BoardVector activationVector) {
-    this.activationVector = activationVector;
-    firePlayerChanged();
-  }
-
-  public Point getBaseVectorOffset() {
-    return baseVectorOffset;
-  }
-
-  public void setBaseVectorOffset(Point baseVectorOffset) {
-    this.baseVectorOffset = baseVectorOffset;
-    firePlayerChanged();
-  }
-
-  public Point getActivationVectorOffset() {
-    return activationVectorOffset;
-  }
-
-  public void setActivationVectorOffset(Point activationVectorOffset) {
-    this.activationVectorOffset = activationVectorOffset;
-    firePlayerChanged();
-  }
-
-  public void updateStandardGraphics(int index, String path) {
-    standardGraphics.set(index, path);
-    firePlayerAnimationUpdated();
-  }
-
-  public void updateStandingGraphics(int index, String path) {
-    standingGraphics.set(index, path);
-    firePlayerAnimationUpdated();
-  }
-
-  public void addCustomGraphics(String path) {
-    customGraphics.add("");
-    firePlayerAnimationAdded();
-  }
-
-  public void updateCustomGraphics(int index, String path) {
-    customGraphics.set(index, path);
-    firePlayerAnimationUpdated();
-  }
-
-  public void removeCustomGraphics(int index) {
-    customGraphics.remove(index);
-    firePlayerAnimationRemoved();
-  }
-
-  /**
    * Loads the animations into memory, used in the engine, this is not called during load as it
    * would use too much memory to load every animation into memory for all players/enemies/items at
    * once.
@@ -868,92 +681,6 @@ public class Player extends AbstractAsset {
 
   public void adjustY(int adjustment) {
     currentYLocation += adjustment;
-  }
-
-  /**
-   * Add a new <code>PlayerChangeListener</code> for this player.
-   *
-   * @param listener new change listener
-   */
-  public void addPlayerChangeListener(PlayerChangeListener listener) {
-    playerChangeListeners.add(listener);
-  }
-
-  /**
-   * Remove an existing <code>PlayerChangeListener</code> for this player.
-   *
-   * @param listener change listener
-   */
-  public void removePlayerChangeListener(PlayerChangeListener listener) {
-    playerChangeListeners.remove(listener);
-  }
-
-  /**
-   * Fires the <code>PlayerChangedEvent</code> informs all the listeners that this player has
-   * changed.
-   */
-  public void firePlayerChanged() {
-    PlayerChangedEvent event = null;
-    Iterator iterator = playerChangeListeners.iterator();
-
-    while (iterator.hasNext()) {
-      if (event == null) {
-        event = new PlayerChangedEvent(this);
-      }
-
-      ((PlayerChangeListener) iterator.next()).playerChanged(event);
-    }
-  }
-
-  /**
-   * Fires the <code>PlayerChangedEvent</code> informs all the listeners that this player has had an
-   * animation added.
-   */
-  public void firePlayerAnimationAdded() {
-    PlayerChangedEvent event = null;
-    Iterator iterator = playerChangeListeners.iterator();
-
-    while (iterator.hasNext()) {
-      if (event == null) {
-        event = new PlayerChangedEvent(this);
-      }
-
-      ((PlayerChangeListener) iterator.next()).playerAnimationAdded(event);
-    }
-  }
-
-  /**
-   * Fires the <code>PlayerChangedEvent</code> informs all the listeners that this player has had an
-   * animation updated.
-   */
-  public void firePlayerAnimationUpdated() {
-    PlayerChangedEvent event = null;
-    Iterator iterator = playerChangeListeners.iterator();
-
-    while (iterator.hasNext()) {
-      if (event == null) {
-        event = new PlayerChangedEvent(this);
-      }
-
-      ((PlayerChangeListener) iterator.next()).playerAnimationUpdated(event);
-    }
-  }
-
-  /**
-   * Fires the <code>PlayerChangedEvent</code> informs all the listeners that this player has had an
-   * animation removed.
-   */
-  public void firePlayerAnimationRemoved() {
-    PlayerChangedEvent event = null;
-    Iterator iterator = playerChangeListeners.iterator();
-
-    while (iterator.hasNext()) {
-      if (event == null) {
-        event = new PlayerChangedEvent(this);
-      }
-
-      ((PlayerChangeListener) iterator.next()).playerAnimationRemoved(event);
-    }
   }
 
 }
