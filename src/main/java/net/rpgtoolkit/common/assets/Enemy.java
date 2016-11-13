@@ -10,8 +10,6 @@ import java.util.ArrayList;
 
 public class Enemy extends AbstractSprite {
   
-  // Enemry Variables
-  private String name;
   private long hitPoints;
   private long magicPoints;
   private long fightPower;
@@ -43,20 +41,6 @@ public class Enemy extends AbstractSprite {
     standardGraphics = new ArrayList<>();
     customGraphics = new ArrayList<>();
     customGraphicsNames = new ArrayList<>();
-  }
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
   }
 
   /**

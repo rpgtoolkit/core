@@ -22,6 +22,8 @@ public abstract class AbstractSprite extends AbstractAsset {
 
   // Non-IO
   protected final LinkedList<SpriteChangeListener> spriteChangeListeners = new LinkedList<>();
+  
+  protected String name;
 
   // Graphics Variables
   protected ArrayList<String> standardGraphics; // 13 Values, S,N,E,W,NW,NE,SW,SE,Att,Def,Spec,Die,Rst
@@ -43,6 +45,14 @@ public abstract class AbstractSprite extends AbstractAsset {
 
   public AbstractSprite(AssetDescriptor descriptor) {
     super(descriptor);
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   /**

@@ -29,7 +29,6 @@ public class Player extends AbstractSprite {
   public static final int DIRECTION_SOUTH = 0;
   public static final int DIRECTION_WEST = 3;
 
-  private String name;
   private String expVariableName;
   private String dpVariableName;
   private String fpVariableName;
@@ -84,20 +83,6 @@ public class Player extends AbstractSprite {
    */
   public Player(AssetDescriptor descriptor) {
     super(descriptor);
-  }
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
   }
 
   /**
