@@ -99,6 +99,17 @@ public abstract class AbstractJsonSerializer
     return strings;
   }
 
+  protected ArrayList<Boolean> getBooleanArrayList(JSONArray array) {
+    ArrayList<Boolean> booleans = new ArrayList<>();
+
+    int length = array.length();
+    for (int i = 0; i < length; i++) {
+      booleans.add(array.getBoolean(i));
+    }
+
+    return booleans;
+  }
+
   protected boolean[] getBooleanArray(JSONArray array) {
     boolean[] booleans = new boolean[array.length()];
 
@@ -164,14 +175,14 @@ public abstract class AbstractJsonSerializer
 
     return vector;
   }
-  
+
   protected JSONObject serializePoint(Point point) {
     JSONObject object = new JSONObject();
     object.put("x", point.getX());
     object.put("y", point.getY());
     return object;
   }
-  
+
   protected Point deserializePoint(JSONObject object) {
     return new Point(object.getInt("x"), object.getInt("y"));
   }
