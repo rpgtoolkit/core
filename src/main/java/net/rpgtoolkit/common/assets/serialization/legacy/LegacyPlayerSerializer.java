@@ -149,7 +149,7 @@ public class LegacyPlayerSerializer extends AbstractAssetSerializer {
         long animationCount = buffer.getInt();
         for (int i = 0; i < animationCount + 1; i++) {
           player.getCustomGraphics().add(ByteBufferHelper.getTerminatedString(buffer));
-          player.getCustomGraphicNames().add(ByteBufferHelper.getTerminatedString(buffer));
+          player.getCustomGraphicsNames().add(ByteBufferHelper.getTerminatedString(buffer));
         }
 
         if (versionMinor > 7) {

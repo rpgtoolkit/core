@@ -7,42 +7,42 @@
 package net.rpgtoolkit.common.assets.listeners;
 
 import java.util.EventListener;
-import net.rpgtoolkit.common.assets.events.PlayerChangedEvent;
+import net.rpgtoolkit.common.assets.events.SpriteChangedEvent;
 
 /**
  * Implementors of this interface will use the contained method definitions to inform their 
- * listeners of new event on a <code>Player</code>.
+ * listeners of new event on a <code>Sprite</code>.
  * 
  * @author Joshua Michael Daly
  */
-public interface PlayerChangeListener  extends EventListener  {
+public interface SpriteChangeListener extends EventListener  {
   
   /**
-     * A general player changed event.
+     * A general sprite changed event.
      * 
      * @param e
      */
-    public void playerChanged(PlayerChangedEvent e);
+    public void spriteChanged(SpriteChangedEvent e);
     
     /**
-     * A new animation has been added to the player.
+     * A new animation has been added to the sprite.
      * 
      * @param e
      */
-    public void playerAnimationAdded(PlayerChangedEvent e);
+    public void spriteAnimationAdded(SpriteChangedEvent e);
     
     /**
      * An animation has been updated.
      * 
      * @param e
      */
-    public void playerAnimationUpdated(PlayerChangedEvent e);
+    public void spriteAnimationUpdated(SpriteChangedEvent e);
     
     /**
      * A animation has been removed.
      * 
      * @param e
      */
-    public void playerAnimationRemoved(PlayerChangedEvent e);
+    public void spriteAnimationRemoved(SpriteChangedEvent e);
 
 }

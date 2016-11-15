@@ -151,35 +151,35 @@ public class LegacyItemSerializer
       //graphical standard information
       item.setIsWide(buffer.get() == 1);
       if (versionMinor >= 4) {  //tk3 item
-        item.getStandardAnimationFiles().clear();
+        item.getStandardGraphics().clear();
         for (int i = 0; i != ANIMATION_STANDARD_COUNT; i++) {
-          item.getStandardAnimationFiles().add(ByteBufferHelper.getTerminatedString(buffer));
+          item.getStandardGraphics().add(ByteBufferHelper.getTerminatedString(buffer));
         }
         if (versionMinor >= 5) {
-          item.getAnimationStanding().clear();
+          item.getStandingGraphics().clear();
           for (int i = 0; i != ANIMATION_STANDING_COUNT; i++) {
-            item.getAnimationStanding().add(ByteBufferHelper.getTerminatedString(buffer));
+            item.getStandingGraphics().add(ByteBufferHelper.getTerminatedString(buffer));
           }
           //speed information
           item.setSpeed(buffer.getDouble());
-          item.setIdleTime(buffer.getDouble());
+          item.setIdleTimeBeforeStanding(buffer.getDouble());
         }
         if (versionMinor < 6) {
           //handling the archaic rest graphic
           //standing might not have enough elements, add any necessary placeholders
-          while (item.getAnimationStanding().size() <= Item.ITEM_WALK_S) {
-            item.getAnimationStanding().add("");
+          while (item.getStandingGraphics().size() <= Item.ITEM_WALK_S) {
+            item.getStandingGraphics().add("");
           }
-          item.getAnimationStanding().set(
-              Item.ITEM_WALK_S, item.getStandardAnimationFiles().get(Item.ITEM_REST));
+          item.getStandingGraphics().set(
+              Item.ITEM_WALK_S, item.getStandardGraphics().get(Item.ITEM_REST));
           //standard has been initialized for sure with ANIMATION_STANDARD_COUNT elements
-          item.getStandardAnimationFiles().set(Item.ITEM_REST, "");
+          item.getStandardGraphics().set(Item.ITEM_REST, "");
         }
         long tempMaxArrayVal;
         tempMaxArrayVal = buffer.getInt() + 1;   //future animationCustomHandle.size()
         for (long i = 0; i != tempMaxArrayVal; i++) {
-          item.getAnimationCustom().add(ByteBufferHelper.getTerminatedString(buffer));
-          item.getAnimationCustomHandle().add(ByteBufferHelper.getTerminatedString(buffer));
+          item.getCustomGraphics().add(ByteBufferHelper.getTerminatedString(buffer));
+          item.getCustomGraphicsNames().add(ByteBufferHelper.getTerminatedString(buffer));
         }
         //vector information
         if (versionMinor >= 7) {  //modern item--uses vectors
@@ -196,9 +196,9 @@ public class LegacyItemSerializer
               tempV.addPoint(tempX, tempY);
             }
             if (i == 0) {
-              item.setVectorBase(tempV);
+              item.setBaseVector(tempV);
             } else {
-              item.setVectorActivate(tempV);
+              item.setActivationVector(tempV);
             }
           }
         }

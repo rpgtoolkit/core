@@ -9,7 +9,7 @@ package net.rpgtoolkit.common.assets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Item extends AbstractAsset {
+public class Item extends AbstractSprite {
 
   //TODO: refactor animation lists to not use integer constant indexes. maybe use map and/or enum?
   public final static int ITEM_WALK_S = 0;
@@ -21,8 +21,10 @@ public class Item extends AbstractAsset {
   public final static int ITEM_WALK_SW = 6;
   public final static int ITEM_WALK_SE = 7;
   public final static int ITEM_REST = 8;
-
-  private String name;
+ 
+  private double speed;
+  
+  // Specific to the item type.
   private String description;
   private boolean isEquippable;
   private boolean isMenuDriven;
@@ -52,51 +54,29 @@ public class Item extends AbstractAsset {
   private String boardPickUpProgram;
   private boolean isWide;
 
-  private List<String> standardAnimationFiles;
-  private List<Animation> standardAnimations;
-  private List<String> animationCustom;
-  private List<String> animationCustomHandle;
-  private List<String> animationStanding;
-
-  private double speed;
-  private double idleTime;
-
-  private BoardVector vectorBase;
-  private BoardVector vectorActivate;
-
   public Item(AssetDescriptor descriptor) {
     super(descriptor);
     this.userChar = new ArrayList<>();
     this.equipLocation = new ArrayList<>();
-    this.standardAnimationFiles = new ArrayList<>();
-    this.standardAnimations = new ArrayList<>();
-    this.animationCustom = new ArrayList<>();
-    this.animationCustomHandle = new ArrayList<>();
-    this.animationStanding = new ArrayList<>();
+    this.standardGraphics = new ArrayList<>();
+    this.standardGraphicsAnimations = new ArrayList<>();
+    this.customGraphics = new ArrayList<>();
+    this.customGraphicsNames = new ArrayList<>();
+    this.standingGraphics = new ArrayList<>();
     reset();
   }
 
   public List<Animation> getStandardAnimations() {
-    return this.standardAnimations;
+    return this.standardGraphicsAnimations;
   }
 
-//    public Item() {
-//        this.userChar = new ArrayList<>();
-//        this.equipLocation = new ArrayList<>();
-//        this.standardAnimationFiles = new ArrayList<>();
-//        this.standardAnimations = new ArrayList<>();
-//        this.animationCustom = new ArrayList<>();
-//        this.animationCustomHandle = new ArrayList<>();
-//        this.animationStanding = new ArrayList<>();
-//        reset();
-//    }
   @Override
-  public void reset() {
+  public final void reset() {
 
     name = "";
     description = "";
     speed = 0.05;
-    idleTime = 3;
+    idleTimeBeforeStanding = 3;
     isEquippable = false;
     isMenuDriven = false;
     isBoardDriven = false;
@@ -126,16 +106,16 @@ public class Item extends AbstractAsset {
     boardMultitaskProgram = "";
     boardPickUpProgram = "";
     isWide = true;
-    standardAnimationFiles.clear();
-    animationStanding.clear();
-    animationCustom.clear();
-    animationCustomHandle.clear();
+    standardGraphics.clear();
+    standingGraphics.clear();
+    customGraphics.clear();
+    customGraphicsNames.clear();
     for (int i = 0; i != 5; i++) {
-      animationCustom.add("");
-      animationCustomHandle.add("");
+      customGraphics.add("");
+      customGraphicsNames.add("");
     }
-    vectorBase = makeDefaultSpriteVector(true, false);
-    vectorActivate = makeDefaultSpriteVector(false, false);
+    baseVector = makeDefaultSpriteVector(true, false);
+    activationVector = makeDefaultSpriteVector(false, false);
   }
 
   private BoardVector makeDefaultSpriteVector(boolean isCollisionVector, boolean isIsometric) {
@@ -168,24 +148,6 @@ public class Item extends AbstractAsset {
       }
     }
     return (toReturn);
-  }
-
-  public List<String> getStandardAnimationFiles() {
-    return standardAnimationFiles;
-  }
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
   }
 
   /**
@@ -567,27 +529,6 @@ public class Item extends AbstractAsset {
   }
 
   /**
-   * @return the animationCustom
-   */
-  public List<String> getAnimationCustom() {
-    return animationCustom;
-  }
-
-  /**
-   * @return the animationCustomHandle
-   */
-  public List<String> getAnimationCustomHandle() {
-    return animationCustomHandle;
-  }
-
-  /**
-   * @return the animationStanding
-   */
-  public List<String> getAnimationStanding() {
-    return animationStanding;
-  }
-
-  /**
    * @return the speed
    */
   public double getSpeed() {
@@ -599,48 +540,6 @@ public class Item extends AbstractAsset {
    */
   public void setSpeed(double speed) {
     this.speed = speed;
-  }
-
-  /**
-   * @return the idleTime
-   */
-  public double getIdleTime() {
-    return idleTime;
-  }
-
-  /**
-   * @param idleTime the idleTime to set
-   */
-  public void setIdleTime(double idleTime) {
-    this.idleTime = idleTime;
-  }
-
-  /**
-   * @return the vectorBase
-   */
-  public BoardVector getVectorBase() {
-    return vectorBase;
-  }
-
-  /**
-   * @param vectorBase the vectorBase to set
-   */
-  public void setVectorBase(BoardVector vectorBase) {
-    this.vectorBase = vectorBase;
-  }
-
-  /**
-   * @return the vectorActivate
-   */
-  public BoardVector getVectorActivate() {
-    return vectorActivate;
-  }
-
-  /**
-   * @param vectorActivate the vectorActivate to set
-   */
-  public void setVectorActivate(BoardVector vectorActivate) {
-    this.vectorActivate = vectorActivate;
   }
 
 }

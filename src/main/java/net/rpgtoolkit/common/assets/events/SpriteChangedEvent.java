@@ -7,17 +7,17 @@
 package net.rpgtoolkit.common.assets.events;
 
 import java.util.EventObject;
-import net.rpgtoolkit.common.assets.Player;
+import net.rpgtoolkit.common.assets.AbstractSprite;
 
 /**
- *  An <code>EventObject</code> used to contain information of a change that has happened on a player.
+ *  An <code>EventObject</code> used to contain information of a change that has happened on a sprite.
  * 
  * @author Joshua Michael Daly
  */
-public class PlayerChangedEvent extends EventObject {
+public class SpriteChangedEvent extends EventObject {
 
-  public PlayerChangedEvent(Player player) {
-    super(player);
+  public SpriteChangedEvent(AbstractSprite sprite) {
+    super(sprite);
   }
 
 }
