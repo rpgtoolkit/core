@@ -243,6 +243,15 @@ public class Item extends AbstractSprite {
   }
 
   /**
+   * 
+   * @param userChar 
+   */
+  public void setUserChar(List<String> userChar) {
+    this.userChar = userChar;
+  }
+  
+
+  /**
    * @return the buyPrice
    */
   public long getBuyPrice() {
@@ -289,6 +298,14 @@ public class Item extends AbstractSprite {
    */
   public List<Boolean> getEquipLocation() {
     return equipLocation;
+  }
+
+  /**
+   * 
+   * @param equipLocation 
+   */
+  public void setEquipLocation(List<Boolean> equipLocation) {
+    this.equipLocation = equipLocation;
   }
 
   /**
