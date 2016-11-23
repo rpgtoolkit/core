@@ -68,10 +68,10 @@ public class JsonPlayerSerializer extends AbstractJsonSerializer {
     player.setCharacterSize((byte) json.optInt("characterSize"));
     player.setStandardGraphics(getStringArrayList(json.getJSONArray("standardGraphics")));
     player.setStandingGraphics(getStringArrayList(json.getJSONArray("standingGraphics")));
-    player.setIdleTimeBeforeStanding(json.optDouble("idleTimeBeforeStanding"));
-    player.setFrameRate(json.optDouble("frameRate"));
     player.setCustomGraphics(getStringArrayList(json.getJSONArray("customGraphics")));
     player.setCustomGraphicNames(getStringArrayList(json.getJSONArray("customGraphicsNames")));
+    player.setIdleTimeBeforeStanding(json.optDouble("idleTimeBeforeStanding"));
+    player.setFrameRate(json.optDouble("frameRate"));
     player.setBaseVector(deserializeBoardVector(json.optJSONObject("baseVector")));
     player.setActivationVector(deserializeBoardVector(json.optJSONObject("activationVector")));
     player.setBaseVectorOffset(deserializePoint(json.optJSONObject("baseVectorOffset")));
@@ -120,10 +120,10 @@ public class JsonPlayerSerializer extends AbstractJsonSerializer {
     json.put("characterSize", player.getCharacterSize());
     json.put("standardGraphics", player.getStandardGraphics());
     json.put("standingGraphics", player.getStandingGraphics());
-    json.put("idleTimeBeforeStanding", player.getIdleTimeBeforeStanding());
-    json.put("frameRate", player.getFrameRate());
     json.put("customGraphics", player.getCustomGraphics());
     json.put("customGraphicsNames", player.getCustomGraphicsNames());
+    json.put("idleTimeBeforeStanding", player.getIdleTimeBeforeStanding());
+    json.put("frameRate", player.getFrameRate());
     json.put("baseVector", serializeBoardVector(player.getBaseVector()));
     json.put("activationVector", serializeBoardVector(player.getActivationVector()));
     json.put("baseVectorOffset", serializePoint(player.getBaseVectorOffset()));

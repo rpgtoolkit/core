@@ -52,12 +52,14 @@ public class JsonEnemySerializer extends AbstractJsonSerializer {
     enemy.setGoldAwarded(json.optInt("goldAwarded"));
     enemy.setBeatEnemyProgram(json.optString("beatEnemyProgram"));
     enemy.setRunAwayProgram(json.optString("runAwayProgram"));
-    enemy.setStandardGraphics(getStringArrayList(json.optJSONArray("standardGraphics")));
-    enemy.setCustomGraphics(getStringArrayList(json.optJSONArray("customizedGraphics")));
-    enemy.setCustomGraphicNames(getStringArrayList(json.optJSONArray("customizedGraphicsNames")));
     enemy.setMaxHitPoints(json.optInt("maxHitPoints"));
     enemy.setMagicPoints(json.optInt("maxMagicPoints"));
     enemy.setStatusEffects(getStringArrayList(json.optJSONArray("statusEffects")));
+    enemy.setStandardGraphics(getStringArrayList(json.optJSONArray("standardGraphics")));
+    enemy.setCustomGraphics(getStringArrayList(json.optJSONArray("customizedGraphics")));
+    enemy.setCustomGraphicNames(getStringArrayList(json.optJSONArray("customizedGraphicsNames")));
+    enemy.setIdleTimeBeforeStanding(json.optDouble("idleTimeBeforeStanding"));
+    enemy.setFrameRate(json.optDouble("frameRate"));
 
     handle.setAsset(enemy);
   }
@@ -85,12 +87,14 @@ public class JsonEnemySerializer extends AbstractJsonSerializer {
     json.put("goldAwarded", enemy.getGoldAwarded());
     json.put("beatEnemyProgram", enemy.getBeatEnemyProgram());
     json.put("runAwayProgram", enemy.getRunAwayProgram());
-    json.put("standardGraphics", enemy.getStandardGraphics());
-    json.put("customizedGraphics", enemy.getCustomGraphics());
-    json.put("customizedGraphicsNames", enemy.getCustomGraphicsNames());
     json.put("maxHitPoints", enemy.getMaxHitPoints());
     json.put("maxMagicPoints", enemy.getMaxMagicPoints());
     json.put("statusEffects", enemy.getStatusEffects());
+    json.put("standardGraphics", enemy.getStandardGraphics());
+    json.put("customizedGraphics", enemy.getCustomGraphics());
+    json.put("customizedGraphicsNames", enemy.getCustomGraphicsNames());
+    json.put("idleTimeBeforeStanding", enemy.getIdleTimeBeforeStanding());
+    json.put("frameRate", enemy.getFrameRate());
   }
 
 }
