@@ -7,8 +7,15 @@
 package net.rpgtoolkit.common.utilities;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.rpgtoolkit.common.assets.AssetDescriptor;
+import net.rpgtoolkit.common.assets.AssetException;
+import net.rpgtoolkit.common.assets.AssetHandle;
+import net.rpgtoolkit.common.assets.AssetManager;
 import net.rpgtoolkit.common.assets.TileSet;
 
 /**
@@ -20,7 +27,7 @@ import net.rpgtoolkit.common.assets.TileSet;
 public class TileSetCache {
 
   // Singleton.
-  private static final TileSetCache instance = new TileSetCache();
+  private static final TileSetCache INSTANCE = new TileSetCache();
 
   private final HashMap<String, TileSet> tileSets;
 
@@ -33,7 +40,7 @@ public class TileSetCache {
    * @return
    */
   public static TileSetCache getInstance() {
-    return instance;
+    return INSTANCE;
   }
 
   /**
@@ -73,13 +80,23 @@ public class TileSetCache {
     TileSet set;
 
     if (!tileSets.containsKey(fileName)) {
-      set = new TileSet(new File(System.getProperty("project.path")
-              + "/"
-              + PropertiesSingleton.getProperty("toolkit.directory.tileset")
-              + "/" + fileName));
-      tileSets.put(fileName, set);
+      try {
+        File file = new File(System.getProperty("project.path")
+                + File.separator
+                + PropertiesSingleton.getProperty("toolkit.directory.tileset")
+                + File.separator + fileName);
 
-      return set;
+        AssetHandle handle = AssetManager.getInstance().deserialize(
+                new AssetDescriptor(file.toURI()));
+        set = (TileSet) handle.getAsset();
+
+        tileSets.put(fileName, set);
+
+        return set;
+      } catch (IOException | AssetException ex) {
+        Logger.getLogger(TileSetCache.class.getName()).log(Level.SEVERE, null, ex);
+        return null;
+      }
     } else {
       set = getTileSet(fileName);
 

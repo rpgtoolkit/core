@@ -56,16 +56,6 @@ public class AnimationFrame {
       } catch (IOException e) {
         e.printStackTrace();
       }
-    } else {
-      // Loads the tileset and fetches the correct tile
-      frameName = frameName.toLowerCase();
-      String tilesetName = frameName.split(".tst")[0] + ".tst";
-      String tilesetPath = System.getProperty("project.path")
-              + "/"
-              + PropertiesSingleton.getProperty("toolkit.directory.tileset")
-              + "/" + tilesetName;
-      TileSet tileSet = new TileSet(new File(tilesetPath), 1); // get a single tile from the set (faster...)
-      frameTile = tileSet.getSingleTileFromSet(Integer.parseInt(frameName.split(".tst")[1]) - 1);
     }
 
     // Set the transparent color and frame sound, these are not currently used.

@@ -9,7 +9,13 @@ package net.rpgtoolkit.common.assets;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import net.rpgtoolkit.common.Selectable;
 import net.rpgtoolkit.common.assets.events.BoardChangedEvent;
@@ -83,6 +89,7 @@ public final class Board extends AbstractAsset implements Selectable {
 
   /**
    * Creates an empty board.
+   * @param descriptor
    */
   public Board(AssetDescriptor descriptor) {
     super(descriptor);
