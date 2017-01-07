@@ -16,8 +16,6 @@ import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.Board;
 import net.rpgtoolkit.common.assets.BoardProgram;
 import net.rpgtoolkit.common.assets.BoardSprite;
-import net.rpgtoolkit.common.assets.BoardVector;
-import net.rpgtoolkit.common.assets.TileType;
 import net.rpgtoolkit.common.io.Paths;
 
 import org.json.JSONArray;
