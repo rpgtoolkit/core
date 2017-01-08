@@ -919,8 +919,6 @@ public final class Board extends AbstractAsset implements Selectable {
    * Update the global <code>TileSetCache</code> with any new tile sets that appear on this board.
    */
   public void updateTileSetCache() {
-    TileSetCache cache = TileSetCache.getInstance();
-
     // Load the tiles into memory
     for (String indexString : tileNameIndex) {
       if (!indexString.isEmpty()) {
@@ -942,7 +940,7 @@ public final class Board extends AbstractAsset implements Selectable {
 
         if (!tileSetNames.contains(tileSetName)) {
           tileSetNames.add(tileSetName);
-          tileSets.put(tileSetName, cache.addTileSet(tileSetName));
+          tileSets.put(tileSetName, TileSetCache.addTileSet(tileSetName));
         }
         loadedTilesIndex.add(tileSets.get(tileSetName).getTile(Integer.parseInt(indexString.split(".tst")[1]) - 1));
       } else {

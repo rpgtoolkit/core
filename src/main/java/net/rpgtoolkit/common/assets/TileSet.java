@@ -25,8 +25,6 @@ public class TileSet extends AbstractAsset {
 
   private LinkedList<Tile> tiles;
 
-  private boolean hasChanged = false;
-
   private int tilesetVersion;
   private int numberOfTiles;
   private int tilesetType;
@@ -100,14 +98,6 @@ public class TileSet extends AbstractAsset {
     this.name = name;
   }
 
-  public boolean isHasChanged() {
-    return hasChanged;
-  }
-
-  public void setHasChanged(boolean hasChanged) {
-    this.hasChanged = hasChanged;
-  }
-
   public int getTilesetVersion() {
     return tilesetVersion;
   }
@@ -173,12 +163,10 @@ public class TileSet extends AbstractAsset {
    * Adds a new tile to the tiles, it will add the tile at the end of the array
    *
    * @param newTile Tile object to add to the array
-   * @return True if the tile was added correctly, false if not
    */
-  public boolean addTile(Tile newTile) {
+  public void addTile(Tile newTile) {
     tiles.add(newTile);
     numberOfTiles++; // Increment tile count
-    hasChanged = true;
-    return hasChanged;
   }
+  
 }
