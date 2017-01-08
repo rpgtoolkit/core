@@ -26,7 +26,7 @@ import net.rpgtoolkit.common.assets.TileSet;
  */
 public class TileSetCache {
 
-  private static final HashMap<String, TileSet> TILE_SETS = new HashMap<>();;
+  private static final HashMap<String, TileSet> TILE_SETS = new HashMap<>();
 
   /**
    * Gets the tile set with the specified key, if it is present in the cache
