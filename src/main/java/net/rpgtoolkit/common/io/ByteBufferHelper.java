@@ -58,5 +58,15 @@ public final class ByteBufferHelper {
   public static ByteBuffer getBuffer(String s) {
     return ByteBuffer.wrap(s.getBytes(LEGACY_CHARSET));
   }
+  
+  /**
+   * Gets an unsigned Int from the buffer, Java by default treats all bytes as signed.
+   * 
+   * @param buffer
+   * @return 
+   */
+  public static int getUnsignedInt(ByteBuffer buffer) {
+    return buffer.get() & 0xff;
+  }
 
 }

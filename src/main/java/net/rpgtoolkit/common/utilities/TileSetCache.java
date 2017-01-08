@@ -7,8 +7,15 @@
 package net.rpgtoolkit.common.utilities;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.rpgtoolkit.common.assets.AssetDescriptor;
+import net.rpgtoolkit.common.assets.AssetException;
+import net.rpgtoolkit.common.assets.AssetHandle;
+import net.rpgtoolkit.common.assets.AssetManager;
 import net.rpgtoolkit.common.assets.TileSet;
 
 /**
@@ -19,22 +26,7 @@ import net.rpgtoolkit.common.assets.TileSet;
  */
 public class TileSetCache {
 
-  // Singleton.
-  private static final TileSetCache instance = new TileSetCache();
-
-  private final HashMap<String, TileSet> tileSets;
-
-  private TileSetCache() {
-    tileSets = new HashMap<>();
-  }
-
-  /**
-   *
-   * @return
-   */
-  public static TileSetCache getInstance() {
-    return instance;
-  }
+  private static final HashMap<String, TileSet> TILE_SETS = new HashMap<>();
 
   /**
    * Gets the tile set with the specified key, if it is present in the cache
@@ -42,9 +34,9 @@ public class TileSetCache {
    * @param key Filename of the tile set to retrieve
    * @return the Tile set with the corresponding filename
    */
-  public TileSet getTileSet(String key) {
-    if (tileSets.containsKey(key)) {
-      return tileSets.get(key);
+  public static TileSet getTileSet(String key) {
+    if (TILE_SETS.containsKey(key)) {
+      return TILE_SETS.get(key);
     } else {
       return null;
     }
@@ -57,8 +49,8 @@ public class TileSetCache {
    * @param key Tile Set file to check for
    * @return true if the tile set is already present in the cache
    */
-  public boolean contains(String key) {
-    return tileSets.containsKey(key);
+  public static boolean contains(String key) {
+    return TILE_SETS.containsKey(key);
   }
 
   /**
@@ -69,17 +61,27 @@ public class TileSetCache {
    * @return The loaded tile set is returned, this is to remove the need to call getTileSet(String
    * key) straight after loading a set
    */
-  public TileSet addTileSet(String fileName) {
+  public static TileSet addTileSet(String fileName) {
     TileSet set;
 
-    if (!tileSets.containsKey(fileName)) {
-      set = new TileSet(new File(System.getProperty("project.path")
-              + "/"
-              + PropertiesSingleton.getProperty("toolkit.directory.tileset")
-              + "/" + fileName));
-      tileSets.put(fileName, set);
+    if (!TILE_SETS.containsKey(fileName)) {
+      try {
+        File file = new File(System.getProperty("project.path")
+                + File.separator
+                + PropertiesSingleton.getProperty("toolkit.directory.tileset")
+                + File.separator + fileName);
 
-      return set;
+        AssetHandle handle = AssetManager.getInstance().deserialize(
+                new AssetDescriptor(file.toURI()));
+        set = (TileSet) handle.getAsset();
+
+        TILE_SETS.put(fileName, set);
+
+        return set;
+      } catch (IOException | AssetException ex) {
+        Logger.getLogger(TileSetCache.class.getName()).log(Level.SEVERE, null, ex);
+        return null;
+      }
     } else {
       set = getTileSet(fileName);
 
@@ -94,9 +96,9 @@ public class TileSetCache {
    * @param fileName TileSet to attempt to load into the cache
    * @return the remove TileSet is returned.
    */
-  public TileSet removeTileSet(String fileName) {
-    if (tileSets.containsKey(fileName)) {
-      TileSet set = tileSets.get(fileName);
+  public static TileSet removeTileSet(String fileName) {
+    if (TILE_SETS.containsKey(fileName)) {
+      TileSet set = TILE_SETS.get(fileName);
 
       return set;
     }
@@ -111,7 +113,7 @@ public class TileSetCache {
    * @param fileNames list of TileSet file names to remove
    * @return the removed TileSets
    */
-  public LinkedList<TileSet> removeTileSets(LinkedList<String> fileNames) {
+  public static LinkedList<TileSet> removeTileSets(LinkedList<String> fileNames) {
     LinkedList<TileSet> removedSets = new LinkedList<>();
 
     for (String fileName : fileNames) {
