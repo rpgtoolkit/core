@@ -24,24 +24,41 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.resources.sourceEncoding>UTF-8</project.resources.sourceEncoding>
+    
+    <java.version>1.7</java.version>
+    <maven.compiler.version>3.3</maven.compiler.version>
+    <maven.jar.version>2.6</maven.jar.version>
+    
+    <junit.version>4.12</junit.version>
+    <json.version>20141113</json.version>
+    <commons-io.version>2.4</commons-io.version>
+    
+    <license.plugin.version>2.11</license.plugin.version>
+    <checkstyle.plugin.version>2.17</checkstyle.plugin.version>
   </properties>
     
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
-      <version>20141113</version>
+      <version>${json.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.4</version>
+      <version>${commons-io.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.mycila</groupId>
+      <artifactId>license-maven-plugin</artifactId>
+      <version>${license.plugin.version}</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
     
@@ -50,27 +67,58 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
+        <version>${maven.compiler.version}</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
         </configuration>
       </plugin>
       <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>2.11</version>
-        <configuration>
-          <header>com/mycila/maven/plugin/license/templates/MPL-2.txt</header>
-          <properties>
-            <owner>rpgtoolkit.net</owner>
-            <email>help@rpgtoolkit.net</email>
-          </properties>
-          <excludes>
-            <exclude>src/main/resources/**</exclude>
-            <exclude>src/test/resources/**</exclude>
-          </excludes>
-        </configuration>
+        <version>${license.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>format-headers></id>
+            <phase>verify</phase>
+            <configuration>
+              <header>com/mycila/maven/plugin/license/templates/MPL-2.txt</header>
+              <properties>
+                <owner>rpgtoolkit.net</owner>
+                <email>help@rpgtoolkit.net</email>
+              </properties>
+              <excludes>
+                <exclude>src/main/resources/**</exclude>
+                <exclude>src/test/resources/**</exclude>
+                <exclude>licenseheader.txt</exclude>
+              </excludes>
+            </configuration>
+            <goals>
+              <goal>format</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${checkstyle.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>check-style</id>
+            <phase>validate</phase>
+            <configuration>
+              <configLocation>google_checks.xml</configLocation>
+              <encoding>UTF-8</encoding>
+              <consoleOutput>true</consoleOutput>
+              <failsOnError>true</failsOnError>
+              <linkXRef>false</linkXRef>
+            </configuration>
+            <goals>
+              <goal>checkstyle</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
