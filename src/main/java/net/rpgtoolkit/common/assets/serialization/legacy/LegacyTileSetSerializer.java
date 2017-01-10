@@ -22,6 +22,7 @@ import net.rpgtoolkit.common.assets.TilePixelOutOfRangeException;
 import net.rpgtoolkit.common.assets.TileSet;
 import net.rpgtoolkit.common.io.ByteBufferHelper;
 import net.rpgtoolkit.common.io.Paths;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -33,7 +34,7 @@ public class LegacyTileSetSerializer extends AbstractAssetSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI().getPath());
-    return (ext.endsWith(".tst"));
+    return (ext.endsWith(CoreProperties.getProperty("toolkit.tileset.extension.legacy")));
   }
 
   @Override

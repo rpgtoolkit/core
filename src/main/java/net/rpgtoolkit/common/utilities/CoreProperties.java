@@ -11,19 +11,21 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Joshua Michael Daly
  */
-public class PropertiesSingleton {
+public class CoreProperties {
 
-  private static final PropertiesSingleton instance = new PropertiesSingleton();
+  private static final CoreProperties INSTANCE = new CoreProperties();
   private final Properties properties = new Properties();
   private String[] directories;
   
-  private PropertiesSingleton() {
-    try (InputStream in = PropertiesSingleton.class.
+  private CoreProperties() {
+    try (InputStream in = CoreProperties.class.
             getResourceAsStream("/core/properties/toolkit.properties")) {
       properties.load(in);
       
@@ -44,21 +46,21 @@ public class PropertiesSingleton {
       properties.getProperty("toolkit.directory.tileset")};
     }
     catch (IOException ex) {
-      System.out.println(ex.toString());
+      Logger.getLogger(CoreProperties.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
   
   public static String getProperty(String key) {
-    return instance.properties.getProperty(key);
+    return INSTANCE.properties.getProperty(key);
   }
   
   public static String getProjectsDirectory() {
     return System.getProperty("user.home") + File.separator + 
-            instance.properties.getProperty("toolkit.directory.projects");
+            INSTANCE.properties.getProperty("toolkit.directory.projects");
   }
   
   public static String[] getDirectories() {
-    return instance.directories;
+    return INSTANCE.directories;
   }
   
 }

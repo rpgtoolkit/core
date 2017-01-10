@@ -18,6 +18,7 @@ import net.rpgtoolkit.common.assets.Board;
 import net.rpgtoolkit.common.assets.BoardProgram;
 import net.rpgtoolkit.common.assets.BoardSprite;
 import net.rpgtoolkit.common.io.Paths;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,7 +32,7 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
-    return (ext.contains(".brd.json"));
+    return (ext.contains(CoreProperties.getProperty("toolkit.board.extension.json")));
   }
 
   @Override

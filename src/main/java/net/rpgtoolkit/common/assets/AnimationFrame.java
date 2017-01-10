@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import net.rpgtoolkit.common.utilities.PropertiesSingleton;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 /**
  * This class stores the necessary data for a single frame, Animations are made up of an ArrayList
@@ -49,7 +49,7 @@ public class AnimationFrame {
         frameName = frameName.replace("\\", "/");
         FileInputStream fis = new FileInputStream(System.getProperty("project.path")
                 + "/"
-                + PropertiesSingleton.getProperty("toolkit.directory.bitmap")
+                + CoreProperties.getProperty("toolkit.directory.bitmap")
                 + "/"
                 + frameName);
         image = ImageIO.read(fis);

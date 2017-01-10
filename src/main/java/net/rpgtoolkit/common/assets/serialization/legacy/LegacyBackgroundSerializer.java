@@ -20,6 +20,7 @@ import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.Background;
 import net.rpgtoolkit.common.io.ByteBufferHelper;
 import net.rpgtoolkit.common.io.Paths;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 /**
  * Serializes background assets
@@ -41,7 +42,7 @@ public class LegacyBackgroundSerializer
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI().getPath());
-    return (ext.endsWith(".itm"));
+    return (ext.endsWith(CoreProperties.getProperty("toolkit.background.extension.legacy")));
   }
 
   @Override

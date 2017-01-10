@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.ReadableByteChannel;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 public class LegacyProjectSerializer extends AbstractAssetSerializer {
 
@@ -39,7 +40,7 @@ public class LegacyProjectSerializer extends AbstractAssetSerializer {
   @Override
   public boolean deserializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI().getPath());
-    return (ext.endsWith(".gam"));
+    return (ext.endsWith(CoreProperties.getProperty("toolkit.project.extension.legacy")));
   }
 
   @Override

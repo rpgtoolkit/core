@@ -21,6 +21,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 /**
  * Serializes legacy special moves.
@@ -35,7 +36,7 @@ public class LegacySpecialMoveSerializer
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
-    return (ext.endsWith(".spc"));
+    return (ext.endsWith(CoreProperties.getProperty("toolkit.specialmove.extension.legacy")));
   }
 
   @Override

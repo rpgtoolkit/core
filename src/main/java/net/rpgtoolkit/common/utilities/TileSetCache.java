@@ -69,7 +69,7 @@ public class TileSetCache {
       try {
         File file = new File(System.getProperty("project.path")
                 + File.separator
-                + PropertiesSingleton.getProperty("toolkit.directory.tileset")
+                + CoreProperties.getProperty("toolkit.directory.tileset")
                 + File.separator + fileName);
 
         AssetHandle handle = AssetManager.getInstance().deserialize(

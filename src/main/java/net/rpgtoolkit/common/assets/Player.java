@@ -19,7 +19,7 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.rpgtoolkit.common.utilities.PropertiesSingleton;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 public class Player extends AbstractSprite {
 
@@ -568,7 +568,7 @@ public class Player extends AbstractSprite {
         try {
           File animationFile = new File(System.getProperty("project.path")
                   + File.pathSeparator
-                  + PropertiesSingleton.getProperty("toolkit.directory.misc")
+                  + CoreProperties.getProperty("toolkit.directory.misc")
                   + File.pathSeparator
                   + anmFile);
 

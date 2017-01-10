@@ -21,6 +21,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.List;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 /**
  * @author Chris Hutchinson <chris@cshutchinson.com>
@@ -40,7 +41,7 @@ public class LegacyAnimatedTileSerializer extends AbstractAssetSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI().toString());
-    return ext.endsWith(".tan");
+    return ext.endsWith(CoreProperties.getProperty("toolkit.animatedtile.extension.legacy"));
   }
 
   @Override

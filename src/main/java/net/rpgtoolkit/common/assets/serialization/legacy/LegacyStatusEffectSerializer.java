@@ -25,6 +25,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.util.List;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 public class LegacyStatusEffectSerializer extends AbstractAssetSerializer {
 
@@ -35,7 +36,7 @@ public class LegacyStatusEffectSerializer extends AbstractAssetSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
-    return (ext.endsWith(".ste"));
+    return (ext.endsWith(CoreProperties.getProperty("toolkit.statuseffect.extension.legacy")));
   }
 
   @Override

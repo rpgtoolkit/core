@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.ReadableByteChannel;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 public class LegacyBoardSerializer extends AbstractAssetSerializer {
 
@@ -34,7 +35,7 @@ public class LegacyBoardSerializer extends AbstractAssetSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
-    return ext.endsWith(".brd");
+    return ext.endsWith(CoreProperties.getProperty("toolkit.board.extension.legacy"));
   }
 
   @Override

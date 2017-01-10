@@ -20,6 +20,7 @@ import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.Enemy;
 import net.rpgtoolkit.common.io.ByteBufferHelper;
 import net.rpgtoolkit.common.io.Paths;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 /**
  *
@@ -39,7 +40,7 @@ public class LegacyEnemySerializer extends AbstractAssetSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
-    return ext.endsWith(".ene");
+    return ext.endsWith(CoreProperties.getProperty("toolkit.enemy.extension.legacy"));
   }
 
   @Override

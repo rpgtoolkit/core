@@ -11,6 +11,7 @@ import net.rpgtoolkit.common.assets.AssetDescriptor;
 import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.SpecialMove;
 import net.rpgtoolkit.common.io.Paths;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 import org.json.JSONObject;
 
@@ -24,7 +25,7 @@ public class JsonSpecialMoveSerializer extends AbstractJsonSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
-    return (ext.contains("spc.json"));
+    return (ext.contains(CoreProperties.getProperty("toolkit.specialmove.extension.json")));
   }
 
   @Override

@@ -20,6 +20,7 @@ import net.rpgtoolkit.common.assets.BoardVector;
 import net.rpgtoolkit.common.assets.Item;
 import net.rpgtoolkit.common.io.ByteBufferHelper;
 import net.rpgtoolkit.common.io.Paths;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 /**
  * Serializes item assets
@@ -47,7 +48,7 @@ public class LegacyItemSerializer
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI().getPath());
-    return (ext.endsWith(".itm"));
+    return (ext.endsWith(CoreProperties.getProperty("toolkit.item.extension.legacy")));
   }
 
   @Override

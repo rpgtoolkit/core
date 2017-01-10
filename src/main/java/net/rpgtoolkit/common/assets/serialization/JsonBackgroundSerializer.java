@@ -12,6 +12,7 @@ import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.Background;
 import net.rpgtoolkit.common.io.Paths;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 import org.json.JSONObject;
 
@@ -23,7 +24,7 @@ public class JsonBackgroundSerializer extends AbstractJsonSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
-    return (ext.endsWith(".bkg.json"));
+    return (ext.endsWith(CoreProperties.getProperty("toolkit.background.extension.json")));
   }
 
   @Override

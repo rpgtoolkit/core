@@ -15,6 +15,7 @@ import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.Player;
 import net.rpgtoolkit.common.assets.PlayerSpecialMove;
 import net.rpgtoolkit.common.io.Paths;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -27,7 +28,7 @@ public class JsonPlayerSerializer extends AbstractJsonSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
-    return (ext.endsWith(".tem.json"));
+    return (ext.endsWith(CoreProperties.getProperty("toolkit.character.extension.json")));
   }
 
   @Override

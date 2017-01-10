@@ -22,7 +22,7 @@ import net.rpgtoolkit.common.Selectable;
 import net.rpgtoolkit.common.assets.events.BoardChangedEvent;
 import net.rpgtoolkit.common.assets.listeners.BoardChangeListener;
 import net.rpgtoolkit.common.utilities.TileSetCache;
-import net.rpgtoolkit.common.utilities.PropertiesSingleton;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 /**
  * A model that represents <code>Board</code> files in the RPGToolkit engine and editor. Used during
@@ -925,7 +925,7 @@ public final class Board extends AbstractAsset implements Selectable {
       if (!indexString.isEmpty()) {
         if (indexString.substring(indexString.length() - 3).equals("tan")) {
           String assetPath = System.getProperty("project.path")
-            + PropertiesSingleton.getProperty("toolkit.directory.tileset")
+            + CoreProperties.getProperty("toolkit.directory.tileset")
             + File.separator + indexString;
 
           try {
