@@ -32,7 +32,7 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
-    return (ext.contains(CoreProperties.getProperty("toolkit.board.extension.json")));
+    return (ext.equals(CoreProperties.getFullExtension("toolkit.board.extension.json")));
   }
 
   @Override

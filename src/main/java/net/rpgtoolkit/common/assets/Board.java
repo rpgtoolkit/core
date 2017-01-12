@@ -923,7 +923,7 @@ public final class Board extends AbstractAsset implements Selectable {
     // Load the tiles into memory
     for (String indexString : tileNameIndex) {
       if (!indexString.isEmpty()) {
-        if (indexString.substring(indexString.length() - 3).equals("tan")) {
+        if (indexString.endsWith(CoreProperties.getDefaultExtension(AnimatedTile.class))) {
           String assetPath = System.getProperty("project.path")
             + CoreProperties.getProperty("toolkit.directory.tileset")
             + File.separator + indexString;
@@ -937,13 +937,16 @@ public final class Board extends AbstractAsset implements Selectable {
           }
         }
 
-        String tileSetName = indexString.split(".tst")[0] + ".tst";
+        String ext = CoreProperties.getDefaultExtension(TileSet.class);
+        String tileSetName = indexString.split(ext)[0] + ext;
 
         if (!tileSetNames.contains(tileSetName)) {
           tileSetNames.add(tileSetName);
           tileSets.put(tileSetName, TileSetCache.addTileSet(tileSetName));
         }
-        loadedTilesIndex.add(tileSets.get(tileSetName).getTile(Integer.parseInt(indexString.split(".tst")[1]) - 1));
+        
+        int index = Integer.parseInt(indexString.split(ext)[1]) - 1;
+        loadedTilesIndex.add(tileSets.get(tileSetName).getTile(index));
       } else {
         loadedTilesIndex.add(null);
       }

@@ -28,7 +28,7 @@ public class JsonPlayerSerializer extends AbstractJsonSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI());
-    return (ext.endsWith(CoreProperties.getProperty("toolkit.character.extension.json")));
+    return (ext.endsWith(CoreProperties.getFullExtension("toolkit.character.extension.json")));
   }
 
   @Override

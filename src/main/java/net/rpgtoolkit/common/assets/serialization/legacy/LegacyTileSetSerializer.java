@@ -34,7 +34,7 @@ public class LegacyTileSetSerializer extends AbstractAssetSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI().getPath());
-    return (ext.endsWith(CoreProperties.getProperty("toolkit.tileset.extension.legacy")));
+    return (ext.endsWith(CoreProperties.getFullExtension("toolkit.tileset.extension.legacy")));
   }
 
   @Override

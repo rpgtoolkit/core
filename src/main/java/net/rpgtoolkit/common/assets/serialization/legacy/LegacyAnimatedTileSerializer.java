@@ -41,7 +41,7 @@ public class LegacyAnimatedTileSerializer extends AbstractAssetSerializer {
   @Override
   public boolean serializable(AssetDescriptor descriptor) {
     final String ext = Paths.extension(descriptor.getURI().toString());
-    return ext.endsWith(CoreProperties.getProperty("toolkit.animatedtile.extension.legacy"));
+    return ext.endsWith(CoreProperties.getFullExtension("toolkit.animatedtile.extension.legacy"));
   }
 
   @Override
