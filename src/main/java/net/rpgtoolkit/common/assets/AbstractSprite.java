@@ -25,6 +25,7 @@ public abstract class AbstractSprite extends AbstractAsset {
   protected final LinkedList<SpriteChangeListener> spriteChangeListeners = new LinkedList<>();
   
   protected String name;
+  private String profilePicture;
 
   // Graphics Variables
   protected ArrayList<String> standardGraphics; // 13 Values, S,N,E,W,NW,NE,SW,SE,Att,Def,Spec,Die,Rst
@@ -54,6 +55,20 @@ public abstract class AbstractSprite extends AbstractAsset {
 
   public void setName(String name) {
     this.name = name;
+  }
+  
+  /**
+   * @return the profilePicture
+   */
+  public String getProfilePicture() {
+    return profilePicture;
+  }
+
+  /**
+   * @param profilePicture the profilePicture to set
+   */
+  public void setProfilePicture(String profilePicture) {
+    this.profilePicture = profilePicture;
   }
 
   /**

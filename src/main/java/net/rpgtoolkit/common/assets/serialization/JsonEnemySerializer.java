@@ -37,6 +37,7 @@ public class JsonEnemySerializer extends AbstractJsonSerializer {
     final Enemy enemy = new Enemy(handle.getDescriptor());
 
     enemy.setName(json.getString("name"));
+    enemy.setProfilePicture(json.getString("profilePicture"));
     enemy.setHitPoints(json.optInt("hitPoints"));
     enemy.setMagicPoints(json.optInt("magicPoints"));
     enemy.setFightPower(json.optInt("fightPower"));
@@ -72,6 +73,7 @@ public class JsonEnemySerializer extends AbstractJsonSerializer {
     final Enemy enemy = (Enemy) handle.getAsset();
 
     json.put("name", enemy.getName());
+    json.put("profilePicture", enemy.getProfilePicture());
     json.put("hitPoints", enemy.getHitPoints());
     json.put("magicPoints", enemy.getMagicPoints());
     json.put("fightPower", enemy.getFightPower());

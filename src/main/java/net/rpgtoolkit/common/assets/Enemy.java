@@ -37,6 +37,7 @@ public class Enemy extends AbstractSprite {
   public Enemy(AssetDescriptor descriptor) {
     super(descriptor);
     specialMoves = new ArrayList<>();
+    statusEffects = new ArrayList<>();
     weaknesses = new ArrayList<>();
     strengths = new ArrayList<>();
     standardGraphics = new ArrayList<>();

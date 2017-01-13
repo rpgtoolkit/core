@@ -41,6 +41,7 @@ public class JsonPlayerSerializer extends AbstractJsonSerializer {
     final Player player = new Player(handle.getDescriptor());
 
     player.setName(json.getString("name"));
+    player.setProfilePicture(json.getString("profilePicture"));
     player.setExpVariableName(json.getString("expVariableName"));
     player.setDpVariableName(json.getString("dpVariableName"));
     player.setFpVariableName(json.getString("fpVariableName"));
@@ -58,7 +59,6 @@ public class JsonPlayerSerializer extends AbstractJsonSerializer {
     player.setInitialMP(json.optInt("initialMP"));
     player.setInitialMaxMP(json.optInt("initialMaxMP"));
     player.setInitialLevel(json.optInt("initialLevel"));
-    player.setProfilePicture(json.getString("profilePicture"));
     player.setSpecialMoveList(deserializePlayerSpecialMoves(json.getJSONArray("specialMoves")));
     player.setSpecialMovesName(json.getString("specialMovesName"));
     player.setHasSpecialMoves(json.getBoolean("hasSpecialMoves"));
@@ -94,6 +94,7 @@ public class JsonPlayerSerializer extends AbstractJsonSerializer {
     final Player player = (Player) handle.getAsset();
     
     json.put("name", player.getName());
+    json.put("profilePicture", player.getProfilePicture());
     json.put("expVariableName", player.getExpVariableName());
     json.put("dpVariableName", player.getDpVariableName());
     json.put("fpVariableName", player.getFpVariableName());
@@ -111,7 +112,6 @@ public class JsonPlayerSerializer extends AbstractJsonSerializer {
     json.put("initialMP", player.getInitialMP());
     json.put("initialMaxMP", player.getInitialMaxMP());
     json.put("initialLevel", player.getInitialLevel());
-    json.put("profilePicture", player.getProfilePicture());
     json.put("specialMoves", serializePlayerSpecialMoves(player.getSpecialMoveList()));
     json.put("specialMovesName", player.getSpecialMovesName());
     json.put("hasSpecialMoves", player.getHasSpecialMoves());

@@ -46,7 +46,7 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
     project.setProjectPath(json.optString("projectPath"));
     project.setGameTitle(json.optString("gameTitle"));
     project.setMainScreenType(json.optInt("mainScreenType"));
-    project.setExtendToFullScreen(json.getBoolean("extendToFullScreen") ? 1 : 0);
+    project.setExtendToFullScreen(json.getBoolean("extendToFullScreen"));
     project.setMainResolution(json.optInt("MainResolution"));
     project.setMainDisableProtectReg(json.optInt("mainDisableProtectReg"));
     project.setLanguageFile(json.getString("languageFile"));
@@ -103,7 +103,7 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
     json.put("projectPath", project.getProjectPath());
     json.put("gameTitle", project.getGameTitle());
     json.put("mainScreenType", project.getMainScreenType());
-    json.put("extendToFullScreen", project.getMainScreenType());
+    json.put("extendToFullScreen", project.getFullscreenMode());
     json.put("mainResolution", project.getMainResolution());
     json.put("mainDisableProtectReg", project.getMainDisableProtectReg());
     json.put("languageFile", project.getLanguageFile());

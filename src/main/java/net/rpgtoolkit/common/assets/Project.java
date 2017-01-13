@@ -24,7 +24,7 @@ public class Project extends AbstractAsset {
   private String projectPath;
   private String gameTitle;
   private int mainScreenType;
-  private int extendToFullScreen;
+  private boolean extendToFullScreen;
   private int mainResolution;
   private int mainDisableProtectReg;
   private String languageFile;
@@ -141,10 +141,10 @@ public class Project extends AbstractAsset {
   }
 
   public boolean getFullscreenMode() {
-    return extendToFullScreen == 1;
+    return extendToFullScreen;
   }
 
-  public void setExtendToFullScreen(int extendToFullScreen) {
+  public void setExtendToFullScreen(boolean extendToFullScreen) {
     this.extendToFullScreen = extendToFullScreen;
   }
 
@@ -172,7 +172,7 @@ public class Project extends AbstractAsset {
     return startupPrg;
   }
 
-  public int getExtendToFullScreen() {
+  public boolean getExtendToFullScreen() {
     return extendToFullScreen;
   }
 
@@ -508,7 +508,7 @@ public class Project extends AbstractAsset {
     movementKeys.clear();
 
     mainScreenType = 1;
-    extendToFullScreen = 0;
+    extendToFullScreen = false;
     mainResolution = 0;
     mainDisableProtectReg = 0;
     languageFile = "";

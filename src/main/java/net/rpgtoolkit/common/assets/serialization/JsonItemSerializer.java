@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package net.rpgtoolkit.common.assets.serialization;
 
 import net.rpgtoolkit.common.assets.AssetDescriptor;
@@ -30,6 +37,7 @@ public class JsonItemSerializer extends AbstractJsonSerializer {
     final Item item = new Item(handle.getDescriptor());
 
     item.setName(json.getString("name"));
+    item.setProfilePicture(json.getString("profilePicture"));
     item.setDescription(json.getString("description"));
     item.setIsEquippable(json.optBoolean("isEquippable"));
     item.setIsMenuDriven(json.optBoolean("isMenuDriven"));
@@ -76,6 +84,7 @@ public class JsonItemSerializer extends AbstractJsonSerializer {
     final Item item = (Item) handle.getAsset();
 
     json.put("name", item.getName());
+    json.put("profilePicture", item.getProfilePicture());
     json.put("description", item.getName());
     json.put("isEquippable", item.isIsEquippable());
     json.put("isMenuDriven", item.isIsMenuDriven());

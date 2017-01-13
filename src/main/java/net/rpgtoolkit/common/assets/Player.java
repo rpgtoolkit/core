@@ -47,7 +47,6 @@ public class Player extends AbstractSprite {
   private int initialMP;
   private int initialMaxMP;
   private int initialLevel;
-  private String profilePicture;
   private ArrayList<PlayerSpecialMove> specialMoveList;
   private String specialMovesName;
   private boolean hasSpecialMoves;
@@ -322,20 +321,6 @@ public class Player extends AbstractSprite {
    */
   public void setInitialLevel(int initialLevel) {
     this.initialLevel = initialLevel;
-  }
-
-  /**
-   * @return the profilePicture
-   */
-  public String getProfilePicture() {
-    return profilePicture;
-  }
-
-  /**
-   * @param profilePicture the profilePicture to set
-   */
-  public void setProfilePicture(String profilePicture) {
-    this.profilePicture = profilePicture;
   }
 
   /**
