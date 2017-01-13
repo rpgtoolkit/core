@@ -67,10 +67,6 @@ public class Item extends AbstractSprite {
     reset();
   }
 
-  public List<Animation> getStandardAnimations() {
-    return this.standardGraphicsAnimations;
-  }
-
   @Override
   public final void reset() {
 
