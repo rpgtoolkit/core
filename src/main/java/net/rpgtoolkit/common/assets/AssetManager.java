@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -20,14 +22,19 @@ import java.util.TreeSet;
  * @author Chris Hutchinson <chris@cshutchinson.com>
  */
 public class AssetManager {
+  
+  private static final Logger LOGGER = LoggerFactory.getLogger(AssetManager.class);
 
   // Singleton.
   // TODO: Singleton pattern is not appropriate for this type.
-
-  private static final AssetManager instance = new AssetManager();
+  private static final AssetManager INSTANCE = new AssetManager();
+  
+  private final TreeSet<AssetSerializer> serializers;
+  private final List<AssetHandleResolver> resolvers;
+  private final Map<AssetDescriptor, AssetHandle> assets;
 
   public static AssetManager getInstance() {
-    return instance;
+    return INSTANCE;
   }
 
   private AssetManager() {
@@ -77,6 +84,8 @@ public class AssetManager {
    * @param serializer
    */
   public void registerSerializer(final AssetSerializer serializer) {
+    LOGGER.info("Registering serializer=[{}].", serializer);
+    
     if (serializer == null) {
       throw new NullPointerException();
     }
@@ -84,6 +93,8 @@ public class AssetManager {
   }
 
   public void registerResolver(final AssetHandleResolver resolver) {
+    LOGGER.info("Registering resolver=[{}].", resolver);
+    
     if (resolver == null) {
       throw new NullPointerException();
     }
@@ -92,8 +103,8 @@ public class AssetManager {
 
   public AssetHandle serialize(AssetHandle handle)
     throws IOException, AssetException {
-
     final AssetDescriptor descriptor = handle.getDescriptor();
+    LOGGER.info("Attempting to serialize asset with URI=[{}]", descriptor.uri);
 
     if (handle.getAsset() != null) {
       assets.put(descriptor, handle);
@@ -101,6 +112,7 @@ public class AssetManager {
 
     for (AssetSerializer serializer : serializers) {
       if (serializer.serializable(descriptor)) {
+        LOGGER.info("Found serializer=[{}] for asset with URI=[{}]", serializer, descriptor.uri);
         serializer.serialize(handle);
         break;
       }
@@ -112,8 +124,10 @@ public class AssetManager {
 
   public AssetHandle deserialize(AssetDescriptor descriptor)
     throws IOException, AssetException {
-
+    LOGGER.info("Attempting to deserialize asset with URI=[{}]", descriptor.uri);
+    
     if (assets.containsKey(descriptor)) {
+      LOGGER.info("Found asset in cache with URI=[{}]", descriptor.uri);
       return assets.get(descriptor);
     }
 
@@ -122,6 +136,7 @@ public class AssetManager {
     if (handle != null) {
       for (AssetSerializer serializer : serializers) {
         if (serializer.deserializable(descriptor)) {
+          LOGGER.info("Found serializer=[{}] for asset with URI=[{}]", serializer, descriptor.uri);
           serializer.deserialize(handle);
           if (handle.getAsset() != null) {
             assets.put(descriptor, handle);
@@ -146,9 +161,5 @@ public class AssetManager {
     return null;
 
   }
-
-  private final TreeSet<AssetSerializer> serializers;
-  private final List<AssetHandleResolver> resolvers;
-  private final Map<AssetDescriptor, AssetHandle> assets;
 
 }

@@ -10,7 +10,6 @@ package net.rpgtoolkit.common.assets;
 import java.io.IOException;
 import java.util.Comparator;
 
-import net.rpgtoolkit.common.CorruptAssetException;
 
 /**
  * Provides an interface for serializing game assets.

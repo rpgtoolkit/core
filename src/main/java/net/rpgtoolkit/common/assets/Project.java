@@ -84,8 +84,8 @@ public class Project extends AbstractAsset {
 
   public Project(AssetDescriptor descriptor, String projectPath, String title) {
     this(descriptor);
-    this.setProjectPath(projectPath);
-    this.setGameTitle(title);
+    setProjectPath(projectPath);
+    setGameTitle(title);
   }
 
   public long getResolutionHeight() {
