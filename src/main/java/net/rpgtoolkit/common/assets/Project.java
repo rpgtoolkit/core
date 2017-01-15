@@ -64,11 +64,11 @@ public class Project extends AbstractAsset {
   private long transpcolor;
   private long resolutionWidth;
   private long resolutionHeight;
-  private int displayFPSInTitle;
+  private boolean displayFPSInTitle;
 
   // Variables Specific to 3.1
   private int pathfindingAlgo;
-  private long drawVectors;
+  private boolean drawVectors;
   private long pathColor;
   private long movementControls;
   private List<Integer> movementKeys;
@@ -300,7 +300,7 @@ public class Project extends AbstractAsset {
     return transpcolor;
   }
 
-  public int getDisplayFPSInTitle() {
+  public boolean getDisplayFPSInTitle() {
     return displayFPSInTitle;
   }
 
@@ -308,7 +308,7 @@ public class Project extends AbstractAsset {
     return pathfindingAlgo;
   }
 
-  public long getDrawVectors() {
+  public boolean getDrawVectors() {
     return drawVectors;
   }
 
@@ -475,7 +475,7 @@ public class Project extends AbstractAsset {
     this.transpcolor = transpcolor;
   }
 
-  public void setDisplayFPSInTitle(int displayFPSInTitle) {
+  public void setDisplayFPSInTitle(boolean displayFPSInTitle) {
     this.displayFPSInTitle = displayFPSInTitle;
   }
 
@@ -483,7 +483,7 @@ public class Project extends AbstractAsset {
     this.pathfindingAlgo = pathfindingAlgo;
   }
 
-  public void setDrawVectors(long drawVectors) {
+  public void setDrawVectors(boolean drawVectors) {
     this.drawVectors = drawVectors;
   }
 
@@ -545,9 +545,9 @@ public class Project extends AbstractAsset {
     transpcolor = 255;
     resolutionWidth = 0;
     resolutionHeight = 0;
-    displayFPSInTitle = 0;
+    displayFPSInTitle = false;
     pathfindingAlgo = 1;
-    drawVectors = 0;
+    drawVectors = false;
     pathColor = 0;
     movementControls = 0;
   }

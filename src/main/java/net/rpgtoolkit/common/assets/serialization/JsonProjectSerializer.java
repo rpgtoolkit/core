@@ -47,7 +47,7 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
     project.setGameTitle(json.optString("gameTitle"));
     project.setMainScreenType(json.optInt("mainScreenType"));
     project.setExtendToFullScreen(json.getBoolean("extendToFullScreen"));
-    project.setMainResolution(json.optInt("MainResolution"));
+    project.setMainResolution(json.optInt("mainResolution"));
     project.setMainDisableProtectReg(json.optInt("mainDisableProtectReg"));
     project.setLanguageFile(json.getString("languageFile"));
     project.setStartupPrg(json.getString("startupPrg"));
@@ -85,9 +85,9 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
     project.setTransparentColor(json.optLong("transpcolor"));
     project.setResolutionWidth(json.optLong("resolutionWidth"));
     project.setResolutionHeight(json.optLong("resolutionHeight"));
-    project.setDisplayFPSInTitle(json.optInt("displayFPSInTitle"));
+    project.setDisplayFPSInTitle(json.optBoolean("displayFPSInTitle"));
     project.setPathfindingAlgorithm(json.optInt("pathfindingAlgo"));
-    project.setDrawVectors(json.optLong("drawVectors"));
+    project.setDrawVectors(json.optBoolean("drawVectors"));
     project.setMovementControls(json.optLong("movementControls"));
     project.setMovementKeys(getMovementKeys(json.getJSONArray("movementKeys")));
 
