@@ -14,7 +14,7 @@ import net.rpgtoolkit.common.Selectable;
  * 
  * @author Joshua Michael Daly
  */
-public class BoardProgram extends BasicType implements Cloneable, Selectable {
+public class BoardProgram implements Cloneable, Selectable {
 
   public enum ActivationType {
 

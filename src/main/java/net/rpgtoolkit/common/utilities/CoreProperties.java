@@ -42,18 +42,13 @@ public class CoreProperties {
       
       directories = new String[] {
       properties.getProperty("toolkit.directory.bitmap"),
-      properties.getProperty("toolkit.directory.background"),
       properties.getProperty("toolkit.directory.board"),
       properties.getProperty("toolkit.directory.character"),
       properties.getProperty("toolkit.directory.enemy"),
-      properties.getProperty("toolkit.directory.font"),
       properties.getProperty("toolkit.directory.item"),
       properties.getProperty("toolkit.directory.media"),
       properties.getProperty("toolkit.directory.misc"),
-      properties.getProperty("toolkit.directory.plugin"),
       properties.getProperty("toolkit.directory.program"),
-      properties.getProperty("toolkit.directory.specialmove"),
-      properties.getProperty("toolkit.directory.statuseffect"),
       properties.getProperty("toolkit.directory.tileset")};
     }
     catch (IOException ex) {

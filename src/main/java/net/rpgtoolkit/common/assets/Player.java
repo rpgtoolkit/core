@@ -551,10 +551,11 @@ public class Player extends AbstractSprite {
     for (String anmFile : standardGraphics) {
       if (!anmFile.equals("")) {
         try {
-          File animationFile = new File(System.getProperty("project.path")
-                  + File.pathSeparator
+          File animationFile = new File(
+                  System.getProperty("project.path")
+                  + File.separator
                   + CoreProperties.getProperty("toolkit.directory.misc")
-                  + File.pathSeparator
+                  + File.separator
                   + anmFile);
 
           AssetHandle handle = AssetManager.getInstance().deserialize(

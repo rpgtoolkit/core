@@ -924,9 +924,12 @@ public final class Board extends AbstractAsset implements Selectable {
     for (String indexString : tileNameIndex) {
       if (!indexString.isEmpty()) {
         if (indexString.endsWith(CoreProperties.getDefaultExtension(AnimatedTile.class))) {
-          String assetPath = System.getProperty("project.path")
+          String assetPath = 
+            System.getProperty("project.path")
+            + File.separator
             + CoreProperties.getProperty("toolkit.directory.tileset")
-            + File.separator + indexString;
+            + File.separator 
+            + indexString;
 
           try {
             AnimatedTile aTile = (AnimatedTile) AssetManager.getInstance().deserialize(

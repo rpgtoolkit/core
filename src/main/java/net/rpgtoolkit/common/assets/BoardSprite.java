@@ -7,7 +7,12 @@
  */
 package net.rpgtoolkit.common.assets;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.rpgtoolkit.common.Selectable;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 /**
  * A board sprite.
@@ -119,6 +124,14 @@ public class BoardSprite implements Cloneable, Selectable {
   public Item getSpriteFile() {
     return spriteFile;
   }
+  
+  /**
+   * 
+   * @param item 
+   */
+  public void setSpriteFile(Item item) {
+      spriteFile = item;
+  }
 
   /**
    *
@@ -206,6 +219,45 @@ public class BoardSprite implements Cloneable, Selectable {
    */
   public void setFileName(String fileName) {
     this.fileName = fileName;
+    
+    // TODO: This is should not be in here!
+    AnimationFrame frame = null;
+    if (!fileName.isEmpty()) {
+        File file = new File(
+                System.getProperty("project.path")
+                + File.separator
+                + CoreProperties.getProperty("toolkit.directory.item"), 
+                fileName);
+        
+        AssetHandle handle;
+        try {
+            handle = AssetManager.getInstance().deserialize(
+                    new AssetDescriptor(file.toURI()));
+            
+            Item item = (Item) handle.getAsset();
+            spriteFile = item;
+
+            if (item.getStandardGraphics().size() > 1) {
+                file = new File(
+                        System.getProperty("project.path")
+                        + File.separator
+                        + CoreProperties.getProperty("toolkit.directory.misc"),
+                        item.getStandardGraphics().get(0));
+                
+                handle = AssetManager.getInstance().deserialize(
+                new AssetDescriptor(file.toURI()));
+                Animation animation = (Animation) handle.getAsset();
+
+                if (animation != null) {
+                    frame = animation.getFrame(0);
+                }
+            }
+        } catch (IOException | AssetException ex) {
+            Logger.getLogger(BoardSprite.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    southAnimationFrame = frame;
   }
 
   /**
@@ -336,7 +388,11 @@ public class BoardSprite implements Cloneable, Selectable {
 
   public void setSouthAnimationFrame(AnimationFrame southAnimationFrame) {
     this.southAnimationFrame = southAnimationFrame;
-  }
+    
+        if (spriteFile != null) {
+            spriteFile.fireSpriteAnimationUpdated();
+        }
+    }
 
   /**
    * Directly clones the board sprite.

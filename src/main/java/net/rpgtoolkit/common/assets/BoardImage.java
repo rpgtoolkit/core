@@ -8,9 +8,11 @@
 package net.rpgtoolkit.common.assets;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import net.rpgtoolkit.common.utilities.CoreProperties;
 
 /**
  * Represents an image as used on a <code>Board</code>.
@@ -51,7 +53,12 @@ public class BoardImage implements Cloneable {
 
     try {
       if (!fileName.equals("")) {
-        FileInputStream fis = new FileInputStream(System.getProperty("project.path") + "/bitmap/" + fileName);
+        FileInputStream fis = new FileInputStream(
+                System.getProperty("project.path") 
+                + File.separator
+                + CoreProperties.getProperty("toolkit.directory.bitmap")
+                + File.separator
+                + fileName);
         image = ImageIO.read(fis);
       }
     } catch (IOException e) {

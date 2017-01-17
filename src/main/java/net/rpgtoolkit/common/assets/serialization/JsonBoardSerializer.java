@@ -85,13 +85,9 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     json.put("tileNames", board.getTileNameIndex());
     json.put("tileIndex", board.getCompressedTileIndex());
 
-    final JSONArray vectors = new JSONArray();
+    final JSONArray vectors = serializeBoardVectors(board.getVectors());
     final JSONArray programs = new JSONArray();
     final JSONArray sprites = new JSONArray();
-
-    // Serialize board vectors
-    vectors.put(serializeBoardVectors(board.getVectors()));
-
 
     // Serialize board programs
 

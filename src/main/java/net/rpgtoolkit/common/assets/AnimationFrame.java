@@ -47,10 +47,11 @@ public class AnimationFrame {
     if ((frameName.toLowerCase().endsWith("png")) || (frameName.toLowerCase().endsWith("gif"))) {
       try {
         frameName = frameName.replace("\\", "/");
-        FileInputStream fis = new FileInputStream(System.getProperty("project.path")
-                + "/"
+        FileInputStream fis = new FileInputStream(
+                System.getProperty("project.path")
+                + File.separator
                 + CoreProperties.getProperty("toolkit.directory.bitmap")
-                + "/"
+                + File.separator
                 + frameName);
         image = ImageIO.read(fis);
         imageType = 1;
