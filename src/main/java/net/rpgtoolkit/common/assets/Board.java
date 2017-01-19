@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,22 +60,22 @@ public final class Board extends AbstractAsset implements Selectable {
   private int height;
   private int layerCount;
   private Perspective perspective;
-  private ArrayList<String> tileNameIndex;      // Contains string names e.g. default.tst1
-  private ArrayList<Tile> loadedTilesIndex;     // Contains tile objects of e.g. default.tst1
+  private List<String> tileNameIndex;      // Contains string names e.g. default.tst1
+  private List<Tile> loadedTilesIndex;     // Contains tile objects of e.g. default.tst1
   private int[][][] boardDimensions;            // x, y, z
-  private ArrayList<BoardLayerShade> tileShading;
-  private ArrayList<BoardImage> boardImages;
-  private ArrayList<BoardImage> spriteImages;
-  private ArrayList<BoardImage> backgroundImages;
+  private List<BoardLayerShade> tileShading;
+  private List<BoardImage> boardImages;
+  private List<BoardImage> spriteImages;
+  private List<BoardImage> backgroundImages;
   private long backgroundColour;
-  private ArrayList<BoardProgram> programs;
-  private ArrayList<BoardLight> lights;
-  private ArrayList<BoardVector> vectors;
-  private ArrayList<BoardSprite> sprites;
-  private ArrayList<String> threads;
-  private ArrayList<String> constants;
-  private ArrayList<String> layerTitles;
-  private ArrayList<String> directionalLinks;
+  private List<BoardProgram> programs;
+  private List<BoardLight> lights;
+  private List<BoardVector> vectors;
+  private List<BoardSprite> sprites;
+  private List<String> threads;
+  private List<String> constants;
+  private List<String> layerTitles;
+  private List<String> directionalLinks;
   private String backgroundMusic;
   private String firstRunProgram;
   private String battleBackground;
@@ -106,7 +107,7 @@ public final class Board extends AbstractAsset implements Selectable {
     this.sprites = new ArrayList<>();
     this.constants = new ArrayList<>();
     this.layerTitles = new ArrayList<>();
-    this.directionalLinks = new ArrayList<>();
+    this.directionalLinks = Arrays.asList("", "", "", "");
     this.backgroundImages = new ArrayList<>();
     this.tileSets = new HashMap<>();
   }
@@ -191,7 +192,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return index list of tiles
    */
-  public ArrayList<String> getTileNameIndex() {
+  public List<String> getTileNameIndex() {
     return tileNameIndex;
   }
 
@@ -209,7 +210,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return background images on board
    */
-  public ArrayList<BoardImage> getBackgroundImages() {
+  public List<BoardImage> getBackgroundImages() {
     return backgroundImages;
   }
 
@@ -227,7 +228,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return board programs on board
    */
-  public ArrayList<BoardProgram> getPrograms() {
+  public List<BoardProgram> getPrograms() {
     return programs;
   }
 
@@ -245,7 +246,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return vectors on board
    */
-  public ArrayList<BoardVector> getVectors() {
+  public List<BoardVector> getVectors() {
     return vectors;
   }
 
@@ -263,7 +264,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return sprites on board
    */
-  public ArrayList<BoardSprite> getSprites() {
+  public List<BoardSprite> getSprites() {
     return sprites;
   }
 
@@ -386,7 +387,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return loaded tiles for this board
    */
-  public ArrayList<Tile> getLoadedTilesIndex() {
+  public List<Tile> getLoadedTilesIndex() {
     return loadedTilesIndex;
   }
 
@@ -422,7 +423,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return tile shades
    */
-  public ArrayList<BoardLayerShade> getTileShading() {
+  public List<BoardLayerShade> getTileShading() {
     return tileShading;
   }
 
@@ -440,7 +441,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return board images
    */
-  public ArrayList<BoardImage> getImages() {
+  public List<BoardImage> getImages() {
     return boardImages;
   }
 
@@ -458,7 +459,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return sprite images
    */
-  public ArrayList<BoardImage> getSpriteImages() {
+  public List<BoardImage> getSpriteImages() {
     return spriteImages;
   }
 
@@ -494,7 +495,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return board lights
    */
-  public ArrayList<BoardLight> getLights() {
+  public List<BoardLight> getLights() {
     return lights;
   }
 
@@ -512,7 +513,7 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @return board thread names
    */
-  public ArrayList<String> getThreads() {
+  public List<String> getThreads() {
     return threads;
   }
 
@@ -597,9 +598,8 @@ public final class Board extends AbstractAsset implements Selectable {
    *
    * @param directionalLinks new directional links
    */
-  public void setDirectionalLinks(Collection<String> directionalLinks) {
-    this.directionalLinks.clear();
-    this.directionalLinks.addAll(directionalLinks);
+  public void setDirectionalLinks(List<String> directionalLinks) {
+    this.directionalLinks = directionalLinks;
   }
 
   /**
@@ -892,7 +892,7 @@ public final class Board extends AbstractAsset implements Selectable {
     sprites.clear();
     constants.clear();
     layerTitles.clear();
-    directionalLinks.clear();
+    directionalLinks = new ArrayList<>();
     backgroundImages.clear();
     tileSets.clear();
 

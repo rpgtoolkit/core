@@ -59,6 +59,7 @@ public class JsonEnemySerializer extends AbstractJsonSerializer {
     enemy.setMagicPoints(json.optInt("maxMagicPoints"));
     enemy.setStatusEffects(getStringArrayList(json.optJSONArray("statusEffects")));
     enemy.setStandardGraphics(getStringArrayList(json.optJSONArray("standardGraphics")));
+    enemy.setStandingGraphics(getStringArrayList(json.getJSONArray("standingGraphics")));
     enemy.setCustomGraphics(getStringArrayList(json.optJSONArray("customizedGraphics")));
     enemy.setCustomGraphicNames(getStringArrayList(json.optJSONArray("customizedGraphicsNames")));
     enemy.setIdleTimeBeforeStanding(json.optDouble("idleTimeBeforeStanding"));
@@ -95,6 +96,7 @@ public class JsonEnemySerializer extends AbstractJsonSerializer {
     json.put("maxMagicPoints", enemy.getMaxMagicPoints());
     json.put("statusEffects", enemy.getStatusEffects());
     json.put("standardGraphics", enemy.getStandardGraphics());
+    json.put("standingGraphics", enemy.getStandingGraphics());
     json.put("customizedGraphics", enemy.getCustomGraphics());
     json.put("customizedGraphicsNames", enemy.getCustomGraphicsNames());
     json.put("idleTimeBeforeStanding", enemy.getIdleTimeBeforeStanding());

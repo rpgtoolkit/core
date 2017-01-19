@@ -71,7 +71,6 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
 
   @Override
   protected void store(AssetHandle handle, JSONObject json) throws AssetException {
-
     final Board board = (Board) handle.getAsset();
 
     board.updateBoardIO();
@@ -81,7 +80,6 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     json.put("layerCount", board.getLayerCount());
 
     // Tile names e.g. default.tst1 etc.
-
     json.put("tileNames", board.getTileNameIndex());
     json.put("tileIndex", board.getCompressedTileIndex());
 
@@ -90,9 +88,7 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     final JSONArray sprites = new JSONArray();
 
     // Serialize board programs
-
     for (final BoardProgram program : board.getPrograms()) {
-
       final JSONObject p = new JSONObject();
 
       p.put("fileName", program.getFileName());
@@ -120,11 +116,9 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
       p.put("handle", program.getVector().getHandle());
 
       programs.put(p);
-
     }
 
     // Serialize sprites
-
     for (final BoardSprite sprite : board.getSprites()) {
       final JSONObject s = new JSONObject();
       s.put("fileName", sprite.getFileName());
@@ -149,7 +143,7 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     json.put("sprites", sprites);
     json.put("layerTitles", board.getLayerTitles());
     json.put("directionalLinks", board.getDirectionalLinks());
-
+    
     json.put("backgroundMusic", board.getBackgroundMusic());
     json.put("firstRunProgram", board.getFirstRunProgram());
 
@@ -164,7 +158,6 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
     json.put("startingLayer", board.getStartingLayer());
 
     handle.setAsset(board);
-
   }
 
   private ArrayList<Integer> getTileIndices(JSONArray array) {

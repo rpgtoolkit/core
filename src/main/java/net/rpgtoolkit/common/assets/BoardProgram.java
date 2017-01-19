@@ -38,6 +38,16 @@ public class BoardProgram implements Cloneable, Selectable {
    */
   public BoardProgram() {
     super();
+    layer = 0;
+    graphic = "";
+    fileName = "";
+    activate = 0;
+    initialVariable = "";
+    finalVariable = "";
+    initialValue = "";
+    finalValue = "";
+    activationType = 0;
+    distanceRepeat = 0;
     vector = new BoardVector();
   }
 
