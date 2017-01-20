@@ -7,12 +7,16 @@
  */
 package net.rpgtoolkit.common.assets;
 
+import java.io.File;
+
 /**
  *
  * @author Chris Hutchinson
  */
 public interface Asset {
         
+    File getFile();
+    
     AssetDescriptor getDescriptor();
     
     void setDescriptor(AssetDescriptor assetDescriptor);
