@@ -76,6 +76,15 @@ public class AssetManager {
     h.setAsset(asset);
     return h;
   }
+  
+  /**
+   * Removes an asset from the map.
+   * 
+   * @param asset 
+   */
+  public void removeAsset(Asset asset) {
+      assets.remove(asset.getDescriptor());
+  }
 
   /**
    * Registers a serializer with the manager. Serializers are sorted in

@@ -172,10 +172,14 @@ public abstract class AbstractSprite extends AbstractAsset {
 
   /**
    * @param baseVector the baseVector to set
+     * @param fire
    */
-  public void setBaseVector(BoardVector baseVector) {
+  public void setBaseVector(BoardVector baseVector, boolean fire) {
     this.baseVector = baseVector;
-    fireSpriteChanged();
+    
+    if (fire) {
+        fireSpriteChanged();
+    }
   }
 
   public BoardVector getActivationVector() {
@@ -184,28 +188,38 @@ public abstract class AbstractSprite extends AbstractAsset {
 
   /**
    * @param activationVector the activationVector to set
+     * @param fire
    */
-  public void setActivationVector(BoardVector activationVector) {
+  public void setActivationVector(BoardVector activationVector, boolean fire) {
     this.activationVector = activationVector;
-    fireSpriteChanged();
+    
+    if (fire) {
+        fireSpriteChanged();
+    }
   }
 
   public Point getBaseVectorOffset() {
     return baseVectorOffset;
   }
 
-  public void setBaseVectorOffset(Point baseVectorOffset) {
+  public void setBaseVectorOffset(Point baseVectorOffset, boolean fire) {
     this.baseVectorOffset = baseVectorOffset;
-    fireSpriteChanged();
+    
+    if (fire) {
+        fireSpriteChanged();
+    }
   }
 
   public Point getActivationVectorOffset() {
     return activationVectorOffset;
   }
 
-  public void setActivationVectorOffset(Point activationVectorOffset) {
+  public void setActivationVectorOffset(Point activationVectorOffset, boolean fire) {
     this.activationVectorOffset = activationVectorOffset;
-    fireSpriteChanged();
+    
+    if (fire) {
+        fireSpriteChanged();
+    }
   }
 
   /**

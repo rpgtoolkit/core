@@ -70,10 +70,10 @@ public class JsonItemSerializer extends AbstractJsonSerializer {
     item.setFrameRate(json.optDouble("frameRate"));
     item.setCustomGraphics(getStringArrayList(json.getJSONArray("customGraphics")));
     item.setCustomGraphicNames(getStringArrayList(json.getJSONArray("customGraphicsNames")));
-    item.setBaseVector(deserializeBoardVector(json.optJSONObject("baseVector")));
-    item.setActivationVector(deserializeBoardVector(json.optJSONObject("activationVector")));
-    item.setBaseVectorOffset(deserializePoint(json.optJSONObject("baseVectorOffset")));
-    item.setActivationVectorOffset(deserializePoint(json.optJSONObject("activationOffset")));
+    item.setBaseVector(deserializeBoardVector(json.optJSONObject("baseVector")), false);
+    item.setActivationVector(deserializeBoardVector(json.optJSONObject("activationVector")), false);
+    item.setBaseVectorOffset(deserializePoint(json.optJSONObject("baseVectorOffset")), false);
+    item.setActivationVectorOffset(deserializePoint(json.optJSONObject("activationOffset")), false);
 
     handle.setAsset(item);
   }

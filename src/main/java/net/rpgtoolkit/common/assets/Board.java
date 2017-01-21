@@ -122,8 +122,9 @@ public final class Board extends AbstractAsset implements Selectable {
   public Board(AssetDescriptor descriptor, int width, int height) {
     this(descriptor);
     reset();
-    this.setWidth(width);
-    this.setHeight(height);
+    setWidth(width);
+    setHeight(height);
+    addLayer();
   }
 
   /**
@@ -892,7 +893,7 @@ public final class Board extends AbstractAsset implements Selectable {
     sprites.clear();
     constants.clear();
     layerTitles.clear();
-    directionalLinks = new ArrayList<>();
+    directionalLinks = Arrays.asList("", "", "", "");
     backgroundImages.clear();
     tileSets.clear();
 

@@ -80,10 +80,10 @@ public class JsonPlayerSerializer extends AbstractJsonSerializer {
     player.setCustomGraphicNames(getStringArrayList(json.getJSONArray("customGraphicsNames")));
     player.setIdleTimeBeforeStanding(json.optDouble("idleTimeBeforeStanding"));
     player.setFrameRate(json.optDouble("frameRate"));
-    player.setBaseVector(deserializeBoardVector(json.optJSONObject("baseVector")));
-    player.setActivationVector(deserializeBoardVector(json.optJSONObject("activationVector")));
-    player.setBaseVectorOffset(deserializePoint(json.optJSONObject("baseVectorOffset")));
-    player.setActivationVectorOffset(deserializePoint(json.optJSONObject("activationOffset")));
+    player.setBaseVector(deserializeBoardVector(json.optJSONObject("baseVector")), false);
+    player.setActivationVector(deserializeBoardVector(json.optJSONObject("activationVector")), false);
+    player.setBaseVectorOffset(deserializePoint(json.optJSONObject("baseVectorOffset")), false);
+    player.setActivationVectorOffset(deserializePoint(json.optJSONObject("activationOffset")), false);
 
     handle.setAsset(player);
   }
