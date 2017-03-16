@@ -38,8 +38,8 @@ public class JsonAnimationSerializer extends AbstractJsonSerializer {
   protected void load(AssetHandle handle, JSONObject json) throws AssetException {
     final Animation animation = new Animation(handle.getDescriptor());
     
-    animation.setAnimationWidth(json.optLong("animationWidth"));
-    animation.setAnimationHeight(json.optLong("animationHeight"));
+    animation.setAnimationWidth(json.optLong("width"));
+    animation.setAnimationHeight(json.optLong("height"));
     animation.setSoundEffect(json.getString("soundEffect"));
     animation.setFramRate(json.getDouble("frameRate"));
     
@@ -56,15 +56,15 @@ public class JsonAnimationSerializer extends AbstractJsonSerializer {
   public void store(AssetHandle handle, JSONObject json) {
     Animation animation = (Animation) handle.getAsset();
 
-    json.put("animationWidth", animation.getAnimationWidth());
-    json.put("animationHeight", animation.getAnimationHeight());
+    json.put("width", animation.getAnimationWidth());
+    json.put("height", animation.getAnimationHeight());
     json.put("soundEffect", animation.getSoundEffect());
     json.put("frameRate", animation.getFrameRate());
 
     final JSONArray frames = new JSONArray();
-    for (AnimationFrame frame : animation.getFrames()) {
-      frames.put(frame.getFrameName());
-    }
+    animation.getFrames().stream().forEach((frame) -> {
+        frames.put(frame.getFrameName());
+    });
     json.put("frames", frames);
   }
 
