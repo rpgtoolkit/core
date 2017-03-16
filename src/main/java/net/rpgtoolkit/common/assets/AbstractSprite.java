@@ -1,336 +1,318 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/.
  */
 package net.rpgtoolkit.common.assets;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import net.rpgtoolkit.common.assets.events.SpriteChangedEvent;
 import net.rpgtoolkit.common.assets.listeners.SpriteChangeListener;
 
 /**
- * A common abstract class for all sprite like assets to inherit (Player/Character, Enemy, Item).
- * 
+ * A common abstract class for all sprite like assets to inherit
+ * (Player/Character, Enemy, Item).
+ *
  * @author Joshua Michael Daly
  */
 public abstract class AbstractSprite extends AbstractAsset {
 
-  // Non-IO
-  protected final LinkedList<SpriteChangeListener> spriteChangeListeners = new LinkedList<>();
-  
-  protected String name;
-  private String profilePicture;
+    // Non-IO
+    protected final LinkedList<SpriteChangeListener> spriteChangeListeners = new LinkedList<>();
 
-  // Graphics Variables
-  protected ArrayList<String> standardGraphics; // 13 Values, S,N,E,W,NW,NE,SW,SE,Att,Def,Spec,Die,Rst
-  protected ArrayList<Animation> standardGraphicsAnimations;
+    protected String name;
+    
+    protected Map<String, String> graphics;
 
-  protected ArrayList<String> customGraphics;
-  protected ArrayList<String> customGraphicsNames;
-  protected ArrayList<String> standingGraphics;
+    // Graphics Variables
+    protected Map<String, String> animations;
+    protected ArrayList<Animation> standardGraphicsAnimations;
 
-  protected double idleTimeBeforeStanding;
-  protected double frameRate; //Seconds between each step
-  protected int loopSpeed;
+    protected double idleTimeBeforeStanding;
+    protected double frameRate; //Seconds between each step
+    protected int loopSpeed;
 
-  protected BoardVector baseVector;
-  protected BoardVector activationVector;
+    protected BoardVector baseVector;
+    protected BoardVector activationVector;
 
-  protected Point baseVectorOffset;
-  protected Point activationVectorOffset;
+    protected Point baseVectorOffset;
+    protected Point activationVectorOffset;
 
-  public AbstractSprite(AssetDescriptor descriptor) {
-    super(descriptor);
-  }
+    public AbstractSprite(AssetDescriptor descriptor) {
+        super(descriptor);
 
-  public String getName() {
-    return name;
-  }
+        name = "";
+        idleTimeBeforeStanding = 3;
+        
+        // Insert the default animations.
+        animations = new HashMap<>();
+        for (AnimationEnum key : AnimationEnum.values()) {
+            animations.put(key.toString(), "");
+        }
+        
+        // Insert the default graphics.
+        graphics = new HashMap<>();
+        for (GraphicEnum key : GraphicEnum.values()) {
+            graphics.put(key.toString(), "");
+        }
+        
+        standardGraphicsAnimations = new ArrayList<>();
 
-  public void setName(String name) {
-    this.name = name;
-  }
-  
-  /**
-   * @return the profilePicture
-   */
-  public String getProfilePicture() {
-    return profilePicture;
-  }
+        baseVector = makeDefaultSpriteVector(true, false);
+        activationVector = makeDefaultSpriteVector(false, false);
+    }
 
-  /**
-   * @param profilePicture the profilePicture to set
-   */
-  public void setProfilePicture(String profilePicture) {
-    this.profilePicture = profilePicture;
-  }
+    public String getName() {
+        return name;
+    }
 
-  /**
-   * @return the standardGraphics
-   */
-  public ArrayList<String> getStandardGraphics() {
-    return standardGraphics;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  /**
-   *
-   * @param standardGraphics
-   */
-  public void setStandardGraphics(ArrayList<String> standardGraphics) {
-    this.standardGraphics = standardGraphics;
-  }
+    public Map<String, String> getGraphics() {
+        return graphics;
+    }
 
-  /**
-   * @return the standardGraphicsAnimations
-   */
-  public ArrayList<Animation> getStandardGraphicsAnimations() {
-    return standardGraphicsAnimations;
-  }
+    public void setGraphics(Map<String, String> graphics) {
+        this.graphics = graphics;
+    }
 
-  /**
-   * @return the customGraphics
-   */
-  public ArrayList<String> getCustomGraphics() {
-    return customGraphics;
-  }
+    public Map<String, String> getAnimations() {
+        return animations;
+    }
 
-  /**
-   *
-   * @param customGraphics
-   */
-  public void setCustomGraphics(ArrayList<String> customGraphics) {
-    this.customGraphics = customGraphics;
-  }
+    public void setAnimations(Map<String, String> animations) {
+        this.animations = animations;
+    }
 
-  /**
-   * @return the customGraphicNames
-   */
-  public ArrayList<String> getCustomGraphicsNames() {
-    return customGraphicsNames;
-  }
+    /**
+     * @return the standardGraphicsAnimations
+     */
+    public ArrayList<Animation> getStandardGraphicsAnimations() {
+        return standardGraphicsAnimations;
+    }
 
-  /**
-   *
-   * @param customGraphicNames
-   */
-  public void setCustomGraphicNames(ArrayList<String> customGraphicNames) {
-    this.customGraphicsNames = customGraphicNames;
-  }
+    /**
+     * @return the idleTimeBeforeStanding
+     */
+    public double getIdleTimeBeforeStanding() {
+        return idleTimeBeforeStanding;
+    }
 
-  /**
-   * @return the standingGraphics
-   */
-  public ArrayList<String> getStandingGraphics() {
-    return standingGraphics;
-  }
+    /**
+     * @param idleTimeBeforeStanding the idleTimeBeforeStanding to set
+     */
+    public void setIdleTimeBeforeStanding(double idleTimeBeforeStanding) {
+        this.idleTimeBeforeStanding = idleTimeBeforeStanding;
+    }
 
-  /**
-   *
-   * @param standingGraphics
-   */
-  public void setStandingGraphics(ArrayList<String> standingGraphics) {
-    this.standingGraphics = standingGraphics;
-  }
+    /**
+     * @return the frameRate (seconds between each step)
+     */
+    public double getFrameRate() {
+        return frameRate;
+    }
 
-  /**
-   * @return the idleTimeBeforeStanding
-   */
-  public double getIdleTimeBeforeStanding() {
-    return idleTimeBeforeStanding;
-  }
+    /**
+     * @param frameRate the frameRate to set (seconds between each step)
+     */
+    public void setFrameRate(double frameRate) {
+        this.frameRate = frameRate;
+    }
 
-  /**
-   * @param idleTimeBeforeStanding the idleTimeBeforeStanding to set
-   */
-  public void setIdleTimeBeforeStanding(double idleTimeBeforeStanding) {
-    this.idleTimeBeforeStanding = idleTimeBeforeStanding;
-  }
+    public BoardVector getBaseVector() {
+        return baseVector;
+    }
 
-  /**
-   * @return the frameRate (seconds between each step)
-   */
-  public double getFrameRate() {
-    return frameRate;
-  }
-
-  /**
-   * @param frameRate the frameRate to set (seconds between each step)
-   */
-  public void setFrameRate(double frameRate) {
-    this.frameRate = frameRate;
-  }
-
-  public BoardVector getBaseVector() {
-    return baseVector;
-  }
-
-  /**
-   * @param baseVector the baseVector to set
+    /**
+     * @param baseVector the baseVector to set
      * @param fire
-   */
-  public void setBaseVector(BoardVector baseVector, boolean fire) {
-    this.baseVector = baseVector;
-    
-    if (fire) {
-        fireSpriteChanged();
+     */
+    public void setBaseVector(BoardVector baseVector, boolean fire) {
+        this.baseVector = baseVector;
+
+        if (fire) {
+            fireSpriteChanged();
+        }
     }
-  }
 
-  public BoardVector getActivationVector() {
-    return activationVector;
-  }
+    public BoardVector getActivationVector() {
+        return activationVector;
+    }
 
-  /**
-   * @param activationVector the activationVector to set
+    /**
+     * @param activationVector the activationVector to set
      * @param fire
-   */
-  public void setActivationVector(BoardVector activationVector, boolean fire) {
-    this.activationVector = activationVector;
-    
-    if (fire) {
-        fireSpriteChanged();
+     */
+    public void setActivationVector(BoardVector activationVector, boolean fire) {
+        this.activationVector = activationVector;
+
+        if (fire) {
+            fireSpriteChanged();
+        }
     }
-  }
 
-  public Point getBaseVectorOffset() {
-    return baseVectorOffset;
-  }
-
-  public void setBaseVectorOffset(Point baseVectorOffset, boolean fire) {
-    this.baseVectorOffset = baseVectorOffset;
-    
-    if (fire) {
-        fireSpriteChanged();
+    public Point getBaseVectorOffset() {
+        return baseVectorOffset;
     }
-  }
 
-  public Point getActivationVectorOffset() {
-    return activationVectorOffset;
-  }
+    public void setBaseVectorOffset(Point baseVectorOffset, boolean fire) {
+        this.baseVectorOffset = baseVectorOffset;
 
-  public void setActivationVectorOffset(Point activationVectorOffset, boolean fire) {
-    this.activationVectorOffset = activationVectorOffset;
-    
-    if (fire) {
-        fireSpriteChanged();
+        if (fire) {
+            fireSpriteChanged();
+        }
     }
-  }
 
-  /**
-   * Add a new <code>SpriteChangeListener</code> for this sprite.
-   *
-   * @param listener new change listener
-   */
-  public void addSpriteChangeListener(SpriteChangeListener listener) {
-    spriteChangeListeners.add(listener);
-  }
-
-  /**
-   * Remove an existing <code>PlayerChangeListener</code> for this player.
-   *
-   * @param listener change listener
-   */
-  public void removeSpriteChangeListener(SpriteChangeListener listener) {
-    spriteChangeListeners.remove(listener);
-  }
-
-  public void updateStandardGraphics(int index, String path) {
-    standardGraphics.set(index, path);
-    fireSpriteAnimationUpdated();
-  }
-
-  public void updateStandingGraphics(int index, String path) {
-    standingGraphics.set(index, path);
-    fireSpriteAnimationUpdated();
-  }
-
-  public void addCustomGraphics(String path) {
-    customGraphics.add("");
-    fireSpriteAnimationAdded();
-  }
-
-  public void updateCustomGraphics(int index, String path) {
-    customGraphics.set(index, path);
-    fireSpriteAnimationUpdated();
-  }
-
-  public void removeCustomGraphics(int index) {
-    customGraphics.remove(index);
-    fireSpriteAnimationRemoved();
-  }
-
-  /**
-   * Fires the <code>SpriteChangedEvent</code> informs all the listeners that this sprite has
-   * changed.
-   */
-  public void fireSpriteChanged() {
-    SpriteChangedEvent event = null;
-    Iterator iterator = spriteChangeListeners.iterator();
-
-    while (iterator.hasNext()) {
-      if (event == null) {
-        event = new SpriteChangedEvent(this);
-      }
-
-      ((SpriteChangeListener) iterator.next()).spriteChanged(event);
+    public Point getActivationVectorOffset() {
+        return activationVectorOffset;
     }
-  }
 
-  /**
-   * Fires the <code>SpriteChangedEvent</code> informs all the listeners that this sprite has had an
-   * animation added.
-   */
-  public void fireSpriteAnimationAdded() {
-    SpriteChangedEvent event = null;
-    Iterator iterator = spriteChangeListeners.iterator();
+    public void setActivationVectorOffset(Point activationVectorOffset, boolean fire) {
+        this.activationVectorOffset = activationVectorOffset;
 
-    while (iterator.hasNext()) {
-      if (event == null) {
-        event = new SpriteChangedEvent(this);
-      }
-
-      ((SpriteChangeListener) iterator.next()).spriteAnimationAdded(event);
+        if (fire) {
+            fireSpriteChanged();
+        }
     }
-  }
 
-  /**
-   * Fires the <code>SpriteChangedEvent</code> informs all the listeners that this sprite has had an
-   * animation updated.
-   */
-  public void fireSpriteAnimationUpdated() {
-    SpriteChangedEvent event = null;
-    Iterator iterator = spriteChangeListeners.iterator();
-
-    while (iterator.hasNext()) {
-      if (event == null) {
-        event = new SpriteChangedEvent(this);
-      }
-
-      ((SpriteChangeListener) iterator.next()).spriteAnimationUpdated(event);
+    /**
+     * Add a new <code>SpriteChangeListener</code> for this sprite.
+     *
+     * @param listener new change listener
+     */
+    public void addSpriteChangeListener(SpriteChangeListener listener) {
+        spriteChangeListeners.add(listener);
     }
-  }
 
-  /**
-   * Fires the <code>SpriteChangedEvent</code> informs all the listeners that this sprite has had an
-   * animation removed.
-   */
-  public void fireSpriteAnimationRemoved() {
-    SpriteChangedEvent event = null;
-    Iterator iterator = spriteChangeListeners.iterator();
-
-    while (iterator.hasNext()) {
-      if (event == null) {
-        event = new SpriteChangedEvent(this);
-      }
-
-      ((SpriteChangeListener) iterator.next()).spriteAnimationRemoved(event);
+    /**
+     * Remove an existing <code>PlayerChangeListener</code> for this player.
+     *
+     * @param listener change listener
+     */
+    public void removeSpriteChangeListener(SpriteChangeListener listener) {
+        spriteChangeListeners.remove(listener);
     }
-  }
+
+    public void addAnimation(String key, String value) {
+        animations.put(key, value);
+        fireSpriteAnimationAdded();
+    }
+
+    public void updateAnimation(String key, String value) {
+        animations.put(key, value);
+        fireSpriteAnimationUpdated();
+    }
+
+    public void removeAnimation(String key, String value) {
+        animations.remove(key);
+        fireSpriteAnimationRemoved();
+    }
+
+    /**
+     * Fires the <code>SpriteChangedEvent</code> informs all the listeners that
+     * this sprite has changed.
+     */
+    public void fireSpriteChanged() {
+        SpriteChangedEvent event = null;
+        Iterator iterator = spriteChangeListeners.iterator();
+
+        while (iterator.hasNext()) {
+            if (event == null) {
+                event = new SpriteChangedEvent(this);
+            }
+
+            ((SpriteChangeListener) iterator.next()).spriteChanged(event);
+        }
+    }
+
+    /**
+     * Fires the <code>SpriteChangedEvent</code> informs all the listeners that
+     * this sprite has had an animation added.
+     */
+    public void fireSpriteAnimationAdded() {
+        SpriteChangedEvent event = null;
+        Iterator iterator = spriteChangeListeners.iterator();
+
+        while (iterator.hasNext()) {
+            if (event == null) {
+                event = new SpriteChangedEvent(this);
+            }
+
+            ((SpriteChangeListener) iterator.next()).spriteAnimationAdded(event);
+        }
+    }
+
+    /**
+     * Fires the <code>SpriteChangedEvent</code> informs all the listeners that
+     * this sprite has had an animation updated.
+     */
+    public void fireSpriteAnimationUpdated() {
+        SpriteChangedEvent event = null;
+        Iterator iterator = spriteChangeListeners.iterator();
+
+        while (iterator.hasNext()) {
+            if (event == null) {
+                event = new SpriteChangedEvent(this);
+            }
+
+            ((SpriteChangeListener) iterator.next()).spriteAnimationUpdated(event);
+        }
+    }
+
+    /**
+     * Fires the <code>SpriteChangedEvent</code> informs all the listeners that
+     * this sprite has had an animation removed.
+     */
+    public void fireSpriteAnimationRemoved() {
+        SpriteChangedEvent event = null;
+        Iterator iterator = spriteChangeListeners.iterator();
+
+        while (iterator.hasNext()) {
+            if (event == null) {
+                event = new SpriteChangedEvent(this);
+            }
+
+            ((SpriteChangeListener) iterator.next()).spriteAnimationRemoved(event);
+        }
+    }
+
+    private BoardVector makeDefaultSpriteVector(boolean isCollisionVector, boolean isIsometric) {
+        BoardVector toReturn = new BoardVector();
+        if (isCollisionVector) {
+            if (isIsometric) {
+                toReturn.addPoint(-15, 0);
+                toReturn.addPoint(0, 7);
+                toReturn.addPoint(15, 0);
+                toReturn.addPoint(0, -7);
+            } else {
+                //toReturn.setTileType(TT_SOLID);   //WARNING: needs to work when tiletypes exist
+                toReturn.addPoint(-15, -15);
+                toReturn.addPoint(15, -15);
+                toReturn.addPoint(15, 0);
+                toReturn.addPoint(-15, 0);
+            }
+        } else if (isIsometric) {
+            toReturn.addPoint(-31, 0);
+            toReturn.addPoint(0, 15);
+            toReturn.addPoint(31, 0);
+            toReturn.addPoint(0, -15);
+        } else {
+            //toReturn.setTileType(TT_SOLID);   //WARNING: needs to work when tiletypes exist
+            toReturn.addPoint(-24, -24);
+            toReturn.addPoint(24, -24);
+            toReturn.addPoint(24, 8);
+            toReturn.addPoint(-24, 8);
+        }
+        return (toReturn);
+    }
 
 }

@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/.
  */
 package net.rpgtoolkit.common.assets.serialization;
 
@@ -19,88 +19,42 @@ import org.json.JSONObject;
 /**
  * @author Joshua Michael Daly
  */
-public class JsonEnemySerializer extends AbstractJsonSerializer {
+public class JsonEnemySerializer extends AbstractSpriteSerializer {
 
-  @Override
-  public boolean serializable(AssetDescriptor descriptor) {
-    final String ext = Paths.extension(descriptor.getURI());
-    return (ext.endsWith(CoreProperties.getFullExtension("toolkit.enemy.extension.json")));
-  }
+    @Override
+    public boolean serializable(AssetDescriptor descriptor) {
+        final String ext = Paths.extension(descriptor.getURI());
+        return (ext.endsWith(CoreProperties.getFullExtension("toolkit.enemy.extension.json")));
+    }
 
-  @Override
-  public boolean deserializable(AssetDescriptor descriptor) {
-    return serializable(descriptor);
-  }
+    @Override
+    public boolean deserializable(AssetDescriptor descriptor) {
+        return serializable(descriptor);
+    }
 
-  @Override
-  protected void load(AssetHandle handle, JSONObject json) throws AssetException {
-    final Enemy enemy = new Enemy(handle.getDescriptor());
+    @Override
+    protected void load(AssetHandle handle, JSONObject json) throws AssetException {
+        final Enemy enemy = super.load(new Enemy(handle.getDescriptor()), json);
 
-    enemy.setName(json.getString("name"));
-    enemy.setProfilePicture(json.getString("profilePicture"));
-    enemy.setHitPoints(json.optInt("hitPoints"));
-    enemy.setMagicPoints(json.optInt("magicPoints"));
-    enemy.setFightPower(json.optInt("fightPower"));
-    enemy.setDefencePower(json.optInt("defencePower")); 
-    enemy.canRunAway(json.optBoolean("canRunAway"));
-    enemy.setSneakChance(json.optInt("sneakChance"));
-    enemy.setSurpriseChance(json.optInt("surpriseChance"));
-    enemy.setSpecialMoves(getStringArrayList(json.optJSONArray("specialMoves")));
-    enemy.setWeaknesses(getStringArrayList(json.optJSONArray("weaknesses")));
-    enemy.setStrengths(getStringArrayList(json.optJSONArray("strengths")));
-    enemy.setAiLevel((byte) json.optInt("aiLevel"));
-    enemy.useRPGCodeTactics(json.optBoolean("useRPGCodeTactics"));
-    enemy.setTacticsFile(json.optString("tacticsFile"));
-    enemy.setExperienceAwarded(json.optInt("experienceAwarded"));
-    enemy.setGoldAwarded(json.optInt("goldAwarded"));
-    enemy.setBeatEnemyProgram(json.optString("beatEnemyProgram"));
-    enemy.setRunAwayProgram(json.optString("runAwayProgram"));
-    enemy.setMaxHitPoints(json.optInt("maxHitPoints"));
-    enemy.setMagicPoints(json.optInt("maxMagicPoints"));
-    enemy.setStatusEffects(getStringArrayList(json.optJSONArray("statusEffects")));
-    enemy.setStandardGraphics(getStringArrayList(json.optJSONArray("standardGraphics")));
-    enemy.setStandingGraphics(getStringArrayList(json.getJSONArray("standingGraphics")));
-    enemy.setCustomGraphics(getStringArrayList(json.optJSONArray("customizedGraphics")));
-    enemy.setCustomGraphicNames(getStringArrayList(json.optJSONArray("customizedGraphicsNames")));
-    enemy.setIdleTimeBeforeStanding(json.optDouble("idleTimeBeforeStanding"));
-    enemy.setFrameRate(json.optDouble("frameRate"));
+        enemy.setLevel(json.getInt("level"));
+        enemy.setHealth(json.getDouble("health"));
+        enemy.setAttack(json.getDouble("attack"));
+        enemy.setDefence(json.getDouble("defence"));
+        enemy.setMagic(json.getDouble("magic"));
 
-    handle.setAsset(enemy);
-  }
+        handle.setAsset(enemy);
+    }
 
-  @Override
-  protected void store(AssetHandle handle, JSONObject json)
-          throws AssetException {
-    final Enemy enemy = (Enemy) handle.getAsset();
+    @Override
+    protected void store(AssetHandle handle, JSONObject json)
+            throws AssetException {
+        final Enemy enemy = super.store((Enemy) handle.getAsset(), json);
 
-    json.put("name", enemy.getName());
-    json.put("profilePicture", enemy.getProfilePicture());
-    json.put("hitPoints", enemy.getHitPoints());
-    json.put("magicPoints", enemy.getMagicPoints());
-    json.put("fightPower", enemy.getFightPower());
-    json.put("defencePower", enemy.getDefencePower());
-    json.put("canRunAway", enemy.canRunAway());
-    json.put("sneakChance", enemy.getSneakChance());
-    json.put("surpriseChance", enemy.getSurpriseChance());
-    json.put("specialMoves", enemy.getSpecialMoves());
-    json.put("weaknesses", enemy.getWeaknesses());
-    json.put("strengths", enemy.getStrengths());
-    json.put("aiLevel", enemy.getAiLevel());
-    json.put("useRPGCodeTactics", enemy.useRPGCodeTatics());
-    json.put("tacticsFile", enemy.getTacticsFile());
-    json.put("experienceAwarded", enemy.getExperienceAwarded());
-    json.put("goldAwarded", enemy.getGoldAwarded());
-    json.put("beatEnemyProgram", enemy.getBeatEnemyProgram());
-    json.put("runAwayProgram", enemy.getRunAwayProgram());
-    json.put("maxHitPoints", enemy.getMaxHitPoints());
-    json.put("maxMagicPoints", enemy.getMaxMagicPoints());
-    json.put("statusEffects", enemy.getStatusEffects());
-    json.put("standardGraphics", enemy.getStandardGraphics());
-    json.put("standingGraphics", enemy.getStandingGraphics());
-    json.put("customizedGraphics", enemy.getCustomGraphics());
-    json.put("customizedGraphicsNames", enemy.getCustomGraphicsNames());
-    json.put("idleTimeBeforeStanding", enemy.getIdleTimeBeforeStanding());
-    json.put("frameRate", enemy.getFrameRate());
-  }
+        json.put("level", enemy.getLevel());
+        json.put("health", enemy.getHealth());
+        json.put("attack", enemy.getAttack());
+        json.put("defence", enemy.getDefence());
+        json.put("magic", enemy.getMagic());
+    }
 
 }

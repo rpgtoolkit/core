@@ -10,6 +10,7 @@ package net.rpgtoolkit.common.assets;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.ArrayList;
+import java.util.Objects;
 import net.rpgtoolkit.common.Selectable;
 
 /**
@@ -250,4 +251,58 @@ public class BoardVector implements Cloneable, Selectable {
 
     return clone;
   }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 31 * hash + this.layer;
+        hash = 31 * hash + this.attributes;
+        hash = 31 * hash + (this.isClosed ? 1 : 0);
+        hash = 31 * hash + Objects.hashCode(this.handle);
+        hash = 31 * hash + Objects.hashCode(this.tileType);
+        hash = 31 * hash + Objects.hashCode(this.points);
+        hash = 31 * hash + Objects.hashCode(this.polygon);
+        hash = 31 * hash + (this.selected ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BoardVector other = (BoardVector) obj;
+        if (this.layer != other.layer) {
+            return false;
+        }
+        if (this.attributes != other.attributes) {
+            return false;
+        }
+        if (this.isClosed != other.isClosed) {
+            return false;
+        }
+        if (this.selected != other.selected) {
+            return false;
+        }
+        if (!Objects.equals(this.handle, other.handle)) {
+            return false;
+        }
+        if (this.tileType != other.tileType) {
+            return false;
+        }
+        if (!Objects.equals(this.points, other.points)) {
+            return false;
+        }
+        if (this.polygon.npoints != other.polygon.npoints) {
+            return false;
+        }
+        return true;
+    }
+    
 }

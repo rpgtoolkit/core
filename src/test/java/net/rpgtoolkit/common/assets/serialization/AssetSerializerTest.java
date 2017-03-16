@@ -7,21 +7,32 @@
  */
 package net.rpgtoolkit.common.assets.serialization;
 
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.rpgtoolkit.common.assets.Animation;
+import net.rpgtoolkit.common.assets.AnimationEnum;
 import net.rpgtoolkit.common.assets.AnimationFrame;
+import net.rpgtoolkit.common.assets.BoardVector;
+import net.rpgtoolkit.common.assets.Enemy;
+import net.rpgtoolkit.common.assets.GraphicEnum;
+import net.rpgtoolkit.common.assets.Item;
+import net.rpgtoolkit.common.assets.Player;
+import net.rpgtoolkit.common.assets.TileType;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * Some pretty basic checks to ensure the file serializers work.
- * 
+ *
  * @author Joshua Michael Daly
  */
 public class AssetSerializerTest {
-    
+
     @BeforeClass
     public static void beforeClass() {
         System.setProperty("project.path", "src/test/resources");
@@ -36,7 +47,7 @@ public class AssetSerializerTest {
         // Deserialize original.
         Animation asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
         checkAnimation(asset);
-        
+
         // Serialize a temporary version and deserialize it.
         path = AssetSerializerTestHelper.serialize(asset, serializer);
         asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
@@ -45,15 +56,15 @@ public class AssetSerializerTest {
 
     private void checkAnimation(Animation asset) {
         List<String> frames = Arrays.asList(
-                "Idle_north.png", 
-                "attack1_north.png", 
+                "Idle_north.png",
+                "attack1_north.png",
                 "attack2_north.png");
-        
-        List<AnimationFrame> actualFrames =  asset.getFrames();
+
+        List<AnimationFrame> actualFrames = asset.getFrames();
         for (int i = 0; i < frames.size(); i++) {
             Assert.assertEquals(frames.get(i), actualFrames.get(i).getFrameName());
         }
-        
+
         Assert.assertEquals(0.2, asset.getFrameRate(), 0);
         Assert.assertEquals(90, asset.getAnimationHeight());
         Assert.assertEquals(55, asset.getAnimationWidth());
@@ -62,22 +73,202 @@ public class AssetSerializerTest {
 
     @Test
     public void testBoardSerializier() throws Exception {
-        
+
     }
 
     @Test
     public void testCharacterSerializer() throws Exception {
-        
+        String path = AssetSerializerTestHelper.getPath(
+                "Characters/Hero.character");
+        JsonPlayerSerializer serializer = new JsonPlayerSerializer();
+
+        // Deserialize original.
+        Player asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkPlayer(asset);
+
+        // Serialize a temporary version and deserialize it.
+        path = AssetSerializerTestHelper.serialize(asset, serializer);
+        asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkPlayer(asset);
+    }
+
+    private void checkPlayer(Player asset) {
+        Assert.assertEquals("Hero", asset.getName());
+        Assert.assertEquals(1, asset.getLevel());
+        Assert.assertEquals(10, asset.getMaxLevel());
+        Assert.assertEquals(3, asset.getHealth(), 0);
+        Assert.assertEquals(10, asset.getMaxHealth(), 0);
+        Assert.assertEquals(1, asset.getAttack(), 0);
+        Assert.assertEquals(10, asset.getMaxAttack(), 0);
+        Assert.assertEquals(1, asset.getDefence(), 0);
+        Assert.assertEquals(10, asset.getMaxDefence(), 0);
+        Assert.assertEquals(1, asset.getMagic(), 0);
+        Assert.assertEquals(10, asset.getMaxMagic(), 0);
+
+        Map<String, String> expectedGraphics = new HashMap();
+        expectedGraphics.put(GraphicEnum.PROFILE.toString(), "hero.png");
+        Map<String, String> actualGraphics = asset.getGraphics();
+        checkMapsEqual(expectedGraphics, actualGraphics);
+
+        Map<String, String> expectedAnimations = new HashMap();
+        for (AnimationEnum key : AnimationEnum.values()) {
+            expectedAnimations.put(key.toString(), "");
+        }
+        expectedAnimations.put(AnimationEnum.NORTH.toString(),
+                "Hero_world_attack_north.animation");
+        Map<String, String> actualAnimations = asset.getAnimations();
+        checkMapsEqual(expectedAnimations, actualAnimations);
+
+        ArrayList<Point> points = new ArrayList<>();
+        points.add(new Point(0, 0));
+        points.add(new Point(30, 0));
+        points.add(new Point(30, 20));
+        points.add(new Point(0, 20));
+        BoardVector expectedBaseVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        expectedBaseVector.setPoints(points);
+        Assert.assertEquals(expectedBaseVector, asset.getBaseVector());
+
+        points = new ArrayList<>();
+        points.add(new Point(0, 0));
+        points.add(new Point(37, 0));
+        points.add(new Point(37, 30));
+        points.add(new Point(0, 30));
+        BoardVector expectedActivationVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        Assert.assertEquals(expectedActivationVector, asset.getActivationVector());
+
+        Assert.assertEquals(new Point(0, 47), asset.getBaseVectorOffset());
+        Assert.assertEquals(new Point(-3, 42), asset.getActivationVectorOffset());
     }
 
     @Test
     public void testEnemySerialzier() throws Exception {
-        
+        String path = AssetSerializerTestHelper.getPath(
+                "Enemies/Goblin.enemy");
+        JsonEnemySerializer serializer = new JsonEnemySerializer();
+
+        // Deserialize original.
+        Enemy asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkEnemy(asset);
+
+        // Serialize a temporary version and deserialize it.
+        path = AssetSerializerTestHelper.serialize(asset, serializer);
+        asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkEnemy(asset);
+    }
+
+    private void checkEnemy(Enemy asset) {
+        Assert.assertEquals("Goblin", asset.getName());
+        Assert.assertEquals(1, asset.getLevel());
+        Assert.assertEquals(3, asset.getHealth(), 0);
+        Assert.assertEquals(1, asset.getAttack(), 0);
+        Assert.assertEquals(1, asset.getDefence(), 0);
+        Assert.assertEquals(1, asset.getMagic(), 0);
+
+        Map<String, String> expectedGraphics = new HashMap();
+        expectedGraphics.put(GraphicEnum.PROFILE.toString(), "goblin.png");
+        Map<String, String> actualGraphics = asset.getGraphics();
+        checkMapsEqual(expectedGraphics, actualGraphics);
+
+        Map<String, String> expectedAnimations = new HashMap();
+        for (AnimationEnum key : AnimationEnum.values()) {
+            expectedAnimations.put(key.toString(), "");
+        }
+        expectedAnimations.put(AnimationEnum.NORTH.toString(),
+                "Goblin_world_attack_north.animation");
+        Map<String, String> actualAnimations = asset.getAnimations();
+        checkMapsEqual(expectedAnimations, actualAnimations);
+
+        ArrayList<Point> points = new ArrayList<>();
+        points.add(new Point(0, 0));
+        points.add(new Point(30, 0));
+        points.add(new Point(30, 20));
+        points.add(new Point(0, 20));
+        BoardVector expectedBaseVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        expectedBaseVector.setPoints(points);
+        Assert.assertEquals(expectedBaseVector, asset.getBaseVector());
+
+        points = new ArrayList<>();
+        points.add(new Point(0, 0));
+        points.add(new Point(37, 0));
+        points.add(new Point(37, 30));
+        points.add(new Point(0, 30));
+        BoardVector expectedActivationVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        Assert.assertEquals(expectedActivationVector, asset.getActivationVector());
+
+        Assert.assertEquals(new Point(0, 47), asset.getBaseVectorOffset());
+        Assert.assertEquals(new Point(-3, 42), asset.getActivationVectorOffset());
     }
 
     @Test
     public void testItemSerializer() throws Exception {
-        
+        String path = AssetSerializerTestHelper.getPath(
+                "Items/Block.item");
+        JsonItemSerializer serializer = new JsonItemSerializer();
+
+        // Deserialize original.
+        Item asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkItem(asset);
+
+        // Serialize a temporary version and deserialize it.
+        path = AssetSerializerTestHelper.serialize(asset, serializer);
+        asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkItem(asset);
+    }
+
+    private void checkItem(Item asset) {
+        Assert.assertEquals("Block", asset.getName());
+        Assert.assertEquals("A pushable block.", asset.getDescription());
+        Assert.assertEquals(0, asset.getFrameRate(), 0);
+
+        Map<String, String> expectedGraphics = new HashMap();
+        expectedGraphics.put(GraphicEnum.PROFILE.toString(), "block.png");
+        Map<String, String> actualGraphics = asset.getGraphics();
+        checkMapsEqual(expectedGraphics, actualGraphics);
+
+        Map<String, String> expectedAnimations = new HashMap();
+        for (AnimationEnum key : AnimationEnum.values()) {
+            expectedAnimations.put(key.toString(), "");
+        }
+        expectedAnimations.put(AnimationEnum.SOUTH.toString(),
+                "Block\\Block_south.animation");
+        Map<String, String> actualAnimations = asset.getAnimations();
+        checkMapsEqual(expectedAnimations, actualAnimations);
+
+        ArrayList<Point> points = new ArrayList<>();
+        points.add(new Point(0, 0));
+        points.add(new Point(30, 0));
+        points.add(new Point(30, 20));
+        points.add(new Point(0, 20));
+        BoardVector expectedBaseVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        expectedBaseVector.setPoints(points);
+        Assert.assertEquals(expectedBaseVector, asset.getBaseVector());
+
+        points = new ArrayList<>();
+        points.add(new Point(0, 0));
+        points.add(new Point(37, 0));
+        points.add(new Point(37, 30));
+        points.add(new Point(0, 30));
+        BoardVector expectedActivationVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        Assert.assertEquals(expectedActivationVector, asset.getActivationVector());
+
+        Assert.assertEquals(new Point(0, 47), asset.getBaseVectorOffset());
+        Assert.assertEquals(new Point(-3, 42), asset.getActivationVectorOffset());
+    }
+
+    private void checkMapsEqual(Map<String, String> expected, Map<String, String> actual) {
+        Assert.assertEquals(expected.keySet(), actual.keySet());
+        Assert.assertArrayEquals(expected.values().toArray(), actual.values().toArray());
+    }
+
+    private BoardVector buildBoardVector(TileType tileType, boolean isClosed, String handle, int layer, ArrayList<Point> points) {
+        BoardVector boardVector = new BoardVector();
+        boardVector.setTileType(tileType);
+        boardVector.setIsClosed(isClosed);
+        boardVector.setHandle(handle);
+        boardVector.setLayer(layer);
+        boardVector.setPoints(points);
+
+        return boardVector;
     }
 
 }

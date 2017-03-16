@@ -237,12 +237,13 @@ public class BoardSprite implements Cloneable, Selectable {
             Item item = (Item) handle.getAsset();
             spriteFile = item;
 
-            if (item.getStandardGraphics().size() > 1) {
+            String southAnimation = item.animations.get(AnimationEnum.SOUTH.toString());
+            if (!southAnimation.isEmpty()) {
                 file = new File(
                         System.getProperty("project.path")
                         + File.separator
                         + CoreProperties.getProperty("toolkit.directory.misc"),
-                        item.getStandardGraphics().get(0));
+                        southAnimation);
                 
                 handle = AssetManager.getInstance().deserialize(
                 new AssetDescriptor(file.toURI()));
