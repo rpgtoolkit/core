@@ -2,6 +2,8 @@
    "name":"Hero",
    "level":1,
    "maxLevel":10,
+   "experience": 1,
+   "maxExperience": 100,
    "health":3,
    "maxHealth":10,
    "attack":1,

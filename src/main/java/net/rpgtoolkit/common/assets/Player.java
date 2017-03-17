@@ -11,6 +11,8 @@ public class Player extends AbstractSprite {
     
     private int level;
     private int maxLevel;
+    private double experience;
+    private double maxExperience;
     private double health;
     private double maxHealth;
     private double attack;
@@ -43,6 +45,22 @@ public class Player extends AbstractSprite {
 
     public void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel;
+    }
+
+    public double getExperience() {
+        return experience;
+    }
+
+    public void setExperience(double experience) {
+        this.experience = experience;
+    }
+
+    public double getMaxExperience() {
+        return maxExperience;
+    }
+
+    public void setMaxExperience(double maxExperience) {
+        this.maxExperience = maxExperience;
     }
 
     public double getHealth() {

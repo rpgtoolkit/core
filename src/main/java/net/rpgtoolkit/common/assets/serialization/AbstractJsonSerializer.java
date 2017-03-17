@@ -18,6 +18,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -190,8 +191,8 @@ public abstract class AbstractJsonSerializer
         return new Point(object.getInt("x"), object.getInt("y"));
     }
 
-    protected Map<String, String> deserializeMap(JSONObject object) {
-        Map<String, String> map = new HashMap();
+    protected LinkedHashMap<String, String> deserializeMap(JSONObject object) {
+        LinkedHashMap<String, String> map = new LinkedHashMap();
         Iterator keys = object.keys();
         while (keys.hasNext()) {
             String key = (String) keys.next();

@@ -5,6 +5,8 @@
    "attack":1,
    "defence":1,
    "magic":1,
+   "experienceReward": 10,
+   "goldReward": 10,
    "frameRate":0,
    "graphics":{
       "PROFILE":"goblin.png"

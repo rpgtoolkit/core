@@ -38,6 +38,8 @@ public class JsonPlayerSerializer extends AbstractSpriteSerializer {
         
         player.setLevel(json.getInt("level"));
         player.setMaxLevel(json.getInt("maxLevel"));
+        player.setExperience(json.getDouble("experience"));
+        player.setMaxExperience(json.getDouble("maxExperience"));
         player.setHealth(json.getDouble("health"));
         player.setMaxHealth(json.getDouble("maxHealth"));
         player.setAttack(json.getDouble("attack"));
@@ -57,6 +59,8 @@ public class JsonPlayerSerializer extends AbstractSpriteSerializer {
         
         json.put("level", player.getLevel());
         json.put("maxLevel", player.getMaxLevel());
+        json.put("experience", player.getExperience());
+        json.put("maxExperience", player.getMaxExperience());
         json.put("health", player.getHealth());
         json.put("maxHealth", player.getMaxHealth());
         json.put("attack", player.getAttack());

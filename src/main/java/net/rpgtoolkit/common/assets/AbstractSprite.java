@@ -11,6 +11,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import net.rpgtoolkit.common.assets.events.SpriteChangedEvent;
@@ -28,11 +29,11 @@ public abstract class AbstractSprite extends AbstractAsset {
     protected final LinkedList<SpriteChangeListener> spriteChangeListeners = new LinkedList<>();
 
     protected String name;
-    
-    protected Map<String, String> graphics;
+
+    protected LinkedHashMap<String, String> graphics;
 
     // Graphics Variables
-    protected Map<String, String> animations;
+    protected LinkedHashMap<String, String> animations;
     protected ArrayList<Animation> standardGraphicsAnimations;
 
     protected double idleTimeBeforeStanding;
@@ -50,23 +51,41 @@ public abstract class AbstractSprite extends AbstractAsset {
 
         name = "";
         idleTimeBeforeStanding = 3;
-        
+
         // Insert the default animations.
-        animations = new HashMap<>();
+        animations = new LinkedHashMap<>();
         for (AnimationEnum key : AnimationEnum.values()) {
             animations.put(key.toString(), "");
         }
-        
+
         // Insert the default graphics.
-        graphics = new HashMap<>();
+        graphics = new LinkedHashMap<>();
         for (GraphicEnum key : GraphicEnum.values()) {
             graphics.put(key.toString(), "");
         }
-        
+
         standardGraphicsAnimations = new ArrayList<>();
 
-        baseVector = makeDefaultSpriteVector(true, false);
-        activationVector = makeDefaultSpriteVector(false, false);
+        name = "Undefined";
+
+        BoardVector base = new BoardVector();
+        base.addPoint(0, 0);
+        base.addPoint(30, 0);
+        base.addPoint(30, 20);
+        base.addPoint(0, 20);
+        base.setClosed(true);
+        baseVector = base;
+
+        BoardVector activation = new BoardVector();
+        activation.addPoint(0, 0);
+        activation.addPoint(30, 0);
+        activation.addPoint(30, 20);
+        activation.addPoint(0, 20);
+        activation.setClosed(true);
+        activationVector = activation;
+
+        baseVectorOffset = new Point(40, 0);
+        activationVectorOffset = new Point(0, 0);
     }
 
     public String getName() {
@@ -81,7 +100,7 @@ public abstract class AbstractSprite extends AbstractAsset {
         return graphics;
     }
 
-    public void setGraphics(Map<String, String> graphics) {
+    public void setGraphics(LinkedHashMap<String, String> graphics) {
         this.graphics = graphics;
     }
 
@@ -89,7 +108,7 @@ public abstract class AbstractSprite extends AbstractAsset {
         return animations;
     }
 
-    public void setAnimations(Map<String, String> animations) {
+    public void setAnimations(LinkedHashMap<String, String> animations) {
         this.animations = animations;
     }
 
@@ -212,7 +231,7 @@ public abstract class AbstractSprite extends AbstractAsset {
         fireSpriteAnimationUpdated();
     }
 
-    public void removeAnimation(String key, String value) {
+    public void removeAnimation(String key) {
         animations.remove(key);
         fireSpriteAnimationRemoved();
     }
@@ -283,36 +302,6 @@ public abstract class AbstractSprite extends AbstractAsset {
 
             ((SpriteChangeListener) iterator.next()).spriteAnimationRemoved(event);
         }
-    }
-
-    private BoardVector makeDefaultSpriteVector(boolean isCollisionVector, boolean isIsometric) {
-        BoardVector toReturn = new BoardVector();
-        if (isCollisionVector) {
-            if (isIsometric) {
-                toReturn.addPoint(-15, 0);
-                toReturn.addPoint(0, 7);
-                toReturn.addPoint(15, 0);
-                toReturn.addPoint(0, -7);
-            } else {
-                //toReturn.setTileType(TT_SOLID);   //WARNING: needs to work when tiletypes exist
-                toReturn.addPoint(-15, -15);
-                toReturn.addPoint(15, -15);
-                toReturn.addPoint(15, 0);
-                toReturn.addPoint(-15, 0);
-            }
-        } else if (isIsometric) {
-            toReturn.addPoint(-31, 0);
-            toReturn.addPoint(0, 15);
-            toReturn.addPoint(31, 0);
-            toReturn.addPoint(0, -15);
-        } else {
-            //toReturn.setTileType(TT_SOLID);   //WARNING: needs to work when tiletypes exist
-            toReturn.addPoint(-24, -24);
-            toReturn.addPoint(24, -24);
-            toReturn.addPoint(24, 8);
-            toReturn.addPoint(-24, 8);
-        }
-        return (toReturn);
     }
 
 }

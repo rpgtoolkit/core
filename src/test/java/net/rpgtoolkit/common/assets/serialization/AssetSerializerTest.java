@@ -96,6 +96,8 @@ public class AssetSerializerTest {
         Assert.assertEquals("Hero", asset.getName());
         Assert.assertEquals(1, asset.getLevel());
         Assert.assertEquals(10, asset.getMaxLevel());
+        Assert.assertEquals(1, asset.getExperience(), 0);
+        Assert.assertEquals(100, asset.getMaxExperience(), 0);
         Assert.assertEquals(3, asset.getHealth(), 0);
         Assert.assertEquals(10, asset.getMaxHealth(), 0);
         Assert.assertEquals(1, asset.getAttack(), 0);
@@ -163,6 +165,8 @@ public class AssetSerializerTest {
         Assert.assertEquals(1, asset.getAttack(), 0);
         Assert.assertEquals(1, asset.getDefence(), 0);
         Assert.assertEquals(1, asset.getMagic(), 0);
+        Assert.assertEquals(10, asset.getExperienceReward(), 0);
+        Assert.assertEquals(10, asset.getGoldReward(), 0);
 
         Map<String, String> expectedGraphics = new HashMap();
         expectedGraphics.put(GraphicEnum.PROFILE.toString(), "goblin.png");

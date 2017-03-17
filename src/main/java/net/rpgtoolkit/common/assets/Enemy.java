@@ -14,6 +14,8 @@ public class Enemy extends AbstractSprite {
     private double attack;
     private double defence;
     private double magic;
+    private double experienceReward;
+    private double goldReward;
 
     public Enemy(AssetDescriptor descriptor) {
         super(descriptor);
@@ -57,6 +59,22 @@ public class Enemy extends AbstractSprite {
 
     public void setMagic(double magic) {
         this.magic = magic;
+    }
+
+    public double getExperienceReward() {
+        return experienceReward;
+    }
+
+    public void setExperienceReward(double experienceReward) {
+        this.experienceReward = experienceReward;
+    }
+
+    public double getGoldReward() {
+        return goldReward;
+    }
+
+    public void setGoldReward(double goldReward) {
+        this.goldReward = goldReward;
     }
     
 }

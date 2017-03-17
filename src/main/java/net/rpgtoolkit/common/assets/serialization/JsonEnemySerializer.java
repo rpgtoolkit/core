@@ -41,6 +41,8 @@ public class JsonEnemySerializer extends AbstractSpriteSerializer {
         enemy.setAttack(json.getDouble("attack"));
         enemy.setDefence(json.getDouble("defence"));
         enemy.setMagic(json.getDouble("magic"));
+        enemy.setExperienceReward(json.getDouble("experienceReward"));
+        enemy.setGoldReward(json.getDouble("goldReward"));
 
         handle.setAsset(enemy);
     }
@@ -55,6 +57,8 @@ public class JsonEnemySerializer extends AbstractSpriteSerializer {
         json.put("attack", enemy.getAttack());
         json.put("defence", enemy.getDefence());
         json.put("magic", enemy.getMagic());
+        json.put("experienceReward", enemy.getExperienceReward());
+        json.put("goldReward", enemy.getGoldReward());
     }
 
 }
