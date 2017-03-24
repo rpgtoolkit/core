@@ -8,6 +8,7 @@
 package net.rpgtoolkit.common.assets.serialization;
 
 import net.rpgtoolkit.common.assets.AssetDescriptor;
+import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.SpecialMove;
 import net.rpgtoolkit.common.io.Paths;
@@ -55,7 +56,8 @@ public class JsonSpecialMoveSerializer extends AbstractJsonSerializer {
   }
 
   @Override
-  public void store(AssetHandle handle, JSONObject json) {
+  public void store(AssetHandle handle, JSONObject json) throws AssetException {
+    super.store(handle, json);
 
     final SpecialMove smove = (SpecialMove) handle.getAsset();
 

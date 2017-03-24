@@ -53,7 +53,9 @@ public class JsonAnimationSerializer extends AbstractJsonSerializer {
   }
 
   @Override
-  public void store(AssetHandle handle, JSONObject json) {
+  public void store(AssetHandle handle, JSONObject json) throws AssetException {
+    super.store(handle, json);
+      
     Animation animation = (Animation) handle.getAsset();
 
     json.put("width", animation.getAnimationWidth());

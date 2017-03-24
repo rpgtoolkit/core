@@ -71,6 +71,8 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
 
   @Override
   protected void store(AssetHandle handle, JSONObject json) throws AssetException {
+    super.store(handle, json);
+      
     final Board board = (Board) handle.getAsset();
 
     board.updateBoardIO();

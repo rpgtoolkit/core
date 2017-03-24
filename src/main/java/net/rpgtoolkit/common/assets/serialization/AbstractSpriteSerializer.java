@@ -34,6 +34,8 @@ public abstract class AbstractSpriteSerializer extends AbstractJsonSerializer {
 
     protected <T extends AbstractSprite> T store(T sprite, JSONObject json)
             throws AssetException {
+        json.put("version", FILE_FORMAT_VERSION);
+        
         json.put("name", sprite.getName());
         json.put("frameRate", sprite.getFrameRate());
         json.put("graphics", serializeMap(sprite.getGraphics()));

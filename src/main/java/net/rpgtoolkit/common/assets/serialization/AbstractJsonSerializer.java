@@ -16,7 +16,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,6 +42,7 @@ public abstract class AbstractJsonSerializer
         extends AbstractAssetSerializer {
 
     public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    public static final double FILE_FORMAT_VERSION = 4.0;
 
     @Override
     public void serialize(AssetHandle handle)
@@ -91,8 +91,9 @@ public abstract class AbstractJsonSerializer
     protected abstract void load(AssetHandle handle, JSONObject json)
             throws AssetException;
 
-    protected abstract void store(AssetHandle handle, JSONObject json)
-            throws AssetException;
+    protected void store(AssetHandle handle, JSONObject json) throws AssetException {
+        json.put("version", FILE_FORMAT_VERSION);
+    }
 
     protected ArrayList<String> getStringArrayList(JSONArray array) {
         ArrayList<String> strings = new ArrayList<>();

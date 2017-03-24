@@ -40,6 +40,7 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
 
   @Override
   protected void load(AssetHandle handle, JSONObject json) throws AssetException {
+    super.store(handle, json);
 
     final Project project = new Project(handle.getDescriptor());
 
