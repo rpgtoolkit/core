@@ -1,4 +1,5 @@
 {
+   "version": 4.0,
    "frameRate":0.2,
    "frames":[
       "Idle_north.png",

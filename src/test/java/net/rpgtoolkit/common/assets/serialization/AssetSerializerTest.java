@@ -21,6 +21,7 @@ import net.rpgtoolkit.common.assets.Enemy;
 import net.rpgtoolkit.common.assets.GraphicEnum;
 import net.rpgtoolkit.common.assets.Item;
 import net.rpgtoolkit.common.assets.Player;
+import net.rpgtoolkit.common.assets.TileSet;
 import net.rpgtoolkit.common.assets.TileType;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -74,6 +75,32 @@ public class AssetSerializerTest {
     @Test
     public void testBoardSerializier() throws Exception {
 
+    }
+    
+    @Test
+    public void testTileSetSerializer() throws Exception {
+        String path = AssetSerializerTestHelper.getPath(
+                "TileSets/Default.tileset");
+        JsonTileSetSerializer serializer = new JsonTileSetSerializer();
+        
+        // Deserialize original.
+        TileSet asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkTileSet(asset);
+        
+        // Serialize a temporary version and deserialize it.
+        path = AssetSerializerTestHelper.serialize(asset, serializer);
+        asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkTileSet(asset);
+    }
+    
+    private void checkTileSet(TileSet asset) {
+        Assert.assertEquals("Default", asset.getName());
+        Assert.assertEquals(32, asset.getTileWidth());
+        Assert.assertEquals(32, asset.getTileHeight());
+        Assert.assertEquals(Arrays.asList(
+                "source1.png", 
+                "source2.jpg", 
+                "source3.gif"), asset.getImages());
     }
 
     @Test

@@ -1,4 +1,5 @@
 {
+   "version": 4.0,
    "name":"Hero",
    "level":1,
    "maxLevel":10,
