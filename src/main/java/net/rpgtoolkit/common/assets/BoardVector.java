@@ -23,15 +23,14 @@ import net.rpgtoolkit.common.Selectable;
  * @author Joshua Michael Daly
  */
 public class BoardVector implements Cloneable, Selectable {
-
-  // Appears in the TableModel.
-  private int layer;                  //layer the vector is on
-  private int attributes;             //???
-  private boolean isClosed;           //whether the vector is closed
-  private String handle;              //vector's handle
-  private TileType tileType;
-
-  private ArrayList<Point> points;    //the points in the vector
+              
+  private boolean isClosed;           
+  private String handle;              
+  private BoardVectorType type;
+  private ArrayList<Point> points;
+  
+  // Non-IO.
+  private int layer;   
   private Polygon polygon;
   private boolean selected;
 
@@ -40,11 +39,10 @@ public class BoardVector implements Cloneable, Selectable {
    */
   public BoardVector() {
     layer = 0;
-    attributes = 0;
     isClosed = false;
     points = new ArrayList<>();
     handle = "";
-    tileType = TileType.SOLID;
+    type = BoardVectorType.SOLID;
     polygon = new Polygon();
     selected = false;
   }
@@ -61,8 +59,8 @@ public class BoardVector implements Cloneable, Selectable {
    *
    * @return
    */
-  public TileType getTileType() {
-    return tileType;
+  public BoardVectorType getType() {
+    return type;
   }
 
   /**
@@ -97,14 +95,6 @@ public class BoardVector implements Cloneable, Selectable {
    */
   public int getLayer() {
     return (layer);
-  }
-
-  /**
-   *
-   * @return
-   */
-  public int getAttributes() {
-    return (attributes);
   }
 
   /**
@@ -155,14 +145,6 @@ public class BoardVector implements Cloneable, Selectable {
 
   /**
    *
-   * @param attributes
-   */
-  public void setAttributes(int attributes) {
-    this.attributes = attributes;
-  }
-
-  /**
-   *
    * @param closed
    */
   public void setClosed(boolean closed) {
@@ -179,10 +161,10 @@ public class BoardVector implements Cloneable, Selectable {
 
   /**
    *
-   * @param tileType
+   * @param type
    */
-  public void setTileType(TileType tileType) {
-    this.tileType = tileType;
+  public void setType(BoardVectorType type) {
+    this.type = type;
   }
 
   /**
@@ -242,12 +224,11 @@ public class BoardVector implements Cloneable, Selectable {
 
     BoardVector clone = new BoardVector();
     clone.layer = layer;
-    clone.attributes = attributes;
     clone.handle = handle;
     clone.isClosed = isClosed;
     clone.points = (ArrayList<Point>) points.clone();
     clone.polygon = polygon;
-    clone.tileType = tileType;
+    clone.type = type;
 
     return clone;
   }
@@ -256,10 +237,9 @@ public class BoardVector implements Cloneable, Selectable {
     public int hashCode() {
         int hash = 3;
         hash = 31 * hash + this.layer;
-        hash = 31 * hash + this.attributes;
         hash = 31 * hash + (this.isClosed ? 1 : 0);
         hash = 31 * hash + Objects.hashCode(this.handle);
-        hash = 31 * hash + Objects.hashCode(this.tileType);
+        hash = 31 * hash + Objects.hashCode(this.type);
         hash = 31 * hash + Objects.hashCode(this.points);
         hash = 31 * hash + Objects.hashCode(this.polygon);
         hash = 31 * hash + (this.selected ? 1 : 0);
@@ -281,9 +261,6 @@ public class BoardVector implements Cloneable, Selectable {
         if (this.layer != other.layer) {
             return false;
         }
-        if (this.attributes != other.attributes) {
-            return false;
-        }
         if (this.isClosed != other.isClosed) {
             return false;
         }
@@ -293,7 +270,7 @@ public class BoardVector implements Cloneable, Selectable {
         if (!Objects.equals(this.handle, other.handle)) {
             return false;
         }
-        if (this.tileType != other.tileType) {
+        if (this.type != other.type) {
             return false;
         }
         if (!Objects.equals(this.points, other.points)) {

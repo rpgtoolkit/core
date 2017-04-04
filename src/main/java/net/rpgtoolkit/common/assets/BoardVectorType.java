@@ -10,7 +10,7 @@ package net.rpgtoolkit.common.assets;
 /**
  * @author Chris Hutchinson
  */
-public enum TileType {
+public enum BoardVectorType {
 
   NULL,
   NORMAL,

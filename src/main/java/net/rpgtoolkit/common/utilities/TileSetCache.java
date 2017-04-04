@@ -77,7 +77,7 @@ public class TileSetCache {
                 new AssetDescriptor(file.toURI()));
         set = (TileSet) handle.getAsset();
 
-        TILE_SETS.put(fileName, set);
+        TILE_SETS.put(set.getName(), set);
 
         return set;
       } catch (IOException | AssetException ex) {

@@ -25,7 +25,7 @@ import net.rpgtoolkit.common.assets.AbstractAssetSerializer;
 import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.BoardVector;
-import net.rpgtoolkit.common.assets.TileType;
+import net.rpgtoolkit.common.assets.BoardVectorType;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -149,12 +149,11 @@ public abstract class AbstractJsonSerializer
             points.put(pt);
         }
 
+        v.put("handle", vector.getHandle());
         v.put("points", points);
         v.put("isClosed", vector.isClosed());
-        v.put("layer", vector.getLayer());
-        v.put("tileType", vector.getTileType());
-        v.put("handle", vector.getHandle());
-
+        v.put("type", vector.getType());
+        
         return v;
     }
 
@@ -172,11 +171,10 @@ public abstract class AbstractJsonSerializer
 
     protected BoardVector deserializeBoardVector(JSONObject object) {
         BoardVector vector = new BoardVector();
+        vector.setHandle(object.getString("handle"));
         vector.setPoints(getPoints(object.getJSONArray("points")));
         vector.setClosed(object.getBoolean("isClosed"));
-        vector.setLayer(object.getInt("layer"));
-        vector.setTileType(TileType.valueOf(object.getString("tileType")));
-        vector.setHandle(object.getString("handle"));
+        vector.setType(BoardVectorType.valueOf(object.getString("type")));
 
         return vector;
     }

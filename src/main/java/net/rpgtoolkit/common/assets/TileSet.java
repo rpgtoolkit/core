@@ -30,7 +30,7 @@ public class TileSet extends AbstractAsset {
     private LinkedList<Tile> tiles;
 
     /**
-     * Creates a new tiles
+     * Creates a new TileSet with a descriptor.
      *
      * @param descriptor
      */

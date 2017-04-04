@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/.
  */
 package net.rpgtoolkit.common.assets.serialization;
 
@@ -16,13 +16,20 @@ import java.util.Map;
 import net.rpgtoolkit.common.assets.Animation;
 import net.rpgtoolkit.common.assets.AnimationEnum;
 import net.rpgtoolkit.common.assets.AnimationFrame;
+import net.rpgtoolkit.common.assets.AssetManager;
+import net.rpgtoolkit.common.assets.Board;
+import net.rpgtoolkit.common.assets.BoardLayer;
+import net.rpgtoolkit.common.assets.BoardSprite;
 import net.rpgtoolkit.common.assets.BoardVector;
 import net.rpgtoolkit.common.assets.Enemy;
+import net.rpgtoolkit.common.assets.Project;
 import net.rpgtoolkit.common.assets.GraphicEnum;
 import net.rpgtoolkit.common.assets.Item;
 import net.rpgtoolkit.common.assets.Player;
 import net.rpgtoolkit.common.assets.TileSet;
-import net.rpgtoolkit.common.assets.TileType;
+import net.rpgtoolkit.common.assets.BoardVectorType;
+import net.rpgtoolkit.common.assets.files.FileAssetHandleResolver;
+import net.rpgtoolkit.common.assets.serialization.legacy.LegacyAnimatedTileSerializer;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,6 +44,49 @@ public class AssetSerializerTest {
     @BeforeClass
     public static void beforeClass() {
         System.setProperty("project.path", "src/test/resources");
+
+        AssetManager assetManager = AssetManager.getInstance();
+
+        assetManager.registerResolver(new FileAssetHandleResolver());
+
+        // Legacy.
+        assetManager.registerSerializer(new LegacyAnimatedTileSerializer());
+
+        // JSON.
+        assetManager.registerSerializer(new JsonAnimationSerializer());
+        assetManager.registerSerializer(new JsonPlayerSerializer());
+        assetManager.registerSerializer(new JsonBoardSerializer());
+        assetManager.registerSerializer(new JsonProjectSerializer());
+        assetManager.registerSerializer(new JsonSpecialMoveSerializer());
+        assetManager.registerSerializer(new JsonEnemySerializer());
+        assetManager.registerSerializer(new JsonItemSerializer());
+        assetManager.registerSerializer(new JsonTileSetSerializer());
+    }
+
+    @Test
+    public void testProjectSerializer() throws Exception {
+        String path = AssetSerializerTestHelper.getPath("Test.game");
+        JsonProjectSerializer serializer = new JsonProjectSerializer();
+
+        // Deserialize original.
+        Project asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkProject(asset);
+
+        // Serialize a temporary version and deserialize it.
+        path = AssetSerializerTestHelper.serialize(asset, serializer);
+        asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkProject(asset);
+    }
+    
+    private void checkProject(Project asset) {
+        Assert.assertEquals("The Wizard's Tower", asset.getName());
+        Assert.assertEquals(640, asset.getResolutionWidth());
+        Assert.assertEquals(480, asset.getResolutionHeight());
+        Assert.assertEquals(false, asset.isFullScreen());
+        Assert.assertEquals("Room1.board", asset.getInitialBoard());
+        Assert.assertEquals("Hero.character", asset.getInitialCharacter());
+        Assert.assertEquals("Start.program", asset.getStartupProgram());
+        Assert.assertEquals("GameOver.program", asset.getGameOverProgram());
     }
 
     @Test
@@ -74,32 +124,74 @@ public class AssetSerializerTest {
 
     @Test
     public void testBoardSerializier() throws Exception {
+        String path = AssetSerializerTestHelper.getPath(
+                "Boards/Room.board");
+        JsonBoardSerializer serializer = new JsonBoardSerializer();
 
+        // Deserialize original.
+        Board asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkBoard(asset);
+
+        // Serialize a temporary version and deserialize it.
+        path = AssetSerializerTestHelper.serialize(asset, serializer);
+        asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
+        checkBoard(asset);
     }
-    
+
+    private void checkBoard(Board asset) {
+        Assert.assertEquals("Room", asset.getName());
+        Assert.assertEquals(3, asset.getWidth());
+        Assert.assertEquals(3, asset.getHeight());
+        Assert.assertTrue(asset.getTileSets().containsKey("Default.tileset"));
+
+        Assert.assertTrue(asset.getSprites().size() == 1);
+        BoardSprite sprite = asset.getSprites().get(0);
+        Assert.assertEquals("Block.item", sprite.getFileName());
+        Assert.assertEquals(1, sprite.getX());
+        Assert.assertEquals(2, sprite.getY());
+        Assert.assertEquals(0, sprite.getLayer());
+
+        Assert.assertTrue(asset.getLayers().size() == 1);
+        BoardLayer layer = asset.getLayers().get(0);
+        Assert.assertEquals("Floor", layer.getName());
+        Assert.assertEquals(3, layer.getTiles()[0].length);
+        Assert.assertEquals(3, layer.getTiles()[1].length);
+
+        Assert.assertTrue(layer.getVectors().size() == 1);
+        BoardVector vector = layer.getVectors().get(0);
+        Assert.assertEquals("walls", vector.getHandle());
+        Assert.assertEquals(2, vector.getPoints().size());
+        Assert.assertEquals(true, vector.isClosed());
+        Assert.assertEquals(BoardVectorType.SOLID, vector.getType());
+
+        Assert.assertEquals(1, asset.getStartingPositionX());
+        Assert.assertEquals(3, asset.getStartingPositionY());
+        Assert.assertEquals(0, asset.getStartingLayer());
+    }
+
     @Test
     public void testTileSetSerializer() throws Exception {
         String path = AssetSerializerTestHelper.getPath(
                 "TileSets/Default.tileset");
         JsonTileSetSerializer serializer = new JsonTileSetSerializer();
-        
+
         // Deserialize original.
         TileSet asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
         checkTileSet(asset);
-        
+
         // Serialize a temporary version and deserialize it.
         path = AssetSerializerTestHelper.serialize(asset, serializer);
         asset = AssetSerializerTestHelper.deserializeFile(path, serializer);
         checkTileSet(asset);
     }
-    
+
     private void checkTileSet(TileSet asset) {
         Assert.assertEquals("Default", asset.getName());
         Assert.assertEquals(32, asset.getTileWidth());
         Assert.assertEquals(32, asset.getTileHeight());
         Assert.assertEquals(Arrays.asList(
-                "source1.png", 
-                "source2.jpg", 
+                "source1.png",
+                "source2.jpg",
                 "source3.gif"), asset.getImages());
     }
 
@@ -153,7 +245,7 @@ public class AssetSerializerTest {
         points.add(new Point(30, 0));
         points.add(new Point(30, 20));
         points.add(new Point(0, 20));
-        BoardVector expectedBaseVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        BoardVector expectedBaseVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
         expectedBaseVector.setPoints(points);
         Assert.assertEquals(expectedBaseVector, asset.getBaseVector());
 
@@ -162,7 +254,7 @@ public class AssetSerializerTest {
         points.add(new Point(37, 0));
         points.add(new Point(37, 30));
         points.add(new Point(0, 30));
-        BoardVector expectedActivationVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        BoardVector expectedActivationVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
         Assert.assertEquals(expectedActivationVector, asset.getActivationVector());
 
         Assert.assertEquals(new Point(0, 47), asset.getBaseVectorOffset());
@@ -214,7 +306,7 @@ public class AssetSerializerTest {
         points.add(new Point(30, 0));
         points.add(new Point(30, 20));
         points.add(new Point(0, 20));
-        BoardVector expectedBaseVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        BoardVector expectedBaseVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
         expectedBaseVector.setPoints(points);
         Assert.assertEquals(expectedBaseVector, asset.getBaseVector());
 
@@ -223,7 +315,7 @@ public class AssetSerializerTest {
         points.add(new Point(37, 0));
         points.add(new Point(37, 30));
         points.add(new Point(0, 30));
-        BoardVector expectedActivationVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        BoardVector expectedActivationVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
         Assert.assertEquals(expectedActivationVector, asset.getActivationVector());
 
         Assert.assertEquals(new Point(0, 47), asset.getBaseVectorOffset());
@@ -260,8 +352,7 @@ public class AssetSerializerTest {
         for (AnimationEnum key : AnimationEnum.values()) {
             expectedAnimations.put(key.toString(), "");
         }
-        expectedAnimations.put(AnimationEnum.SOUTH.toString(),
-                "Block\\Block_south.animation");
+        expectedAnimations.put(AnimationEnum.SOUTH.toString(), "Block_south.animation");
         Map<String, String> actualAnimations = asset.getAnimations();
         checkMapsEqual(expectedAnimations, actualAnimations);
 
@@ -270,7 +361,7 @@ public class AssetSerializerTest {
         points.add(new Point(30, 0));
         points.add(new Point(30, 20));
         points.add(new Point(0, 20));
-        BoardVector expectedBaseVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        BoardVector expectedBaseVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
         expectedBaseVector.setPoints(points);
         Assert.assertEquals(expectedBaseVector, asset.getBaseVector());
 
@@ -279,7 +370,7 @@ public class AssetSerializerTest {
         points.add(new Point(37, 0));
         points.add(new Point(37, 30));
         points.add(new Point(0, 30));
-        BoardVector expectedActivationVector = buildBoardVector(TileType.SOLID, true, "", 0, points);
+        BoardVector expectedActivationVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
         Assert.assertEquals(expectedActivationVector, asset.getActivationVector());
 
         Assert.assertEquals(new Point(0, 47), asset.getBaseVectorOffset());
@@ -291,9 +382,9 @@ public class AssetSerializerTest {
         Assert.assertArrayEquals(expected.values().toArray(), actual.values().toArray());
     }
 
-    private BoardVector buildBoardVector(TileType tileType, boolean isClosed, String handle, int layer, ArrayList<Point> points) {
+    private BoardVector buildBoardVector(BoardVectorType tileType, boolean isClosed, String handle, int layer, ArrayList<Point> points) {
         BoardVector boardVector = new BoardVector();
-        boardVector.setTileType(tileType);
+        boardVector.setType(tileType);
         boardVector.setIsClosed(isClosed);
         boardVector.setHandle(handle);
         boardVector.setLayer(layer);

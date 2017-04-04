@@ -36,10 +36,9 @@
       "SOUTH_EAST_IDLE":""
    },
    "baseVector":{
-      "tileType":"SOLID",
+      "type":"SOLID",
       "isClosed":true,
       "handle":"",
-      "layer":0,
       "points":[
          {
             "x":0,
@@ -60,10 +59,9 @@
       ]
    },
    "activationVector":{
-      "tileType":"SOLID",
+      "type":"SOLID",
       "isClosed":true,
       "handle":"",
-      "layer":0,
       "points":[
          {
             "x":0,

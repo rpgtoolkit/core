@@ -8,7 +8,7 @@
    },
    "animations":{
       "NORTH":"",
-      "SOUTH":"Block\\Block_south.animation",
+      "SOUTH":"Block_south.animation",
       "EAST":"",
       "WEST":"",
       "NORTH_WEST":"",
@@ -30,10 +30,9 @@
       "SOUTH_EAST_IDLE":""
    },
    "baseVector":{
-      "tileType":"SOLID",
+      "type":"SOLID",
       "isClosed":true,
       "handle":"",
-      "layer":0,
       "points":[
          {
             "x":0,
@@ -54,10 +53,9 @@
       ]
    },
    "activationVector":{
-      "tileType":"SOLID",
+      "type":"SOLID",
       "isClosed":true,
       "handle":"",
-      "layer":0,
       "points":[
          {
             "x":0,
