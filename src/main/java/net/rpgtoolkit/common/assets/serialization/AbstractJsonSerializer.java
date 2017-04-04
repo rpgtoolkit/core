@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/.
  */
 package net.rpgtoolkit.common.assets.serialization;
 
@@ -26,6 +26,8 @@ import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.BoardVector;
 import net.rpgtoolkit.common.assets.BoardVectorType;
+import net.rpgtoolkit.common.assets.Event;
+import net.rpgtoolkit.common.assets.EventType;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -141,6 +143,7 @@ public abstract class AbstractJsonSerializer
     protected JSONObject serializeBoardVector(BoardVector vector) {
         final JSONObject v = new JSONObject();
         final JSONArray points = new JSONArray();
+        final JSONArray events = new JSONArray();
 
         for (final Point point : vector.getPoints()) {
             final JSONObject pt = new JSONObject();
@@ -153,7 +156,15 @@ public abstract class AbstractJsonSerializer
         v.put("points", points);
         v.put("isClosed", vector.isClosed());
         v.put("type", vector.getType());
-        
+
+        for (final Event event : vector.getEvents()) {
+            final JSONObject evt = new JSONObject();
+            evt.put("type", event.getType().name().toLowerCase());
+            evt.put("program", event.getProgram());
+            events.put(evt);
+        }
+        v.put("events", events);
+
         return v;
     }
 
@@ -175,6 +186,61 @@ public abstract class AbstractJsonSerializer
         vector.setPoints(getPoints(object.getJSONArray("points")));
         vector.setClosed(object.getBoolean("isClosed"));
         vector.setType(BoardVectorType.valueOf(object.getString("type")));
+        vector.setEvents(getEvents(object.getJSONArray("events")));
+
+        return vector;
+    }
+
+    protected JSONArray serializeSpriteVectors(List<BoardVector> vectors) {
+        final JSONArray jsonVectors = new JSONArray();
+
+        for (final BoardVector vector : vectors) {
+            jsonVectors.put(serializeSpriteVector(vector));
+        }
+
+        return jsonVectors;
+    }
+
+    protected JSONObject serializeSpriteVector(BoardVector vector) {
+        final JSONObject v = new JSONObject();
+        final JSONArray points = new JSONArray();
+        final JSONArray events = new JSONArray();
+
+        for (final Point point : vector.getPoints()) {
+            final JSONObject pt = new JSONObject();
+            pt.put("x", point.x);
+            pt.put("y", point.y);
+            points.put(pt);
+        }
+        v.put("points", points);
+
+        for (final Event event : vector.getEvents()) {
+            final JSONObject evt = new JSONObject();
+            evt.put("type", event.getType().name().toLowerCase());
+            evt.put("program", event.getProgram());
+            events.put(evt);
+        }
+        v.put("events", events);
+
+        return v;
+    }
+
+    protected ArrayList<BoardVector> deserializeSpriteVectors(JSONArray array) {
+        ArrayList<BoardVector> vectors = new ArrayList<>();
+
+        int length = array.length();
+        for (int i = 0; i < length; i++) {
+            JSONObject object = array.getJSONObject(i);
+            vectors.add(deserializeSpriteVector(object));
+        }
+
+        return vectors;
+    }
+
+    protected BoardVector deserializeSpriteVector(JSONObject object) {
+        BoardVector vector = new BoardVector();
+        vector.setPoints(getPoints(object.getJSONArray("points")));
+        vector.setEvents(getEvents(object.getJSONArray("events")));
 
         return vector;
     }
@@ -220,6 +286,19 @@ public abstract class AbstractJsonSerializer
         }
 
         return points;
+    }
+
+    private ArrayList<Event> getEvents(JSONArray array) {
+        ArrayList<Event> events = new ArrayList<>();
+
+        int length = array.length();
+        for (int i = 0; i < length; i++) {
+            JSONObject event = array.getJSONObject(i);
+
+            events.add(new Event(EventType.valueOf(event.getString("type").toUpperCase()), event.getString("program")));
+        }
+
+        return events;
     }
 
 }

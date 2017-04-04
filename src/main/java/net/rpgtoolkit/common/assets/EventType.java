@@ -8,11 +8,12 @@
 package net.rpgtoolkit.common.assets;
 
 /**
- * @author Chris Hutchinson
+ *  Basic event to be used in assets that can trigger events.
+ * 
+ * @author Joshua Michael Daly
  */
-public enum BoardVectorType {
-
-  PASSABLE,
-  SOLID
-  
+public enum EventType {
+    
+    OVERLAP
+    
 }

@@ -1,5 +1,5 @@
 {
-   "version": 4.0,
+   "version":4.0,
    "name":"Block",
    "description":"A pushable block.",
    "frameRate":0,
@@ -30,9 +30,6 @@
       "SOUTH_EAST_IDLE":""
    },
    "baseVector":{
-      "type":"SOLID",
-      "isClosed":true,
-      "handle":"",
       "points":[
          {
             "x":0,
@@ -50,12 +47,15 @@
             "x":0,
             "y":20
          }
+      ],
+      "events":[
+         {
+            "type":"overlap",
+            "program":"myprogram"
+         }
       ]
    },
    "activationVector":{
-      "type":"SOLID",
-      "isClosed":true,
-      "handle":"",
       "points":[
          {
             "x":0,
@@ -72,6 +72,12 @@
          {
             "x":0,
             "y":30
+         }
+      ],
+      "events":[
+         {
+            "type":"overlap",
+            "program":"myprogram"
          }
       ]
    },

@@ -23,8 +23,8 @@ public abstract class AbstractSpriteSerializer extends AbstractJsonSerializer {
         sprite.setGraphics(deserializeMap(json.getJSONObject("graphics")));
         sprite.setAnimations(deserializeMap(json.getJSONObject("animations")));
 
-        sprite.setBaseVector(deserializeBoardVector(json.optJSONObject("baseVector")), false);
-        sprite.setActivationVector(deserializeBoardVector(json.optJSONObject("activationVector")), false);
+        sprite.setBaseVector(deserializeSpriteVector(json.optJSONObject("baseVector")), false);
+        sprite.setActivationVector(deserializeSpriteVector(json.optJSONObject("activationVector")), false);
 
         sprite.setBaseVectorOffset(deserializePoint(json.optJSONObject("baseVectorOffset")), false);
         sprite.setActivationVectorOffset(deserializePoint(json.optJSONObject("activationOffset")), false);
@@ -41,8 +41,8 @@ public abstract class AbstractSpriteSerializer extends AbstractJsonSerializer {
         json.put("graphics", serializeMap(sprite.getGraphics()));
         json.put("animations", serializeMap(sprite.getAnimations()));
 
-        json.put("baseVector", serializeBoardVector(sprite.getBaseVector()));
-        json.put("activationVector", serializeBoardVector(sprite.getActivationVector()));
+        json.put("baseVector", serializeSpriteVector(sprite.getBaseVector()));
+        json.put("activationVector", serializeSpriteVector(sprite.getActivationVector()));
 
         json.put("baseVectorOffset", serializePoint(sprite.getBaseVectorOffset()));
         json.put("activationOffset", serializePoint(sprite.getActivationVectorOffset()));

@@ -1,13 +1,13 @@
 {
-   "version": 4.0,
+   "version":4.0,
    "name":"Goblin",
    "level":1,
    "health":3,
    "attack":1,
    "defence":1,
    "magic":1,
-   "experienceReward": 10,
-   "goldReward": 10,
+   "experienceReward":10,
+   "goldReward":10,
    "frameRate":0,
    "graphics":{
       "PROFILE":"goblin.png"
@@ -56,12 +56,15 @@
             "x":0,
             "y":20
          }
+      ],
+      "events":[
+         {
+            "type":"overlap",
+            "program":"myprogram"
+         }
       ]
    },
    "activationVector":{
-      "type":"SOLID",
-      "isClosed":true,
-      "handle":"",
       "points":[
          {
             "x":0,
@@ -78,6 +81,12 @@
          {
             "x":0,
             "y":30
+         }
+      ],
+      "events":[
+         {
+            "type":"overlap",
+            "program":"myprogram"
          }
       ]
    },

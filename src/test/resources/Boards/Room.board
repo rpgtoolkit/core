@@ -4,7 +4,7 @@
    "width":3,
    "height":3,
    "tileSets":[
-        "Default.tileset"
+      "Default.tileset"
    ],
    "sprites":[
       {
@@ -44,7 +44,7 @@
                      "y":1
                   }
                ],
-               "isClosed": true,
+               "isClosed":true,
                "events":[
                   {
                      "type":"overlap",

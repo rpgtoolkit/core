@@ -28,6 +28,8 @@ import net.rpgtoolkit.common.assets.Item;
 import net.rpgtoolkit.common.assets.Player;
 import net.rpgtoolkit.common.assets.TileSet;
 import net.rpgtoolkit.common.assets.BoardVectorType;
+import net.rpgtoolkit.common.assets.Event;
+import net.rpgtoolkit.common.assets.EventType;
 import net.rpgtoolkit.common.assets.files.FileAssetHandleResolver;
 import net.rpgtoolkit.common.assets.serialization.legacy.LegacyAnimatedTileSerializer;
 import org.junit.Assert;
@@ -245,7 +247,11 @@ public class AssetSerializerTest {
         points.add(new Point(30, 0));
         points.add(new Point(30, 20));
         points.add(new Point(0, 20));
-        BoardVector expectedBaseVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
+        
+        ArrayList<Event> events = new ArrayList<>();
+        events.add(new Event(EventType.OVERLAP, "myprogram"));
+        
+        BoardVector expectedBaseVector = buildBoardVector(BoardVectorType.SOLID, false, "", 0, points, events);
         expectedBaseVector.setPoints(points);
         Assert.assertEquals(expectedBaseVector, asset.getBaseVector());
 
@@ -254,7 +260,7 @@ public class AssetSerializerTest {
         points.add(new Point(37, 0));
         points.add(new Point(37, 30));
         points.add(new Point(0, 30));
-        BoardVector expectedActivationVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
+        BoardVector expectedActivationVector = buildBoardVector(BoardVectorType.SOLID, false, "", 0, points, events);
         Assert.assertEquals(expectedActivationVector, asset.getActivationVector());
 
         Assert.assertEquals(new Point(0, 47), asset.getBaseVectorOffset());
@@ -306,7 +312,11 @@ public class AssetSerializerTest {
         points.add(new Point(30, 0));
         points.add(new Point(30, 20));
         points.add(new Point(0, 20));
-        BoardVector expectedBaseVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
+        
+        ArrayList<Event> events = new ArrayList<>();
+        events.add(new Event(EventType.OVERLAP, "myprogram"));
+        
+        BoardVector expectedBaseVector = buildBoardVector(BoardVectorType.SOLID, false, "", 0, points, events);
         expectedBaseVector.setPoints(points);
         Assert.assertEquals(expectedBaseVector, asset.getBaseVector());
 
@@ -315,7 +325,7 @@ public class AssetSerializerTest {
         points.add(new Point(37, 0));
         points.add(new Point(37, 30));
         points.add(new Point(0, 30));
-        BoardVector expectedActivationVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
+        BoardVector expectedActivationVector = buildBoardVector(BoardVectorType.SOLID, false, "", 0, points, events);
         Assert.assertEquals(expectedActivationVector, asset.getActivationVector());
 
         Assert.assertEquals(new Point(0, 47), asset.getBaseVectorOffset());
@@ -361,7 +371,11 @@ public class AssetSerializerTest {
         points.add(new Point(30, 0));
         points.add(new Point(30, 20));
         points.add(new Point(0, 20));
-        BoardVector expectedBaseVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
+        
+        ArrayList<Event> events = new ArrayList<>();
+        events.add(new Event(EventType.OVERLAP, "myprogram"));
+        
+        BoardVector expectedBaseVector = buildBoardVector(BoardVectorType.SOLID, false, "", 0, points, events);
         expectedBaseVector.setPoints(points);
         Assert.assertEquals(expectedBaseVector, asset.getBaseVector());
 
@@ -370,7 +384,7 @@ public class AssetSerializerTest {
         points.add(new Point(37, 0));
         points.add(new Point(37, 30));
         points.add(new Point(0, 30));
-        BoardVector expectedActivationVector = buildBoardVector(BoardVectorType.SOLID, true, "", 0, points);
+        BoardVector expectedActivationVector = buildBoardVector(BoardVectorType.SOLID, false, "", 0, points, events);
         Assert.assertEquals(expectedActivationVector, asset.getActivationVector());
 
         Assert.assertEquals(new Point(0, 47), asset.getBaseVectorOffset());
@@ -382,13 +396,14 @@ public class AssetSerializerTest {
         Assert.assertArrayEquals(expected.values().toArray(), actual.values().toArray());
     }
 
-    private BoardVector buildBoardVector(BoardVectorType tileType, boolean isClosed, String handle, int layer, ArrayList<Point> points) {
+    private BoardVector buildBoardVector(BoardVectorType type, boolean isClosed, String handle, int layer, ArrayList<Point> points, ArrayList<Event> events) {
         BoardVector boardVector = new BoardVector();
-        boardVector.setType(tileType);
+        boardVector.setType(type);
         boardVector.setIsClosed(isClosed);
         boardVector.setHandle(handle);
         boardVector.setLayer(layer);
         boardVector.setPoints(points);
+        boardVector.setEvents(events);
 
         return boardVector;
     }
