@@ -9,13 +9,11 @@ package net.rpgtoolkit.common.assets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import net.rpgtoolkit.common.Selectable;
 import net.rpgtoolkit.common.assets.events.BoardChangedEvent;
@@ -186,6 +184,11 @@ public final class Board extends AbstractAsset implements Selectable {
      */
     public void setSprites(ArrayList<BoardSprite> sprites) {
         this.sprites = sprites;
+    }
+    
+    public void addSprite(BoardSprite sprite) {
+        sprites.add(sprite);
+        fireBoardChanged();
     }
 
     public StartingPosition getStartingPosition() {

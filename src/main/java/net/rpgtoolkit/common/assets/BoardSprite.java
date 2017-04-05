@@ -27,21 +27,11 @@ public class BoardSprite implements Cloneable, Selectable {
   private long x;
   private long y;
   private long layer;
-  private long activate;
 
-  private String initialVariable;
-  private String initialValue;
-  private String finalVariable;
-  private String finalValue;
-  private String loadingVariable;
-  private String loadingValue;
-
-  private long activationType; // Defines how the sprite is activated (step-on or key-press)
-
-  private String activationProgram; // Override activation program
-  private String multitaskingProgram; // Override multitask program
-
-  private BoardVector boardPath; // TK3.10 relic - not used.
+  private EventType eventType; // Defines how the sprite is activated
+  private String eventProgram; // Override activation program
+  
+  private String thread; // Override multitask program
 
   private boolean selected;
   
@@ -56,16 +46,9 @@ public class BoardSprite implements Cloneable, Selectable {
     x = 0;
     y = 0;
     layer = 0;
-    activate = 0;
-    initialVariable = "";
-    initialValue = "";
-    finalVariable = "";
-    finalValue = "";
-    loadingVariable = "";
-    loadingValue = "";
-    activationType = 0;
-    activationProgram = "";
-    multitaskingProgram = "";
+    eventType = EventType.OVERLAP;
+    eventProgram = "";
+    thread = "";
     selected = false;
   }
 
@@ -113,14 +96,6 @@ public class BoardSprite implements Cloneable, Selectable {
    *
    * @return
    */
-  public long getActivate() {
-    return activate;
-  }
-
-  /**
-   *
-   * @return
-   */
   public Item getSpriteFile() {
     return spriteFile;
   }
@@ -137,80 +112,24 @@ public class BoardSprite implements Cloneable, Selectable {
    *
    * @return
    */
-  public String getInitialVariable() {
-    return initialVariable;
+  public EventType getEventType() {
+    return eventType;
   }
 
   /**
    *
    * @return
    */
-  public String getFinalVariable() {
-    return finalVariable;
+  public String getEventProgram() {
+    return eventProgram;
   }
 
   /**
    *
    * @return
    */
-  public String getInitialValue() {
-    return initialValue;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public String getFinalValue() {
-    return finalValue;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public String getLoadingVariable() {
-    return loadingVariable;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public String getLoadingValue() {
-    return loadingValue;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public long getActivationType() {
-    return activationType;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public String getActivationProgram() {
-    return activationProgram;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public String getMultitaskingProgram() {
-    return multitaskingProgram;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public BoardVector getBoardPath() {
-    return boardPath;
+  public String getThread() {
+    return thread;
   }
 
   /**
@@ -287,90 +206,26 @@ public class BoardSprite implements Cloneable, Selectable {
 
   /**
    *
-   * @param activate
+   * @param eventType
    */
-  public void setActivate(long activate) {
-    this.activate = activate;
-  }
-
-  /**
-   *
-   * @param initialVariable
-   */
-  public void setInitialVariable(String initialVariable) {
-    this.initialVariable = initialVariable;
-  }
-
-  /**
-   *
-   * @param finalVariable
-   */
-  public void setFinalVariable(String finalVariable) {
-    this.finalVariable = finalVariable;
-  }
-
-  /**
-   *
-   * @param initialValue
-   */
-  public void setInitialValue(String initialValue) {
-    this.initialValue = initialValue;
-  }
-
-  /**
-   *
-   * @param finalValue
-   */
-  public void setFinalValue(String finalValue) {
-    this.finalValue = finalValue;
-  }
-
-  /**
-   *
-   * @param loadingVariable
-   */
-  public void setLoadingVariable(String loadingVariable) {
-    this.loadingVariable = loadingVariable;
-  }
-
-  /**
-   *
-   * @param loadingValue
-   */
-  public void setLoadingValue(String loadingValue) {
-    this.loadingValue = loadingValue;
-  }
-
-  /**
-   *
-   * @param activationType
-   */
-  public void setActivationType(long activationType) {
-    this.activationType = activationType;
+  public void setEventType(EventType eventType) {
+    this.eventType = eventType;
   }
 
   /**
    *
    * @param activationProgram
    */
-  public void setActivationProgram(String activationProgram) {
-    this.activationProgram = activationProgram;
+  public void setEventProgram(String activationProgram) {
+    this.eventProgram = activationProgram;
   }
 
   /**
    *
    * @param multitaskingProgram
    */
-  public void setMultitaskingProgram(String multitaskingProgram) {
-    this.multitaskingProgram = multitaskingProgram;
-  }
-
-  /**
-   *
-   * @param boardPath
-   */
-  public void setBoardPath(BoardVector boardPath) {
-    this.boardPath = boardPath;
+  public void setThread(String multitaskingProgram) {
+    this.thread = multitaskingProgram;
   }
 
   @Override
@@ -406,18 +261,10 @@ public class BoardSprite implements Cloneable, Selectable {
     super.clone();
 
     BoardSprite clone = new BoardSprite();
-    clone.activate = activate;
-    clone.activationProgram = activationProgram;
-    clone.activationType = activationType;
-    clone.boardPath = (BoardVector) boardPath.clone();
-    clone.finalValue = finalValue;
-    clone.finalVariable = finalVariable;
-    clone.initialValue = initialValue;
-    clone.initialVariable = initialVariable;
+    clone.eventProgram = eventProgram;
+    clone.eventType = eventType;
     clone.layer = layer;
-    clone.loadingValue = loadingValue;
-    clone.loadingVariable = loadingVariable;
-    clone.multitaskingProgram = multitaskingProgram;
+    clone.thread = thread;
     clone.spriteFile = spriteFile;
     clone.fileName = fileName;
     clone.x = x;

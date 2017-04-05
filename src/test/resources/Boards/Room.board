@@ -13,7 +13,10 @@
             "x":1,
             "y":2,
             "layer":0
-         }
+         },
+         "eventType": "overlap",
+         "eventProgram": "myprogram",
+         "thread": "mythread"
       }
    ],
    "layers":[

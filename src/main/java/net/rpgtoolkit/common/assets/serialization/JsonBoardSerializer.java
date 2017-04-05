@@ -22,6 +22,7 @@ import net.rpgtoolkit.common.assets.BoardLayer;
 import net.rpgtoolkit.common.assets.BoardProgram;
 import net.rpgtoolkit.common.assets.BoardSprite;
 import net.rpgtoolkit.common.assets.BoardVector;
+import net.rpgtoolkit.common.assets.EventType;
 import net.rpgtoolkit.common.io.Paths;
 import net.rpgtoolkit.common.utilities.CoreProperties;
 import net.rpgtoolkit.common.assets.StartingPosition;
@@ -110,6 +111,9 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
             spritePosition.put("y", sprite.getY());
             spritePosition.put("layer", sprite.getLayer());
             s.put("startingPosition", spritePosition);
+            s.put("eventType", sprite.getEventType().name().toLowerCase());
+            s.put("eventProgram", sprite.getEventProgram());
+            s.put("thread", sprite.getThread());
             sprites.put(s);
         }
         json.put("sprites", sprites);
@@ -340,6 +344,10 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
             sprite.setX(startingPosition.getInt("x"));
             sprite.setY(startingPosition.getInt("y"));
             sprite.setLayer(startingPosition.getInt("layer"));
+            
+            sprite.setEventType(EventType.valueOf(object.getString("eventType").toUpperCase()));
+            sprite.setEventProgram(object.getString("eventProgram"));
+            sprite.setThread(object.getString("thread"));
 
             sprites.add(sprite);
         }
