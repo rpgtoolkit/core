@@ -3,6 +3,8 @@
    "name":"Room",
    "width":3,
    "height":3,
+   "firstRunProgram": "room.prg",
+   "backgroundMusic": "room.wav",
    "tileSets":[
       "Default.tileset"
    ],

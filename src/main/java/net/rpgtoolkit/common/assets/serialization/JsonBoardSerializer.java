@@ -1,13 +1,12 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v. 2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package net.rpgtoolkit.common.assets.serialization;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,7 +18,6 @@ import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.Board;
 import net.rpgtoolkit.common.assets.BoardLayer;
-import net.rpgtoolkit.common.assets.BoardProgram;
 import net.rpgtoolkit.common.assets.BoardSprite;
 import net.rpgtoolkit.common.assets.BoardVector;
 import net.rpgtoolkit.common.assets.EventType;
@@ -72,11 +70,10 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
                 startingPosition.getInt("y"),
                 startingPosition.getInt("layer"))
         );
+        
+        board.setFirstRunProgram(json.getString("firstRunProgram"));
+        board.setBackgroundMusic(json.getString("backgroundMusic"));
 
-        // ADD?
-//        board.setDirectionalLinks(getStringArrayList(json.optJSONArray("directionalLinks")));
-//        board.setBackgroundMusic(json.getString("backgroundMusic"));
-//        board.setFirstRunProgram(json.getString("firstRunProgram"));
         board.setBoardDimensions(new int[board.getWidth()][board.getHeight()][board.getLayers().size()]);
 
         handle.setAsset(board);
@@ -172,55 +169,11 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
         startingPosition.put("y", board.getStartingPositionY());
         startingPosition.put("layer", board.getStartingLayer());
         json.put("startingPosition", startingPosition);
+        
+        json.put("firstRunProgram", board.getFirstRunProgram());
+        json.put("backgroundMusic", board.getBackgroundMusic());
 
         handle.setAsset(board);
-
-//                json.put("layerTitles", board.getLayerNames());
-//        json.put("directionalLinks", board.getDirectionalLinks());
-//        json.put("backgroundMusic", board.getBackgroundMusic());
-//        json.put("firstRunProgram", board.getFirstRunProgram());
-//
-//        final JSONArray programs = new JSONArray();
-//        for (final BoardProgram program : board.getPrograms()) {
-//            final JSONObject p = new JSONObject();
-//
-//            p.put("fileName", program.getFileName());
-//            p.put("graphic", program.getGraphic());
-//            p.put("initialVariable", program.getInitialVariable());
-//            p.put("initialValue", program.getInitialValue());
-//            p.put("finalVariable", program.getFinalVariable());
-//            p.put("finalValue", program.getFinalValue());
-//            p.put("activate", program.getActivate());
-//            p.put("activationType", program.getActivationType());
-//            p.put("distanceRepeat", program.getDistanceRepeat());
-//            p.put("layer", program.getLayer());
-//
-//            final JSONArray points = new JSONArray();
-//
-//            for (final Point point : program.getVector().getPoints()) {
-//                final JSONObject pt = new JSONObject();
-//                pt.put("x", point.x);
-//                pt.put("y", point.y);
-//                points.put(pt);
-//            }
-//
-//            p.put("points", points);
-//            p.put("isClosed", program.getVector().isClosed());
-//            p.put("handle", program.getVector().getHandle());
-//
-//            programs.put(p);
-//        }
-    }
-
-    private ArrayList<Integer> getTileIndices(JSONArray array) {
-        ArrayList<Integer> tileIndices = new ArrayList<>();
-
-        int length = array.length();
-        for (int i = 0; i < length; i++) {
-            tileIndices.add(array.getInt(i));
-        }
-
-        return tileIndices;
     }
 
     private Map<String, TileSet> getTileSets(JSONArray array) {
@@ -237,34 +190,6 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
         }
 
         return tileSets;
-    }
-
-    private ArrayList<BoardProgram> getPrograms(JSONArray array) {
-        ArrayList<BoardProgram> programs = new ArrayList<>();
-
-        BoardProgram program;
-        int length = array.length();
-        for (int i = 0; i < length; i++) {
-            JSONObject object = array.getJSONObject(i);
-            program = new BoardProgram();
-            program.setFileName(object.getString("fileName"));
-            program.setGraphic(object.getString("graphic"));
-            program.setInitialVariable(object.getString("initialVariable"));
-            program.setInitialValue(object.getString("initialValue"));
-            program.setFinalVariable(object.getString("finalVariable"));
-            program.setFinalValue(object.getString("finalValue"));
-            program.setActivate(object.getLong("activate"));
-            program.setActivationType(object.getLong("activationType"));
-            program.setDistanceRepeat(object.getLong("distanceRepeat"));
-            program.setLayer(object.getLong("layer"));
-            program.getVector().setPoints(getPoints(object.getJSONArray("points")));
-            program.getVector().setClosed(object.getBoolean("isClosed"));
-            program.getVector().setHandle(object.getString("handle"));
-
-            programs.add(program);
-        }
-
-        return programs;
     }
 
     private LinkedList<BoardLayer> getBoardLayers(JSONArray array, Board board, List<String> tileSetNames) {
@@ -353,19 +278,6 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
         }
 
         return sprites;
-    }
-
-    private ArrayList<Point> getPoints(JSONArray array) {
-        ArrayList<Point> points = new ArrayList<>();
-
-        int length = array.length();
-        for (int i = 0; i < length; i++) {
-            JSONObject point = array.getJSONObject(i);
-
-            points.add(new Point(point.getInt("x"), point.getInt("y")));
-        }
-
-        return points;
     }
 
 }

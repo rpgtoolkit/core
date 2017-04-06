@@ -1,14 +1,13 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v. 2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package net.rpgtoolkit.common.assets;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -47,8 +46,8 @@ public final class Board extends AbstractAsset implements Selectable {
 
     // Non-IO
     private final LinkedList<BoardChangeListener> boardChangeListeners;
-
     private boolean selectedState; // TODO: This is editor specific, move it!
+    private Perspective perspective;
 
     // Variables
     private String name;
@@ -56,16 +55,9 @@ public final class Board extends AbstractAsset implements Selectable {
     private int height;
     private LinkedHashMap<String, TileSet> tileSets;
     private LinkedList<BoardLayer> layers;
-
-    private int[][][] boardDimensions;            // x, y, z
-
+    private int[][][] boardDimensions; // x, y, z
     private List<BoardSprite> sprites;
-
     private StartingPosition startingPosition;
-
-    // TODO
-    private Perspective perspective;
-    private List<String> directionalLinks;
     private String backgroundMusic;
     private String firstRunProgram;
 
@@ -81,8 +73,6 @@ public final class Board extends AbstractAsset implements Selectable {
         tileSets = new LinkedHashMap<>();
         layers = new LinkedList<>();
         boardChangeListeners = new LinkedList<>();
-
-        this.directionalLinks = Arrays.asList("", "", "", "");
     }
 
     /**
@@ -95,8 +85,8 @@ public final class Board extends AbstractAsset implements Selectable {
     public Board(AssetDescriptor descriptor, int width, int height) {
         this(descriptor);
         reset();
-        setWidth(width);
-        setHeight(height);
+        this.width = width;
+        this.height = height;
         addLayer();
     }
 
@@ -335,25 +325,6 @@ public final class Board extends AbstractAsset implements Selectable {
         layers.get(index).setName(name);
         fireBoardChanged();
     }
-
-    /**
-     * Gets the board directional links e.g. N, S, E, W.
-     *
-     * @return directional links
-     */
-    public List<String> getDirectionalLinks() {
-        return directionalLinks;
-    }
-
-    /**
-     * Sets the board directional links e.g. N, S, E, W.
-     *
-     * @param directionalLinks new directional links
-     */
-    public void setDirectionalLinks(List<String> directionalLinks) {
-        this.directionalLinks = directionalLinks;
-    }
-
     /**
      * Gets the board background music.
      *
@@ -432,7 +403,6 @@ public final class Board extends AbstractAsset implements Selectable {
     @Override
     public void reset() {
         sprites.clear();
-        directionalLinks = Arrays.asList("", "", "", "");
         tileSets.clear();
 
         width = 0;

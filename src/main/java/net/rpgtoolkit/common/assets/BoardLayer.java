@@ -43,10 +43,6 @@ public class BoardLayer implements Cloneable {
    */
   private ArrayList<BoardVector> vectors;
   /**
-   * A list of all the programs on this layer.
-   */
-  private ArrayList<BoardProgram> programs;
-  /**
    * A list of all the sprites on this layer.
    */
   private ArrayList<BoardSprite> sprites;
@@ -65,7 +61,6 @@ public class BoardLayer implements Cloneable {
     tiles = new Tile[board.getWidth()][board.getHeight()];
     lights = new ArrayList<>();
     vectors = new ArrayList<>();
-    programs = new ArrayList<>();
     sprites = new ArrayList<>();
     images = new ArrayList<>();
 
@@ -181,24 +176,6 @@ public class BoardLayer implements Cloneable {
   }
 
   /**
-   * Gets the programs used on this layer.
-   *
-   * @return programs used on this layer
-   */
-  public ArrayList<BoardProgram> getPrograms() {
-    return programs;
-  }
-
-  /**
-   * Sets the programs used on this layer.
-   *
-   * @param programs programs used on this layer
-   */
-  public void setPrograms(ArrayList<BoardProgram> programs) {
-    this.programs = programs;
-  }
-
-  /**
    * Gets the sprites used on this layer.
    *
    * @return sprites used on this layer
@@ -286,10 +263,6 @@ public class BoardLayer implements Cloneable {
       vector.setLayer(number);
     }
 
-    for (BoardProgram program : programs) {
-      program.setLayer(number);
-    }
-
     for (BoardSprite sprite : sprites) {
       sprite.setLayer(number);
     }
@@ -311,10 +284,6 @@ public class BoardLayer implements Cloneable {
 
     for (BoardVector vector : vectors) {
       vector.setLayer(number);
-    }
-
-    for (BoardProgram program : programs) {
-      program.setLayer(number);
     }
 
     for (BoardSprite sprite : sprites) {
@@ -341,7 +310,6 @@ public class BoardLayer implements Cloneable {
     layer.lights = (ArrayList<BoardLight>) lights.clone();
     layer.name = name + "_clone";
     layer.number = number;
-    layer.programs = (ArrayList<BoardProgram>) programs.clone();
     layer.sprites = (ArrayList<BoardSprite>) sprites.clone();
     layer.tiles = (Tile[][]) tiles.clone();
     layer.vectors = (ArrayList<BoardVector>) vectors.clone();
@@ -398,58 +366,6 @@ public class BoardLayer implements Cloneable {
     }
 
     return vector;
-  }
-
-  /**
-   * Finds a program at the coordinates based on a small bounding box around the mouse click.
-   *
-   * @param x mouse click x
-   * @param y mouse click y
-   * @return a program or null
-   */
-  public BoardProgram findProgramAt(int x, int y) {
-    // Create a small rectangle to represent the bounds of the mouse.
-    Rectangle2D mouse = new Rectangle2D.Double(x - 5, y - 5, 10, 10);
-
-    for (BoardProgram program : programs) {
-      BoardVector vector = program.getVector();
-
-      // There are no lines.
-      if (vector.getPoints().size() < 2) {
-        continue;
-      }
-
-      for (int i = 0; i < vector.getPoints().size() - 1; i++) {
-        // Build a line from the points in the polygon.
-        Line2D line2D = new Line2D.Double(vector.getPoints().get(i),
-                vector.getPoints().get(i + 1));
-
-        // See if the mouse intersects the line of the polygon.
-        if (line2D.intersects(mouse)) {
-          return program;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   * Removes the program at the specified mouse click location.
-   *
-   * @param x mouse click x
-   * @param y mouse click y
-   * @return removed if any
-   */
-  public BoardProgram removeProgramAt(int x, int y) {
-    BoardProgram program = findProgramAt(x, y);
-
-    if (program != null) {
-      programs.remove(program);
-      board.fireBoardChanged();
-    }
-
-    return program;
   }
 
   /**
