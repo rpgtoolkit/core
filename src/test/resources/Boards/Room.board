@@ -3,6 +3,8 @@
    "name":"Room",
    "width":3,
    "height":3,
+   "tileWidth": 32,
+   "tileHeight": 32,
    "firstRunProgram": "room.prg",
    "backgroundMusic": "room.wav",
    "tileSets":[
@@ -16,8 +18,12 @@
             "y":2,
             "layer":0
          },
-         "eventType": "overlap",
-         "eventProgram": "myprogram",
+         "events": [
+            {
+                "type": "overlap",
+                "program": "myprogram"
+            }
+         ],
          "thread": "mythread"
       }
    ],

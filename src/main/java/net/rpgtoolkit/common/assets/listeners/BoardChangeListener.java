@@ -59,4 +59,19 @@ public interface BoardChangeListener extends EventListener
      * @param e 
      */
     public void boardLayerDeleted(BoardChangedEvent e);
+    
+    /**
+     * A BoardSprite has been added.
+     * 
+     * @param e 
+     */
+    public void boardSpriteAdded(BoardChangedEvent e);
+    
+    /**
+     * A BoardSprite has been removed.
+     * 
+     * @param e 
+     */
+    public void boardSpriteRemoved(BoardChangedEvent e);
+    
 }

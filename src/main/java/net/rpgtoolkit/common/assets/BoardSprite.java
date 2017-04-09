@@ -9,6 +9,7 @@ package net.rpgtoolkit.common.assets;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.rpgtoolkit.common.Selectable;
@@ -24,9 +25,9 @@ public class BoardSprite implements Cloneable, Selectable {
   private Item spriteFile; // Item filename
   private String fileName;
 
-  private long x;
-  private long y;
-  private long layer;
+  private int x;
+  private int y;
+  private int layer;
 
   private EventType eventType; // Defines how the sprite is activated
   private String eventProgram; // Override activation program
@@ -80,7 +81,7 @@ public class BoardSprite implements Cloneable, Selectable {
    *
    * @return
    */
-  public long getLayer() {
+  public int getLayer() {
     return layer;
   }
   
@@ -184,7 +185,7 @@ public class BoardSprite implements Cloneable, Selectable {
    *
    * @param x
    */
-  public void setX(long x) {
+  public void setX(int x) {
     this.x = x;
   }
 
@@ -192,7 +193,7 @@ public class BoardSprite implements Cloneable, Selectable {
    *
    * @param y
    */
-  public void setY(long y) {
+  public void setY(int y) {
     this.y = y;
   }
 
@@ -200,7 +201,7 @@ public class BoardSprite implements Cloneable, Selectable {
    *
    * @param layer
    */
-  public void setLayer(long layer) {
+  public void setLayer(int layer) {
     this.layer = layer;
   }
 
@@ -250,6 +251,45 @@ public class BoardSprite implements Cloneable, Selectable {
         }
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BoardSprite other = (BoardSprite) obj;
+        if (this.x != other.x) {
+            return false;
+        }
+        if (this.y != other.y) {
+            return false;
+        }
+        if (this.layer != other.layer) {
+            return false;
+        }
+        if (this.selected != other.selected) {
+            return false;
+        }
+        if (!Objects.equals(this.fileName, other.fileName)) {
+            return false;
+        }
+        if (!Objects.equals(this.eventProgram, other.eventProgram)) {
+            return false;
+        }
+        if (!Objects.equals(this.thread, other.thread)) {
+            return false;
+        }
+        if (this.eventType != other.eventType) {
+            return false;
+        }
+        return true;
+    }
+  
   /**
    * Directly clones the board sprite.
    * 

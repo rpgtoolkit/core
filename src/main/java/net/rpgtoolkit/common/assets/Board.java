@@ -53,10 +53,11 @@ public final class Board extends AbstractAsset implements Selectable {
     private String name;
     private int width;
     private int height;
+    private int tileWidth;
+    private int tileHeight;
     private LinkedHashMap<String, TileSet> tileSets;
     private LinkedList<BoardLayer> layers;
     private int[][][] boardDimensions; // x, y, z
-    private List<BoardSprite> sprites;
     private StartingPosition startingPosition;
     private String backgroundMusic;
     private String firstRunProgram;
@@ -68,7 +69,6 @@ public final class Board extends AbstractAsset implements Selectable {
      */
     public Board(AssetDescriptor descriptor) {
         super(descriptor);
-        sprites = new ArrayList<>();
         startingPosition = new StartingPosition();
         tileSets = new LinkedHashMap<>();
         layers = new LinkedList<>();
@@ -81,12 +81,16 @@ public final class Board extends AbstractAsset implements Selectable {
      * @param descriptor
      * @param width board width
      * @param height board height
+     * @param tileWidth
+     * @param tileHeight
      */
-    public Board(AssetDescriptor descriptor, int width, int height) {
+    public Board(AssetDescriptor descriptor, int width, int height, int tileWidth, int tileHeight) {
         this(descriptor);
         reset();
         this.width = width;
         this.height = height;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
         addLayer();
     }
 
@@ -158,27 +162,32 @@ public final class Board extends AbstractAsset implements Selectable {
         this.height = height;
     }
 
-    /**
-     * Gets the sprites used on this board.
-     *
-     * @return sprites on board
-     */
-    public List<BoardSprite> getSprites() {
-        return sprites;
+    public int getTileWidth() {
+        return tileWidth;
     }
 
-    /**
-     * Sets the sprites used on this board.
-     *
-     * @param sprites new sprites
-     */
-    public void setSprites(ArrayList<BoardSprite> sprites) {
-        this.sprites = sprites;
+    public void setTileWidth(int tileWidth) {
+        this.tileWidth = tileWidth;
     }
-    
+
+    public int getTileHeight() {
+        return tileHeight;
+    }
+
+    public void setTileHeight(int tileHeight) {
+        this.tileHeight = tileHeight;
+    }
+
     public void addSprite(BoardSprite sprite) {
-        sprites.add(sprite);
-        fireBoardChanged();
+        BoardLayer boardLayer = layers.get(sprite.getLayer());
+        boardLayer.addBoardSprite(sprite);
+        fireBoardSpriteAdded(sprite);
+    }
+
+    public void removeSprite(BoardSprite sprite) {
+        BoardLayer boardLayer = layers.get(sprite.getLayer());
+        boardLayer.removeBoardSprite(sprite);
+        fireBoardSpriteAdded(sprite);
     }
 
     public StartingPosition getStartingPosition() {
@@ -325,6 +334,7 @@ public final class Board extends AbstractAsset implements Selectable {
         layers.get(index).setName(name);
         fireBoardChanged();
     }
+
     /**
      * Gets the board background music.
      *
@@ -402,7 +412,6 @@ public final class Board extends AbstractAsset implements Selectable {
 
     @Override
     public void reset() {
-        sprites.clear();
         tileSets.clear();
 
         width = 0;
@@ -550,6 +559,46 @@ public final class Board extends AbstractAsset implements Selectable {
     }
 
     /**
+     * Fires the <code>BoardChangedEvent</code> informs all the listeners that
+     * this board has changed.
+     *
+     * @param sprite
+     */
+    public void fireBoardSpriteAdded(BoardSprite sprite) {
+        BoardChangedEvent event = null;
+        Iterator iterator = boardChangeListeners.iterator();
+
+        while (iterator.hasNext()) {
+            if (event == null) {
+                event = new BoardChangedEvent(this);
+                event.setBoardSprite(sprite);
+            }
+
+            ((BoardChangeListener) iterator.next()).boardSpriteAdded(event);
+        }
+    }
+
+    /**
+     * Fires the <code>BoardChangedEvent</code> informs all the listeners that
+     * this board has changed.
+     *
+     * @param sprite
+     */
+    public void fireBoardSpriteRemoved(BoardSprite sprite) {
+        BoardChangedEvent event = null;
+        Iterator iterator = boardChangeListeners.iterator();
+
+        while (iterator.hasNext()) {
+            if (event == null) {
+                event = new BoardChangedEvent(this);
+                event.setBoardSprite(sprite);
+            }
+
+            ((BoardChangeListener) iterator.next()).boardSpriteRemoved(event);
+        }
+    }
+
+    /**
      * Add a new blank layer to this board.
      */
     public void addLayer() {
@@ -674,7 +723,7 @@ public final class Board extends AbstractAsset implements Selectable {
                     tile.setTileSet(TileSetCache.getTileSet(tile.getTileSet().getName()));
                     tiles[x][y] = tile.getTileSet().getTile(tile.getIndex());
                 }
-                
+
                 x++;
                 if (x == width) {
                     x = 0;

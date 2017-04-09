@@ -144,10 +144,12 @@ public class AssetSerializerTest {
         Assert.assertEquals("Room", asset.getName());
         Assert.assertEquals(3, asset.getWidth());
         Assert.assertEquals(3, asset.getHeight());
+        Assert.assertEquals(32, asset.getTileWidth());
+        Assert.assertEquals(32, asset.getTileHeight());
         Assert.assertTrue(asset.getTileSets().containsKey("Default.tileset"));
 
-        Assert.assertTrue(asset.getSprites().size() == 1);
-        BoardSprite sprite = asset.getSprites().get(0);
+        Assert.assertTrue(asset.getLayers().get(0).getSprites().size() == 1);
+        BoardSprite sprite = asset.getLayers().get(0).getSprites().get(0);
         Assert.assertEquals("Block.item", sprite.getFileName());
         Assert.assertEquals(1, sprite.getX());
         Assert.assertEquals(2, sprite.getY());

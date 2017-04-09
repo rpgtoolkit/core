@@ -233,6 +233,18 @@ public class BoardLayer implements Cloneable {
     tiles[x][y] = tile;
     board.fireBoardChanged();
   }
+  
+  /**
+   * 
+   * @param sprite 
+   */
+  public void addBoardSprite(BoardSprite sprite) {
+    sprites.add(sprite);
+  }
+  
+  public void removeBoardSprite(BoardSprite sprite) {
+      sprites.remove(sprite);
+  }
 
   /**
    * Does this layer contain the coordinates.
@@ -377,7 +389,10 @@ public class BoardLayer implements Cloneable {
    */
   public BoardSprite findSpriteAt(int x, int y) {
     for (BoardSprite sprite : sprites) {
-      if (sprite.getX() == x && sprite.getY() == y) {
+      int diffX = Math.abs(sprite.getX() - x);
+      int diffY = Math.abs(sprite.getY() - y);
+        
+      if (diffX < 20 && diffY < 20) {
         return sprite;
       }
     }
