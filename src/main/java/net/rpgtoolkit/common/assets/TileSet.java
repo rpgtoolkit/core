@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, rpgtoolkit.net <help@rpgtoolkit.net>
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/.
  */
 package net.rpgtoolkit.common.assets;
 
@@ -21,7 +21,7 @@ import java.util.List;
 public class TileSet extends AbstractAsset {
 
     private String name;
-    
+
     private int tileWidth;
     private int tileHeight;
 
@@ -29,23 +29,31 @@ public class TileSet extends AbstractAsset {
 
     private LinkedList<Tile> tiles;
 
+    public TileSet() {
+        super(null);
+        images = new ArrayList<>();
+        tiles = new LinkedList<>();
+    }
+
     /**
      * Creates a new TileSet with a descriptor.
      *
      * @param descriptor
+     * @param tileWidth
+     * @param tileHeight
      */
-    public TileSet(AssetDescriptor descriptor) {
+    public TileSet(AssetDescriptor descriptor, int tileWidth, int tileHeight) {
         super(descriptor);
-        tileWidth = 32;
-        tileHeight = 32;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
         images = new ArrayList<>();
         tiles = new LinkedList<>();
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }

@@ -9,7 +9,7 @@ package net.rpgtoolkit.common.assets;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import net.rpgtoolkit.common.assets.events.AnimationChangedEvent;
 import net.rpgtoolkit.common.assets.listeners.AnimationChangeListener;
 
@@ -22,7 +22,7 @@ import net.rpgtoolkit.common.assets.listeners.AnimationChangeListener;
  */
 public class Animation extends AbstractAsset {
 
-  private final LinkedList<AnimationChangeListener> animationChangeListeners = new LinkedList<>();
+  private final ConcurrentLinkedQueue<AnimationChangeListener> animationChangeListeners = new ConcurrentLinkedQueue<>();
 
   // Constants
   private final String FILE_HEADER = "RPGTLKIT ANIM";

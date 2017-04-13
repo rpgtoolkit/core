@@ -7,7 +7,6 @@
  */
 package net.rpgtoolkit.common.assets.serialization;
 
-import java.util.Iterator;
 import net.rpgtoolkit.common.assets.AssetDescriptor;
 import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;

@@ -34,12 +34,13 @@ public class JsonTileSetSerializer extends AbstractJsonSerializer {
     
     @Override
     protected void load(AssetHandle handle, JSONObject json) throws AssetException {
-        final TileSet tileSet = new TileSet(handle.getDescriptor());
-        
+        final TileSet tileSet = new TileSet(
+                handle.getDescriptor(), 
+                json.optInt("tileWidth"), 
+                json.optInt("tileHeight")
+        );
+    
         tileSet.setName(json.optString("name"));
-        tileSet.setTileWidth(json.optInt("tileWidth"));
-        tileSet.setTileHeight(json.optInt("tileHeight"));
-        
         tileSet.setImages(getStringArrayList(json.getJSONArray("images")));
         
         handle.setAsset(tileSet);
