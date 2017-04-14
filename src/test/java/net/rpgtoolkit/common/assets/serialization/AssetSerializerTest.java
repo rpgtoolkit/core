@@ -11,11 +11,9 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import net.rpgtoolkit.common.assets.Animation;
 import net.rpgtoolkit.common.assets.AnimationEnum;
-import net.rpgtoolkit.common.assets.AnimationFrame;
 import net.rpgtoolkit.common.assets.AssetManager;
 import net.rpgtoolkit.common.assets.Board;
 import net.rpgtoolkit.common.assets.BoardLayer;
@@ -30,6 +28,7 @@ import net.rpgtoolkit.common.assets.TileSet;
 import net.rpgtoolkit.common.assets.BoardVectorType;
 import net.rpgtoolkit.common.assets.Event;
 import net.rpgtoolkit.common.assets.EventType;
+import net.rpgtoolkit.common.assets.SpriteSheet;
 import net.rpgtoolkit.common.assets.files.FileAssetHandleResolver;
 import net.rpgtoolkit.common.assets.serialization.legacy.LegacyAnimatedTileSerializer;
 import org.junit.Assert;
@@ -108,19 +107,17 @@ public class AssetSerializerTest {
     }
 
     private void checkAnimation(Animation asset) {
-        List<String> frames = Arrays.asList(
-                "Idle_north.png",
-                "attack1_north.png",
-                "attack2_north.png");
-
-        List<AnimationFrame> actualFrames = asset.getFrames();
-        for (int i = 0; i < frames.size(); i++) {
-            Assert.assertEquals(frames.get(i), actualFrames.get(i).getFrameName());
-        }
-
-        Assert.assertEquals(0.2, asset.getFrameRate(), 0);
+        Assert.assertEquals(0.2, asset.getFrameRate(), 25);
         Assert.assertEquals(90, asset.getAnimationHeight());
         Assert.assertEquals(55, asset.getAnimationWidth());
+        
+        SpriteSheet spriteSheet = asset.getSpriteSheet();
+        Assert.assertEquals("attack1_north.png", spriteSheet.getFileName());
+        Assert.assertEquals(0, spriteSheet.getX());
+        Assert.assertEquals(0, spriteSheet.getY());
+        Assert.assertEquals(100, spriteSheet.getWidth());
+        Assert.assertEquals(25, spriteSheet.getHeight());  
+        
         Assert.assertEquals("hit.wav", asset.getSoundEffect());
     }
 
