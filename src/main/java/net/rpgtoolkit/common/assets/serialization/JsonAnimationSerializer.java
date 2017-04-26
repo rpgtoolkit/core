@@ -14,7 +14,6 @@ import net.rpgtoolkit.common.assets.AssetHandle;
 import net.rpgtoolkit.common.assets.SpriteSheet;
 import net.rpgtoolkit.common.io.Paths;
 import net.rpgtoolkit.common.utilities.CoreProperties;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -70,7 +69,7 @@ public class JsonAnimationSerializer extends AbstractJsonSerializer {
 
         final SpriteSheet spriteSheet = animation.getSpriteSheet();
         final JSONObject object = new JSONObject();
-        object.put("image", spriteSheet.getFileName());
+        object.put("image", serializePath(spriteSheet.getFileName()));
         object.put("x", spriteSheet.getX());
         object.put("y", spriteSheet.getY());
         object.put("width", spriteSheet.getWidth());
@@ -78,7 +77,7 @@ public class JsonAnimationSerializer extends AbstractJsonSerializer {
         
         json.put("spriteSheet", object);
 
-        json.put("soundEffect", animation.getSoundEffect());
+        json.put("soundEffect", serializePath(animation.getSoundEffect()));
     }
 
 }

@@ -61,10 +61,10 @@ public class JsonProjectSerializer extends AbstractJsonSerializer {
         json.put("resolutionWidth", project.getResolutionWidth());
         json.put("resolutionHeight", project.getResolutionHeight());
         json.put("isFullScreen", project.isFullScreen());
-        json.put("initialBoard", project.getInitialBoard());
-        json.put("initialCharacter", project.getInitialCharacter());
-        json.put("startupProgram", project.getStartupProgram());
-        json.put("gameOverProgram", project.getGameOverProgram());
+        json.put("initialBoard", serializePath(project.getInitialBoard()));
+        json.put("initialCharacter", serializePath(project.getInitialCharacter()));
+        json.put("startupProgram", serializePath(project.getStartupProgram()));
+        json.put("gameOverProgram", serializePath(project.getGameOverProgram()));
     }
 
 }

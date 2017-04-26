@@ -28,6 +28,7 @@ import net.rpgtoolkit.common.assets.BoardVector;
 import net.rpgtoolkit.common.assets.BoardVectorType;
 import net.rpgtoolkit.common.assets.Event;
 import net.rpgtoolkit.common.assets.EventType;
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -267,12 +268,17 @@ public abstract class AbstractJsonSerializer
         return map;
     }
 
-    public static Object serializeMap(Map map) throws JSONException {
+    protected static JSONObject serializeMap(Map map) throws JSONException {
         JSONObject json = new JSONObject();
         for (Object key : map.keySet()) {
-            json.put(key.toString(), map.get(key));
+            json.put(key.toString(), serializePath(map.get(key).toString()));
         }
         return json;
+    }
+    
+    protected static String serializePath(String path) {
+        // Use *nix path separator everywhere, higher compatability.
+        return FilenameUtils.separatorsToUnix(path);
     }
 
     private ArrayList<Point> getPoints(JSONArray array) {

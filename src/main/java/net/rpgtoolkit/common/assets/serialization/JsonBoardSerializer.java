@@ -98,7 +98,7 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
         // Stored in LinkedHashMap which the original insertion order.
         final JSONArray tileSets = new JSONArray();
         for (TileSet tileSet : board.getTileSets().values()) {
-            tileSets.put(tileSet.getName());
+            tileSets.put(serializePath(tileSet.getName()));
         }
         json.put("tileSets", tileSets);
 
@@ -111,7 +111,7 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
         final JSONArray sprites = new JSONArray();
         for (final BoardSprite sprite : boardSprites) {
             final JSONObject s = new JSONObject();
-            s.put("name", sprite.getFileName());
+            s.put("name", serializePath(sprite.getFileName()));
             JSONObject spritePosition = new JSONObject();
             spritePosition.put("x", sprite.getX());
             spritePosition.put("y", sprite.getY());
@@ -124,13 +124,13 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
             if (sprite.getEventProgram() != null && !sprite.getEventProgram().isEmpty()) {
                 JSONObject event = new JSONObject();
                 event.put("type", sprite.getEventType().name().toLowerCase());
-                event.put("program", sprite.getEventProgram());
+                event.put("program", serializePath(sprite.getEventProgram()));
                 events.put(event);
             }
 
             s.put("events", events);
 
-            s.put("thread", sprite.getThread());
+            s.put("thread", serializePath(sprite.getThread()));
             sprites.put(s);
         }
         json.put("sprites", sprites);
@@ -190,8 +190,8 @@ public class JsonBoardSerializer extends AbstractJsonSerializer {
         startingPosition.put("layer", board.getStartingLayer());
         json.put("startingPosition", startingPosition);
 
-        json.put("firstRunProgram", board.getFirstRunProgram());
-        json.put("backgroundMusic", board.getBackgroundMusic());
+        json.put("firstRunProgram", serializePath(board.getFirstRunProgram()));
+        json.put("backgroundMusic", serializePath(board.getBackgroundMusic()));
 
         handle.setAsset(board);
     }

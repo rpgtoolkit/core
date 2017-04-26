@@ -7,6 +7,8 @@
  */
 package net.rpgtoolkit.common.assets.serialization;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.rpgtoolkit.common.assets.AssetDescriptor;
 import net.rpgtoolkit.common.assets.AssetException;
 import net.rpgtoolkit.common.assets.AssetHandle;
@@ -55,7 +57,12 @@ public class JsonTileSetSerializer extends AbstractJsonSerializer {
         json.put("name", tileSet.getName());
         json.put("tileWidth", tileSet.getTileWidth());
         json.put("tileHeight", tileSet.getTileHeight());
-        json.put("images", tileSet.getImages());
+        
+        List<String> images = new ArrayList();
+        for (String image : tileSet.getImages()) {
+            images.add(serializePath(image));
+        }
+        json.put("images", images);
     }
 
 }
